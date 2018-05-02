@@ -1,0 +1,164 @@
+---
+title: 'Spatial statistics'
+author: 'Kerstin Wiegand, Craig Simpkins, Maximilian Hesselbarth'
+date: 'Summer semester 2018'
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Practical 2a
+
+First, we need to import the [`spatstat`](https://spatstat.org) package for analyzing spatial point patterns. Also, we import the [*tidyverse*](https://www.tidyverse.org) package, a collection of `R` packages designed for data science.
+
+```{r, message = FALSE}
+  library(spatstat)
+  library(tidyverse)
+```
+
+If you don't have the packages already installed, run the following code in order to install them. 
+
+```{r, eval = FALSE, include = TRUE}
+  install.packages(c('spatstat', 'tidyverse'))
+```
+
+## Exercise 1 
+
+__Task__: Using the data set *DouglasFir_LiveDead_OGN.txt* calculate the O-ring statistic and the L-function. Here, pattern 1 gives the locations of live trees and pattern 2 gives the locations of dead trees. Comparing the univariate measures O11(r) and L11(r), how do they differ?
+
+First, we need to import the data. Therefore, set the working directory to the folder containing the data. Then, import the data using `read_delim()`. The columns are separated by a semicolon. By using `read_delim()`, the class of the data is automatically a `tibble` (an 'advanced' version of a `data.frame`. For more information see `?tibble`). 
+
+```{r, message = FALSE}
+  setwd('/Users/Maximilian/ownCloud/03_Lehre/Spatial_Statistics/Data/R')
+  douglas_fir <- read_delim(file = 'DouglasFir_LiveDead_OGN.txt', delim = ';')
+  class(douglas_fir)
+```
+
+Print the data. The `tibble` contains 668 rows (one for each tree) and 3 columns(x-coordinate, y-coordinate and the marks).
+```{r}
+  print(douglas_fir)
+```
+
+We want to edit the column 'mark' in a way that 1 == 'alive' and 2 == 'dead'. We are using two functions of the `dplyr` package. `mutate()` creates a new column (actually we overwrite the already existing column 'mark') and `case_when()` classifies the data. Lastly, we convert the column as `factors`. 
+
+```{r}
+  douglas_fir <- mutate(douglas_fir,
+                        mark = case_when(mark == 1 ~ 'alive',
+                                         mark == 2 ~ 'dead'),
+                        mark = as.factor(mark))
+```
+
+Now, we need to convert the `tibble`  to the `ppp` class of the `spatstat` packages. Firstly, we need to specify our plot area (`spatstat` calls this observation window) using `ripras()`. The function calculates a window based on the provided x- and y-coordinates (the results is returned as a `owin`). We can specify the shape of the window using the `shape` argument. Secondly, we convert the `tibble` to a `ppp`. The `tibble` contains the coordinates and the marks as columns and we just need additionally to specify the observation window with the just created `owin` object.
+
+Plotting the pattern to control it is always a good idea. The plot function automatically modifies the points according to their mark. Also the `summary()` function returns many helpful information about the point pattern. The functions returns the intensity, information about the marks (in this case the frequencies, proportions and intensities of the discrete classes) and information about the plot area.
+
+```{r}
+  plot_area <- ripras(x = douglas_fir$x, y = douglas_fir$y, shape = 'rectangle')
+  douglas_fir_ppp <- as.ppp(X = douglas_fir, W = plot_area)
+  
+  summary(douglas_fir_ppp)
+``` 
+
+```{r, echo = FALSE,  fig.align = 'center'}
+  plot(douglas_fir_ppp, main = "Douglas fir")
+```
+
+`spatstat` provides most summary functions for spatial point pattern analyses (see e.g. `?Kest()`). The result is always a `fv` (function value) object. Almost all summary functions allow you to specify the edge correction (`correction`) and the distances r (`r`). But first, we subset the data because we want only to use the 'alive' trees at the moment.
+
+```{r}
+  alive <- subset.ppp(douglas_fir_ppp, marks == 'alive')
+  
+  l_fct_alive <- Lest(X = alive, correction = 'Ripley', 
+                      r = seq(from = 0, to = 45, by = 0.5))
+  class(l_fct_alive)
+```
+
+```{r, echo = FALSE,  fig.align = 'center'}
+  plot(l_fct_alive, xlim = c(0, 45))
+```
+
+As you can see in the plot, however, Besag's L-function is not centered to 0. Also, the O-ring statistic is not available. Therefore, we need to write our own functions. For that, `eval.fv()` is quiet handy. The function evaluates expression involving one or more `fv` objects (`divisor = 'd'` is just a little trick to improve the bias of the estimator when r is close to zero).
+
+```{r}
+Lest.cent <- function(input, correction='Ripley', r=NULL, ...){
+  l_fct <- Lest(input, correction = correction, r = r)
+  r <- l_fct$r
+  eval.fv(l_fct-r)
+}
+
+Oest <- function(input, correction='Ripley', r=NULL, ...){
+  p_fct <- pcf(input, correction = correction, r = r, divisor = 'd')
+  lambda <- intensity(unmark(input))
+  eval.fv(p_fct*lambda)
+}
+```
+
+Now, we can calculate the summary functions and plot them.
+
+```{r}
+  l_function <- Lest.cent(input = alive, 
+                          r = seq(from = 0, to = 45, by = 0.5))
+
+  oring_statistic <- Oest(input = alive, 
+                         r = seq(from = 0, to = 45, by = 0.5))
+
+```
+
+```{r, echo = FALSE,  fig.align='center'}
+plot(l_function,  xlim=c(0,45), 
+     main='Univariate L-function \nliving trees', legend = FALSE)
+
+plot(oring_statistic, xlim=c(0,45), 
+     main = 'Univariate O-ring statistic \nliving trees', legend = FALSE)
+```
+
+## Exercise 3
+__Task:__ Redo the analysis but now with simulation envelopes. How does the simulation envelope change if you change the settings for the envelope from # simulations=39/'lowest/highest'=1 to simulations=199/'lowest/highest'=5.
+
+The function `envelope` of the `spatstat` package calculates simulation envelopes. The number of simulations can be specified with the argument `nsim`, the lowest/highest values with the argument `rank`. When not specified otherwise, the functions uses _CSR_ as null model. The `fun` argument can handle any summary function that `spatstat` provides (or the ones we implemented as long as they return a `fv` object).
+
+```{r, message=FALSE, warning=FALSE, results = 'hide'}
+  simulation_envelope_39 <- envelope(Y = alive, fun = Oest, 
+                                     r = seq(from = 0, to = 45, by = 0.5),
+                                     nsim = 39, nrank = 1)
+
+  simulation_envelope_199 <- envelope(Y = alive, fun = Oest, 
+                                      r = seq(from = 0, to = 45, by = 0.5),
+                                      nsim = 199, nrank = 5)
+```
+
+```{r, echo = FALSE,  fig.align='center'}
+  plot(simulation_envelope_39, xlim=c(0,45), 
+       main='Univariate O-ring statistic \nnsim=39, nrank=1', legend = FALSE)
+
+  plot.fv(simulation_envelope_199, xlim=c(0,45), 
+          main='Univariate O-ring statistic \nnsim=199, nrank=5', legend = FALSE)
+```
+
+## Exercise 4 
+__Task:__ Also look at the functions O22(r) and L22(r). Is there a striking difference between dead and live Douglas fir trees?
+
+So this time, we want to subset all 'dead' trees.
+
+```{r, message=FALSE, warning=FALSE, results = 'hide'}
+  dead <- subset.ppp(douglas_fir_ppp, marks == 'dead')
+
+  simulation_envelope_dead <- envelope(Y = dead, fun = Oest, 
+                                       r = seq(from = 0, to = 45, by = 0.5),
+                                       nsim = 199, nrank = 5)
+```
+
+```{r, echo = FALSE,  fig.align='center'}
+  plot.fv(simulation_envelope_199, xlim=c(0,45), 
+          main='Univariate O-ring statistic \nliving trees', legend = FALSE)
+  plot.fv(simulation_envelope_dead, xlim=c(0,45), 
+          main='Univariate O-ring statistic \ndead trees', legend = FALSE)
+```
+
+__References__:
+
+Baddeley, A., Rubak, E., Turner, R., 2015. Spatial point patterns: Methodology and applications with R. Chapman and Hall/CRC Press, London.
+
+Getzin, S., Dean, C., He, F., Trofymow, J.A., Wiegand, K., Wiegand, T., 2006. Spatial patterns and competition of tree species in a Douglas fir chronosequence on Vancouver Island. Ecography (Cop.). 29, 671–682.
+
+Getzin, S., Wiegand, T., Wiegand, K., He, F., 2008. Heterogeneity influences spatial patterns and demographics in forest stands. J. Ecol. 96, 807–820.
