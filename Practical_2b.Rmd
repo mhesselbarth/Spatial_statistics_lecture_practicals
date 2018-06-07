@@ -21,7 +21,7 @@ __Task:__ Calculate the bivariate g12 function using the null model random label
 In case it is not in our workspace anymore, we import the data and convert it to a `ppp` object again.
 
 ```{r, message = FALSE}
-  setwd('/Users/Maximilian/ownCloud/03_Lehre/Spatial_Statistics/Data/R')
+  setwd('C:/Users/Maximilian/ownCloud/03_Lehre/Spatial_Statistics/Practicals/Spatial_statistics_R')
   douglas_fir <- read_delim(file = 'DouglasFir_LiveDead_OGN.txt', delim = ';')
   
   douglas_fir <- mutate(douglas_fir,
@@ -29,14 +29,14 @@ In case it is not in our workspace anymore, we import the data and convert it to
                                          mark == 2 ~ 'dead'),
                         mark = as.factor(mark))
   
-  plot_area <- ripras(x = douglas_fir$x, y= douglas_fir$y, shape = 'rectangle')
+  plot_area <- ripras(x = douglas_fir$x, y = douglas_fir$y, shape = 'rectangle')
   douglas_fir_ppp <- as.ppp(X = douglas_fir, W = plot_area)
 ```
 
 The same goes for the O-ring statistic.
 
 ```{r}
-  Oest <- function(input, correction='Ripley', r=NULL, ...){
+  Oest <- function(input, correction = 'Ripley', r = NULL, ...){
     p_fct <- pcf(input, correction = correction, r = r, divisor = 'd')
     lambda <- intensity(unmark(input))
     eval.fv(p_fct*lambda)
@@ -54,7 +54,7 @@ The function `envelope()` can also be used to simulate more complex null models 
 
 ```{r, echo = FALSE,  fig.align = 'center'}
   plot(simulaion_envelope_random_labeling, xlim = c(0,45), 
-       main='Bivariate pair correlation function \nrandom labelling', legend = FALSE)
+       main = 'Bivariate pair correlation function\nrandom labelling', legend = FALSE)
 ```
 
 ## Exercise 6
@@ -89,13 +89,16 @@ The softcore process is very similar, with the only difference that the probabil
   envelope_softcore <- envelope(alive, fun = Oest,
                                 r = seq(from = 0, to = 45, by = 0.5),
                                 nsim = 199, nrank = 5,
-                                simulate=simulated_patterns_softcore)
+                                simulate = simulated_patterns_softcore)
 ```
 
 ```{r, echo = FALSE,  fig.align = 'center'}
   # par(mfrow=c(1,2))
-  plot(envelope_hardcore, xlim=c(0,45), legend = FALSE, main="Univariate O-ring statistic \nhard-core process")
-  plot(envelope_softcore,xlim=c(0,45), legend = FALSE, main="Univariate O-ring statistic \nsoft-core process")
+  plot(envelope_hardcore, xlim=c(0,45), 
+       main = "Univariate O-ring statistic\nhard-core process", legend = FALSE)
+      
+  plot(envelope_softcore,xlim=c(0,45), 
+       main = "Univariate O-ring statistic\nsoft-core process", legend = FALSE)
   # par(mfrow=c(1,1))
 ```
 
@@ -105,7 +108,7 @@ __Task:__ Now use the data set 'DouglasFir_Adult_vs_Seedling_OG-N.txt'. Here, pa
 Firstly, we import the data and convert it to a `ppp` object. Also, we reclassify the mark column to 1 == 'adults' and 2 == 'seedlings' and convert is as a factor. 
 
 ```{r}
-  setwd('/Users/Maximilian/ownCloud/03_Lehre/Spatial_Statistics/Data/R')
+  setwd('C:/Users/Maximilian/ownCloud/03_Lehre/Spatial_Statistics/Practicals/Spatial_statistics_R')
   douglas_fir <- read_delim(file = 'DouglasFir_Adult_vs_Seedling_OG-N.txt', delim = ';')
   
   douglas_fir <- mutate(douglas_fir,
@@ -113,7 +116,7 @@ Firstly, we import the data and convert it to a `ppp` object. Also, we reclassif
                                          mark == 2 ~ 'seedlings'),
                         mark = as.factor(mark))
   
-  plot_area <- ripras(x = douglas_fir$x, y= douglas_fir$y, shape = 'rectangle')
+  plot_area <- ripras(x = douglas_fir$x, y = douglas_fir$y, shape = 'rectangle')
   douglas_fir_ppp <- as.ppp(X = douglas_fir, W = plot_area)
 ```
 
@@ -124,7 +127,7 @@ Firstly, we import the data and convert it to a `ppp` object. Also, we reclassif
 Now, we need to implement the bivariate O-ring statistic O12(r). We want to multiply the bivariate pair-correlation function g12(r) with the intensity of lambda2.
 
 ```{r}
-Oestcross <- function(input,i,j, correction='Ripley', r=NULL, ......){
+Oestcross <- function(input,i,j, correction = 'Ripley', r = NULL, ......){
   gij <- pcfcross(input, 
                   i = i, j = j, r = r,
                   correction = correction, divisor = "d")
@@ -141,8 +144,8 @@ After splitting the point pattern into seedlings and adults, we create a new, ra
 null_model_pattern <- list()
 
 for(i in 1:199){
-  seedlings <- subset.ppp(douglas_fir_ppp, marks=="seedlings", drop=T)
-  adults <- subset(douglas_fir_ppp, marks=="adults", drop=T)
+  seedlings <- subset.ppp(douglas_fir_ppp, marks == "seedlings", drop = TRUE)
+  adults <- subset(douglas_fir_ppp, marks == "adults", drop = TRUE)
   
   random_seedlings <- rpoint(n = seedlings$n,
                              win = seedlings$window)
@@ -165,7 +168,7 @@ Now, we can compute the simulation envelopes as usually.
 
 ```{r, echo = FALSE, fig.align = 'center'}
   plot(antecedent_conditions, xlim = c(0, 45),
-       legend = FALSE, main = "Bivariate O-ring statistic \nantecedent conditions")
+       main = "Bivariate O-ring statistic\nantecedent conditions", legend = FALSE)
 ```
 
 ## Exercise 8
@@ -178,11 +181,11 @@ There is a possibility to simulate the toroidal shift null model with functions 
                         i = "adults", j = "seedlings",
                         r = seq(from = 0, to = 45, by = 0.5),
                         nsim = 199, nrank = 5,
-                        simulate = expression(rshift(douglas_fir_ppp, which="seedlings", edge="torus")))
+                        simulate = expression(rshift(douglas_fir_ppp, which = "seedlings", edge="torus")))
 ```
 ```{r, echo = FALSE, fig.align = 'center'}
   plot(trdl.shft, xlim = c(0, 45), 
-       legend = FALSE, main = "Bivariate O-ring statistic \ntoroidal shift")
+       main = "Bivariate O-ring statistic\ntoroidal shift",  legend = FALSE)
 ```
 
 __References__:

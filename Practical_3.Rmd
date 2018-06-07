@@ -22,7 +22,7 @@ __Task:__ Perform a point-pattern analysis on the 'Hemlock_Adults_vs_SmallSaps.t
 We import the data first and convert it as `ppp`. Also, we reclassify the marks as 1 == 'adults' and 2 == 'saplings'.
 
 ```{r, message = FALSE}
-  setwd('/Users/Maximilian/ownCloud/03_Lehre/Spatial_Statistics/Data/R')
+  setwd('C:/Users/Maximilian/ownCloud/03_Lehre/Spatial_Statistics/Practicals/Spatial_statistics_R')
   hemlock <- read_delim(file = 'Hemlock_Adults_vs_SmallSaps.txt', delim = ';')
   
   hemlock <- mutate(hemlock,
@@ -42,7 +42,7 @@ We import the data first and convert it as `ppp`. Also, we reclassify the marks 
 
 Then ,we implement the O-ring statistic.
 ```{r}
-  Oest <- function(input, correction='Ripley', r=NULL, ...){
+  Oest <- function(input, correction = 'Ripley', r = NULL, ...){
     p_fct <- pcf(input, correction = correction, 
                  r = r, divisor = 'd')
     lambda <- intensity(unmark(input))
@@ -55,14 +55,14 @@ We are just interested in the saplings, therefore we subset them first. Then we 
 ```{r, results = 'hide'}
   saplings <- subset.ppp(hemlock_ppp, marks == 'saplings', drop = TRUE)
   
-  o_ring_saplings <- envelope(saplings, fun=Oest,
+  o_ring_saplings <- envelope(saplings, fun = Oest,
                               r = seq(from = 0, to = 45, by = 0.5), 
                               nsim = 199, nrank = 5)
 ```
 
 ```{r, echo = FALSE, fig.align = 'center'}
   plot(o_ring_saplings, xlim = c(0, 45), 
-       main = 'O-ring statistic \nSaplings', legend = FALSE)
+       main = 'O-ring statistic\nsaplings', legend = FALSE)
 ```
 
 ## Exercise 2 
@@ -87,7 +87,7 @@ Now, we can compute the envelopes of the null model and compare it to the observ
 
 ```{r, echo = FALSE, fig.align = 'center'}
   plot(o22_saplings_thomas, xlim = c(0, 45), 
-       main = "Hemlock saplings \nThomas process", legend = FALSE)
+       main = "Hemlock saplings\nThomas process", legend = FALSE)
 ```
 
 ## Exercise 3
@@ -112,7 +112,7 @@ __Task:__ The data set 'Alive_Douglas-Fir_OG_N.txt' contains the location and st
 First, we need to import the data, convert as `ppp` and have a look at the data. This time, the marks are continuous, i.e. the diameter at breast height in cm of each tree. Therefore, the `summary()` function automatically gives the mean, median and quantiles of the data. Also, the plot automatically scales the point according to their size. 
 
 ```{r, message = FALSE}
-  setwd('/Users/Maximilian/ownCloud/03_Lehre/Spatial_Statistics/Data/R')
+  setwd('C:/Users/Maximilian/ownCloud/03_Lehre/Spatial_Statistics/Practicals/Spatial_statistics_R')
   douglas_fir <- read_delim(file = 'Alive_Douglas-Fir_OG_N.txt', delim = ';')
   
   plot_area <- ripras(x = douglas_fir$x, y = douglas_fir$y, shape = 'rectangle')
@@ -134,7 +134,7 @@ The mark-correlation function can be calculated with `markcorr()`. This is very 
 
 ```{r, echo = FALSE, fig.align = 'center'}
   plot(mark_corrlation_douglas_fir, xlim = c(0, 45), 
-       main = "Mark correlation function \nDouglas fir", legend = F)
+       main = "Mark correlation function\nDouglas fir", legend = F)
 ```
 
 ## Exercise 2 
@@ -152,7 +152,7 @@ We use `envelope()` to calculate the simulation envelopes. As null model, we use
 
 ```{r, echo = FALSE, fig.align = 'center'}
   plot(envelopes_mark_correlation_alive, xlim = c(0, 45), 
-       main = "Mark correlation function \nDouglas fir", legend = F)
+       main = "Mark correlation function\nDouglas fir", legend = F)
 ```
 
 # Practical 3c #
@@ -163,7 +163,7 @@ __Task:__ In the data set 'Hemlock_Adults_vs_SmallSaps.txt', you can observe a c
 We import the data, classify it and convert it as a `ppp` object. We plot the point pattern of only adult trees and have a look at the summary.
 
 ```{r, message = FALSE}
-  setwd('/Users/Maximilian/ownCloud/03_Lehre/Spatial_Statistics/Data/R')
+  setwd('C:/Users/Maximilian/ownCloud/03_Lehre/Spatial_Statistics/Practicals/Spatial_statistics_R')
   hemlock <- read_delim(file = 'Hemlock_Adults_vs_SmallSaps.txt', delim = ';')
   
   hemlock <- mutate(hemlock,
@@ -171,7 +171,7 @@ We import the data, classify it and convert it as a `ppp` object. We plot the po
                                      mark == 2 ~ 'saplings'),
                     mark = as.factor(mark))
   
-  plot_area <- ripras(x = hemlock$x, y= hemlock$y, shape = 'rectangle')
+  plot_area <- ripras(x = hemlock$x, y = hemlock$y, shape = 'rectangle')
   hemlock_ppp <- as.ppp(X = hemlock, W = plot_area)
   
   summary(hemlock_ppp)
@@ -183,7 +183,7 @@ We import the data, classify it and convert it as a `ppp` object. We plot the po
 
 Also, we need to implement the O-ring statistic as before.
 ```{r}
-  Oest <- function(input, correction='Ripley', r=NULL, ...){
+  Oest <- function(input, correction = 'Ripley', r = NULL, ...){
     p_fct <- pcf(input, correction = correction, r = r, divisor = 'd')
     lambda <- intensity(unmark(input))
     eval.fv(p_fct*lambda)

@@ -9,7 +9,7 @@ editor_options:
 
 # Practical 2a
 
-First, we need to import the [`spatstat`](https://spatstat.org) package for analyzing spatial point patterns. Also, we import the [*tidyverse*](https://www.tidyverse.org) package, a collection of `R` packages designed for data science.
+First, we need to import the [`spatstat`](https://spatstat.org) package for analyzing spatial point patterns. Also, we import the [`tidyverse`](https://www.tidyverse.org) package, a collection of `R` packages designed for data science.
 
 ```{r, message = FALSE}
   library(spatstat)
@@ -26,10 +26,10 @@ If you don't have the packages already installed, run the following code in orde
 
 __Task__: Using the data set *DouglasFir_LiveDead_OGN.txt* calculate the O-ring statistic and the L-function. Here, pattern 1 gives the locations of live trees and pattern 2 gives the locations of dead trees. Comparing the univariate measures O11(r) and L11(r), how do they differ?
 
-First, we need to import the data. Therefore, set the working directory to the folder containing the data. Then, import the data using `read_delim()`. The columns are separated by a semicolon. By using `read_delim()`, the class of the data is automatically a `tibble` (an 'advanced' version of a `data.frame`. For more information see `?tibble`). 
+First, we need to import the data. Therefore, set the working directory to the folder containing the data (the path is different on your computer). Then, import the data using `read_delim()`. The columns are separated by a semicolon. By using `read_delim()`, the class of the data is automatically a `tibble` (an 'advanced' version of a `data.frame`. For more information see `?tibble`). 
 
 ```{r, message = FALSE}
-  setwd('/Users/Maximilian/ownCloud/03_Lehre/Spatial_Statistics/Data/R')
+  setwd('C:/Users/Maximilian/ownCloud/03_Lehre/Spatial_Statistics/Practicals/Spatial_statistics_R')
   douglas_fir <- read_delim(file = 'DouglasFir_LiveDead_OGN.txt', delim = ';')
   class(douglas_fir)
 ```
@@ -80,13 +80,13 @@ Plotting the pattern to control it is always a good idea. The plot function auto
 As you can see in the plot, however, Besag's L-function is not centered to 0. Also, the O-ring statistic is not available. Therefore, we need to write our own functions. For that, `eval.fv()` is quiet handy. The function evaluates expression involving one or more `fv` objects (`divisor = 'd'` is just a little trick to improve the bias of the estimator when r is close to zero).
 
 ```{r}
-Lest.cent <- function(input, correction='Ripley', r=NULL, ...){
+Lest.cent <- function(input, correction = 'Ripley', r = NULL, ...){
   l_fct <- Lest(input, correction = correction, r = r)
   r <- l_fct$r
   eval.fv(l_fct-r)
 }
 
-Oest <- function(input, correction='Ripley', r=NULL, ...){
+Oest <- function(input, correction = 'Ripley', r = NULL, ...){
   p_fct <- pcf(input, correction = correction, r = r, divisor = 'd')
   lambda <- intensity(unmark(input))
   eval.fv(p_fct*lambda)
@@ -105,11 +105,11 @@ Now, we can calculate the summary functions and plot them.
 ```
 
 ```{r, echo = FALSE,  fig.align='center'}
-plot(l_function,  xlim=c(0,45), 
-     main='Univariate L-function \nliving trees', legend = FALSE)
+plot(l_function,  xlim = c(0,45), 
+     main = 'Univariate L-function\nliving trees', legend = FALSE)
 
-plot(oring_statistic, xlim=c(0,45), 
-     main = 'Univariate O-ring statistic \nliving trees', legend = FALSE)
+plot(oring_statistic, xlim = c(0,45), 
+     main = 'Univariate O-ring statistic\nliving trees', legend = FALSE)
 ```
 
 ## Exercise 3
@@ -128,11 +128,11 @@ The function `envelope` of the `spatstat` package calculates simulation envelope
 ```
 
 ```{r, echo = FALSE,  fig.align='center'}
-  plot(simulation_envelope_39, xlim=c(0,45), 
-       main='Univariate O-ring statistic \nnsim=39, nrank=1', legend = FALSE)
+  plot(simulation_envelope_39, xlim = c(0,45), 
+       main = 'Univariate O-ring statistic\nnsim=39, nrank=1', legend = FALSE)
 
-  plot.fv(simulation_envelope_199, xlim=c(0,45), 
-          main='Univariate O-ring statistic \nnsim=199, nrank=5', legend = FALSE)
+  plot.fv(simulation_envelope_199, xlim = c(0,45), 
+          main = 'Univariate O-ring statistic\nnsim=199, nrank=5', legend = FALSE)
 ```
 
 ## Exercise 4 
@@ -149,11 +149,31 @@ So this time, we want to subset all 'dead' trees.
 ```
 
 ```{r, echo = FALSE,  fig.align='center'}
-  plot.fv(simulation_envelope_199, xlim=c(0,45), 
-          main='Univariate O-ring statistic \nliving trees', legend = FALSE)
-  plot.fv(simulation_envelope_dead, xlim=c(0,45), 
-          main='Univariate O-ring statistic \ndead trees', legend = FALSE)
+  plot.fv(simulation_envelope_199, xlim = c(0,45), 
+          main = 'Univariate O-ring statistic\nliving trees', legend = FALSE)
+  plot.fv(simulation_envelope_dead, xlim = c(0,45), 
+          main = 'Univariate O-ring statistic\ndead trees', legend = FALSE)
 ```
+
+In case you are interested in another plot theme for the summary functions and the simulation envelope, I programmed a function and uploaded it on [*GitHub*](https://github.com). To install it, you need the `devtools` package. With `devtools` you can install the package (`UtilityFunctions`). In case you don't have `devtools` installed yet, do it as before.
+
+```{r, eval = FALSE, include = TRUE}
+  library(devtools)
+  install_github(repo = 'mhesselbarth/UtilityFunctions')
+  
+  library(UtilityFunctions)
+```
+
+Now, plot the results using `Plot.Envelope()` (check out the help file for the options). Take for example the result of the O-ring functions for the living trees.
+
+```{r, echo = FALSE, fig.align = 'center'}
+  library(UtilityFunctions)
+  Plot.Envelope(simulation_envelope_199, 
+                xlab = 'r [m]', ylab = 'O(r)', 
+                title = 'Univariate O-ring statistic\nliving trees', size = 7.5)
+```
+
+The functions adds some bars at the bottom of the plot indicating the location of the observed functions in relation to the simulation envelope.
 
 __References__:
 
