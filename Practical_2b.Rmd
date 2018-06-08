@@ -109,7 +109,7 @@ Firstly, we import the data and convert it to a `ppp` object. Also, we reclassif
 
 ```{r}
   setwd('C:/Users/Maximilian/ownCloud/03_Lehre/Spatial_Statistics/Practicals/Spatial_statistics_R')
-  douglas_fir <- read_delim(file = 'DouglasFir_Adult_vs_Seedling_OG-N.txt', delim = ';')
+  douglas_fir <- read_delim(file = 'DouglasFir_Adult_vs_Seedling_OGN.txt', delim = ';')
   
   douglas_fir <- mutate(douglas_fir,
                         mark = case_when(mark == 1 ~ 'adults',

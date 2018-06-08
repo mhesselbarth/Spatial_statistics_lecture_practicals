@@ -113,7 +113,7 @@ First, we need to import the data, convert as `ppp` and have a look at the data.
 
 ```{r, message = FALSE}
   setwd('C:/Users/Maximilian/ownCloud/03_Lehre/Spatial_Statistics/Practicals/Spatial_statistics_R')
-  douglas_fir <- read_delim(file = 'Alive_Douglas-Fir_OG_N.txt', delim = ';')
+  douglas_fir <- read_delim(file = 'Alive_DouglasFir_OGN.txt', delim = ';')
   
   plot_area <- ripras(x = douglas_fir$x, y = douglas_fir$y, shape = 'rectangle')
   douglas_fir_ppp <- as.ppp(X = douglas_fir, W = plot_area)
