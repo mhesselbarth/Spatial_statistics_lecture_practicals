@@ -17,7 +17,7 @@ As always, we load all needed packages.
 ```
 
 ## Exercise 1 
-__Task:__ Perform a point-pattern analysis on the 'Hemlock_Adults_vs_SmallSaps.txt' data set using CSR as null model. We are now especially interested in pattern 2, the small saplings. Using a cell size of 1 meter, calculate the O22(r). Up to which scale do we find significant clustering of the saplings?
+__Task:__ Perform a point-pattern analysis on the *Hemlock_Adults_vs_SmallSaps.txt* data set using 'CSR' as null model. We are now especially interested in pattern 2, the small saplings. Using a cell size of 1 meter, calculate the O22(r). Up to which scale do we find significant clustering of the saplings?
 
 We import the data first and convert it as `ppp`. Also, we reclassify the marks as 1 == 'adults' and 2 == 'saplings'.
 
@@ -50,7 +50,7 @@ Then ,we implement the O-ring statistic.
   }
 ```
 
-We are just interested in the saplings, therefore we subset them first. Then we calculate the O-ring statistic with simulation envelopes and _CSR_ as null model.
+We are just interested in the saplings, therefore we subset them first. Then we calculate the O-ring statistic with simulation envelopes and 'CSR' as null model.
 
 ```{r, results = 'hide'}
   saplings <- subset.ppp(hemlock_ppp, marks == 'saplings', drop = TRUE)
@@ -71,7 +71,7 @@ __Task:__ Use the pair-correlation function to fit a cluster process to the data
 We use the function `kkpm()` to fit a cluster point process model. We need to provide the point pattern (`X`, here we need to remove all marks with `unmark()` because `subset.ppp()` only drops all unused levels, but does not remove all marks). We specify the cluster type we want to fit (`cluster`) and which summary function to use (`pcf`). Then, we simulate patterns using the fitted process with `simulate.kppm()`. We need to provide the model (`object`) and the number of simulations (`nsim`). The result is a list of simulated patterns.
 
 ```{r, results = 'hide'}
-  thomas_process <- kppm(X = unmark(saplings), clusters = "Thomas", statistic = "pcf")
+  thomas_process <- kppm(X = unmark(saplings), clusters = 'Thomas', statistic = 'pcf')
   
   simulated_pattern	<- simulate.kppm(object = thomas_process, nsim = 199)
 ```
@@ -87,7 +87,7 @@ Now, we can compute the envelopes of the null model and compare it to the observ
 
 ```{r, echo = FALSE, fig.align = 'center'}
   plot(o22_saplings_thomas, xlim = c(0, 45), 
-       main = "Hemlock saplings\nThomas process", legend = FALSE)
+       main = 'Hemlock saplings\nThomas process', legend = FALSE)
 ```
 
 ## Exercise 3
@@ -100,14 +100,14 @@ __Task:__ If the function of the observed data falls into the new envelope, you 
 ```
   
 ```{r, echo = FALSE}
-  paste0("Number of parents: ", round(thomas_process$clustpar[['kappa']] * area(saplings$window), 2))
-  paste0("Cluster area: ", round((thomas_process$clustpar[['scale']] ^ 2) * pi, 2)) # Double check also with Programita!
+  paste0('Number of parents: ', round(thomas_process$clustpar[['kappa']] * area(saplings$window), 2))
+  paste0('Cluster area: ', round((thomas_process$clustpar[['scale']] ^ 2) * pi, 2)) # Double check also with Programita!
 ```
 
 # Practical 3b
 
 ## Exercise 1 
-__Task:__ The data set 'Alive_Douglas-Fir_OG_N.txt' contains the location and stem diameters (diameter at breast height, DBH) for all live Douglas fir trees in the Old-growth North plot. Calculate the mark correlation function What do these results suggest?
+__Task:__ The data set *Alive_DouglasFir_OGN.txt* contains the location and stem diameters (diameter at breast height, DBH) for all live Douglas fir trees in the Old-growth North plot. Calculate the mark correlation function What do these results suggest?
 
 First, we need to import the data, convert as `ppp` and have a look at the data. This time, the marks are continuous, i.e. the diameter at breast height in cm of each tree. Therefore, the `summary()` function automatically gives the mean, median and quantiles of the data. Also, the plot automatically scales the point according to their size. 
 
@@ -129,12 +129,12 @@ The mark-correlation function can be calculated with `markcorr()`. This is very 
 ```{r}
   mark_corrlation_douglas_fir <- markcorr(X = douglas_fir_ppp, 
                                           r = seq(from = 0, to = 45, by = 0.5),
-                                          correction = "Ripley")
+                                          correction = 'Ripley')
 ```
 
 ```{r, echo = FALSE, fig.align = 'center'}
   plot(mark_corrlation_douglas_fir, xlim = c(0, 45), 
-       main = "Mark correlation function\nDouglas fir", legend = F)
+       main = 'Mark correlation function\nDouglas fir', legend = F)
 ```
 
 ## Exercise 2 
@@ -152,13 +152,13 @@ We use `envelope()` to calculate the simulation envelopes. As null model, we use
 
 ```{r, echo = FALSE, fig.align = 'center'}
   plot(envelopes_mark_correlation_alive, xlim = c(0, 45), 
-       main = "Mark correlation function\nDouglas fir", legend = F)
+       main = 'Mark correlation function\nDouglas fir', legend = F)
 ```
 
 # Practical 3c #
 
 ## Exercise 1 
-__Task:__ In the data set 'Hemlock_Adults_vs_SmallSaps.txt', you can observe a clear gradient in the density of adult trees. Calculate O11(r) and L11(r) for pattern 1 (adult trees) to see up to which scale clustering of the trees can be observed using CSR as null model.
+__Task:__ In the data set *Hemlock_Adults_vs_SmallSaps.txt*, you can observe a clear gradient in the density of adult trees. Calculate O11(r) and L11(r) for pattern 1 (adult trees) to see up to which scale clustering of the trees can be observed using 'CSR' as null model.
 
 We import the data, classify it and convert it as a `ppp` object. We plot the point pattern of only adult trees and have a look at the summary.
 
@@ -190,7 +190,7 @@ Also, we need to implement the O-ring statistic as before.
   }
 ``` 
 
-We calculate the O-ring statistic for the adult trees only, using `envelope()` and the null model of _CSR_. 
+We calculate the O-ring statistic for the adult trees only, using `envelope()` and the null model of 'CSR'. 
 ```{r, results = 'hide'}
   adults <- subset.ppp(hemlock_ppp, marks == 'adults', drop = TRUE)
   
@@ -248,8 +248,8 @@ Now, we can use the simulated point patterns as input for `envelope()` to create
 <!-- Alternativly, `spatstat` can calculated the inhomogenous pair-correlation function and consider the heterogneous plot conditions while estimating the pair-correlation function.  -->
 
 <!-- ```{r, results = 'hide'} -->
-<!--   envelopes_adults_inhomo <- envelope(Y = adults, fun = pcfinhom, divisor = "d", -->
-<!--                                       correction = "Ripley",  -->
+<!--   envelopes_adults_inhomo <- envelope(Y = adults, fun = pcfinhom, divisor = 'd', -->
+<!--                                       correction = 'Ripley',  -->
 <!--                                       r = seq(from = 0, to = 45, by = 0.5),  -->
 <!--                                       nsim = 199, rank = 5) -->
 <!-- ``` -->

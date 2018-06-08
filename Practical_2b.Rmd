@@ -43,7 +43,7 @@ The same goes for the O-ring statistic.
   }
 ```
 
-The function `envelope()` can also be used to simulate more complex null models than _CSR_ and basically all functions (`fun`) that return a `fv` object. This time, we use the bivariate pair-correlation function as `fun` called `pcfcross` in `spatstat`. We need to specify the arguments of `pcfcross` `i` and `j` indicating the two types of marks. `simulate` allows us to specify any possible null model as an expression. Random labeling can be simulated with the help of `rlabel`. Lastly, we specify the number of simulation (`nsim`) and the highest/lowest values to use for the envelopes (`nrank`) and the distances at which the function should be evaluated (`r`) just as before.
+The function `envelope()` can also be used to simulate more complex null models than 'CSR' and basically all functions (`fun`) that return a `fv` object. This time, we use the bivariate pair-correlation function as `fun` called `pcfcross` in `spatstat`. We need to specify the arguments of `pcfcross` `i` and `j` indicating the two types of marks. `simulate` allows us to specify any possible null model as an expression. Random labeling can be simulated with the help of `rlabel`. Lastly, we specify the number of simulation (`nsim`) and the highest/lowest values to use for the envelopes (`nrank`) and the distances at which the function should be evaluated (`r`) just as before.
 
 ```{r, message = FALSE, warning = FALSE, results = 'hide'}
   simulaion_envelope_random_labeling <- envelope(douglas_fir_ppp, fun = pcfcross, i = 'alive', j = 'dead', 
@@ -95,15 +95,15 @@ The softcore process is very similar, with the only difference that the probabil
 ```{r, echo = FALSE,  fig.align = 'center'}
   # par(mfrow=c(1,2))
   plot(envelope_hardcore, xlim=c(0,45), 
-       main = "Univariate O-ring statistic\nhard-core process", legend = FALSE)
+       main = 'Univariate O-ring statistic\nhard-core process', legend = FALSE)
       
   plot(envelope_softcore,xlim=c(0,45), 
-       main = "Univariate O-ring statistic\nsoft-core process", legend = FALSE)
+       main = 'Univariate O-ring statistic\nsoft-core process', legend = FALSE)
   # par(mfrow=c(1,1))
 ```
 
 ## Exercise 7 
-__Task:__ Now use the data set 'DouglasFir_Adult_vs_Seedling_OG-N.txt'. Here, pattern 1 gives the locations of adult trees and pattern 2 gives the locations of seedlings. Calculate O12(r) and generate 95% confidence envelopes for the null model 'Pattern 1 fixed, pattern 2 random' (antecedent conditions). What would be a meaningful interpretation of the results?
+__Task:__ Now use the data set *DouglasFir_Adult_vs_Seedling_OGN.txt*. Here, pattern 1 gives the locations of adult trees and pattern 2 gives the locations of seedlings. Calculate O12(r) and generate 95% confidence envelopes for the null model 'Pattern 1 fixed, pattern 2 random' ('antecedent conditions'). What would be a meaningful interpretation of the results?
 
 Firstly, we import the data and convert it to a `ppp` object. Also, we reclassify the mark column to 1 == 'adults' and 2 == 'seedlings' and convert is as a factor. 
 
@@ -121,7 +121,7 @@ Firstly, we import the data and convert it to a `ppp` object. Also, we reclassif
 ```
 
 ```{r, echo = FALSE, fig.align = 'center'}
-  plot(douglas_fir_ppp, main = "Douglas fir")
+  plot(douglas_fir_ppp, main = 'Douglas fir')
 ```
 
 Now, we need to implement the bivariate O-ring statistic O12(r). We want to multiply the bivariate pair-correlation function g12(r) with the intensity of lambda2.
@@ -130,13 +130,13 @@ Now, we need to implement the bivariate O-ring statistic O12(r). We want to mult
 Oestcross <- function(input,i,j, correction = 'Ripley', r = NULL, ......){
   gij <- pcfcross(input, 
                   i = i, j = j, r = r,
-                  correction = correction, divisor = "d")
+                  correction = correction, divisor = 'd')
   lambda <- intensity(input)[j]
   eval.fv(gij * lambda)
 }
 ```
 
-`spatstat` has no build-in function to simulate a null model of _antecedent conditions_. But remember, we can give the `simulate` argument of the `envelope()` function a list of patterns. Therefore, we just need to simulate the null model and save the results in a list. 
+`spatstat` has no build-in function to simulate a null model of 'antecedent conditions'. But remember, we can give the `simulate` argument of the `envelope()` function a list of patterns. Therefore, we just need to simulate the null model and save the results in a list. 
 
 After splitting the point pattern into seedlings and adults, we create a new, random pattern with the same number of points (`n`) and the same observation window (`win`) as the seedlings. Then, we superimpose the random seedlings with the unchanged adults. Lastly, we save the result in a list.
 
@@ -144,8 +144,8 @@ After splitting the point pattern into seedlings and adults, we create a new, ra
 null_model_pattern <- list()
 
 for(i in 1:199){
-  seedlings <- subset.ppp(douglas_fir_ppp, marks == "seedlings", drop = TRUE)
-  adults <- subset(douglas_fir_ppp, marks == "adults", drop = TRUE)
+  seedlings <- subset.ppp(douglas_fir_ppp, marks == 'seedlings', drop = TRUE)
+  adults <- subset(douglas_fir_ppp, marks == 'adults', drop = TRUE)
   
   random_seedlings <- rpoint(n = seedlings$n,
                              win = seedlings$window)
@@ -160,7 +160,7 @@ Now, we can compute the simulation envelopes as usually.
 
 ```{r,  message = FALSE, warning = FALSE, results = 'hide'}
   antecedent_conditions <- envelope(douglas_fir_ppp, fun = Oestcross, 
-                                    i = "adults", j = "seedlings",
+                                    i = 'adults', j = 'seedlings',
                                     r = seq(from = 0, to = 45, by = 0.5),
                                     nsim = 199,  nrank = 5,
                                     simulate = null_model_pattern)
@@ -168,24 +168,24 @@ Now, we can compute the simulation envelopes as usually.
 
 ```{r, echo = FALSE, fig.align = 'center'}
   plot(antecedent_conditions, xlim = c(0, 45),
-       main = "Bivariate O-ring statistic\nantecedent conditions", legend = FALSE)
+       main = 'Bivariate O-ring statistic\nantecedent conditions', legend = FALSE)
 ```
 
 ## Exercise 8
 __Task:__ How does the interpretation of the 'Toroidal shift' null model differ from the null models in 7)? What is the advantage? Is it always an advantage?
 
-There is a possibility to simulate the toroidal shift null model with functions provided by `spatstat`. We just use the function `rshift()` and specify the behavior at the edge of the observation area (`edge`) and which points should be shifted (`which`).
+There is a possibility to simulate the 'toroidal shift' null model with functions provided by `spatstat`. We just use the function `rshift()` and specify the behavior at the edge of the observation area (`edge`) and which points should be shifted (`which`).
 
 ```{r, message = FALSE, warning = FALSE, results = 'hide'}
   trdl.shft <- envelope(douglas_fir_ppp, fun = Oestcross, 
-                        i = "adults", j = "seedlings",
+                        i = 'adults', j = 'seedlings',
                         r = seq(from = 0, to = 45, by = 0.5),
                         nsim = 199, nrank = 5,
-                        simulate = expression(rshift(douglas_fir_ppp, which = "seedlings", edge="torus")))
+                        simulate = expression(rshift(douglas_fir_ppp, which = 'seedlings', edge='torus')))
 ```
 ```{r, echo = FALSE, fig.align = 'center'}
   plot(trdl.shft, xlim = c(0, 45), 
-       main = "Bivariate O-ring statistic\ntoroidal shift",  legend = FALSE)
+       main = 'Bivariate O-ring statistic\ntoroidal shift',  legend = FALSE)
 ```
 
 __References__:

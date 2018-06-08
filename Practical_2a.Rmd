@@ -60,7 +60,7 @@ Plotting the pattern to control it is always a good idea. The plot function auto
 ``` 
 
 ```{r, echo = FALSE,  fig.align = 'center'}
-  plot(douglas_fir_ppp, main = "Douglas fir")
+  plot(douglas_fir_ppp, main = 'Douglas fir')
 ```
 
 `spatstat` provides most summary functions for spatial point pattern analyses (see e.g. `?Kest()`). The result is always a `fv` (function value) object. Almost all summary functions allow you to specify the edge correction (`correction`) and the distances r (`r`). But first, we subset the data because we want only to use the 'alive' trees at the moment.
@@ -115,7 +115,7 @@ plot(oring_statistic, xlim = c(0,45),
 ## Exercise 3
 __Task:__ Redo the analysis but now with simulation envelopes. How does the simulation envelope change if you change the settings for the envelope from # simulations=39/'lowest/highest'=1 to simulations=199/'lowest/highest'=5.
 
-The function `envelope` of the `spatstat` package calculates simulation envelopes. The number of simulations can be specified with the argument `nsim`, the lowest/highest values with the argument `rank`. When not specified otherwise, the functions uses _CSR_ as null model. The `fun` argument can handle any summary function that `spatstat` provides (or the ones we implemented as long as they return a `fv` object).
+The function `envelope` of the `spatstat` package calculates simulation envelopes. The number of simulations can be specified with the argument `nsim`, the lowest/highest values with the argument `rank`. When not specified otherwise, the functions uses 'CSR' as null model. The `fun` argument can handle any summary function that `spatstat` provides (or the ones we implemented as long as they return a `fv` object).
 
 ```{r, message=FALSE, warning=FALSE, results = 'hide'}
   simulation_envelope_39 <- envelope(Y = alive, fun = Oest, 
