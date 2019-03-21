@@ -1,11 +1,11 @@
 ## Spatial statistics
 
-Practicals for Spatial statistics class taught at University of Goettingen by the Department of Ecosystem Modeling. For more information, click [here](https://ecampus.uni-goettingen.de/sb/rds?state=verpublish&status=init&vmfile=no&moduleCall=webInfo&publishConfFile=webInfo&publishSubDir=veranstaltung&veranstaltung.veranstid=231382)
+Practicals for Spatial statistics class taught at University of Goettingen by the Department of Ecosystem Modeling. For more information, click [here](https://ecampus.uni-goettingen.de/sb/rds?state=verpublish&status=init&vmfile=no&moduleCall=webInfo&publishConfFile=webInfo&publishSubDir=veranstaltung&veranstaltung.veranstid=231382).
 
-Lectures:
+Instructors:
 
 * Prof. Dr. Kerstin Wiegand
-* Dr. Craig E. Simpkins
+* Dr. Craig Simpkins
 * Maximilian Hesselbarth (Practicals)
 
 #### Aims:
