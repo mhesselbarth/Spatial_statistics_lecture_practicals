@@ -1,0 +1,26 @@
+---
+title: "Spatial statistics"
+author: "Kerstin Wiegand, Craig Simpkins, Maximilian Hesselbarth"
+date: "Summer semester 2019"
+output: html_document
+---
+
+# ... continiued Homogenous null model 
+
+#### Exercise 5)
+Calculate the bivariate $g_{12}(r)$ function using the null model random labeling. Was the process that labeled trees as dead or alive a random process?
+
+For more information, see Slide 77 & 83 ff.
+
+#### Exercise 6) 
+Can the small-scale regularity in the live Douglas fir trees be modeled by a hard-core process? What about a soft-core process?
+
+For more information, see Slides 68 ff.
+
+#### Exercise 7) 
+Now use the data set _DouglasFir_Adult_vs_Seedling_OGN.dat_. Here, pattern 1 gives the locations of adult trees and pattern 2 gives the locations of seedlings. Calculate $O_{12}(r)$ and generate 95% confidence envelopes for the null model 'Pattern 1 fixed, pattern 2 random' (antecedent conditions). What would be a meaningful interpretation of the results?
+
+#### Exercise 8) 
+How does the interpretation of the 'Toroidal shift' null model differ from the null models in 7)? What is the advantage? Is it always an advantage?
+
+For more information, see  Slides 91 & Slides 96 ff.

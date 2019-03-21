@@ -29,7 +29,8 @@ __Task__: Using the data set *DouglasFir_LiveDead_OGN.txt* calculate the O-ring 
 First, we need to import the data using `read_delim()` (make sure the data is in your working direction. See `?getwd()`/`?setwd()` for help). The columns are separated by a semicolon. By using `read_delim()`, the class of the data is automatically a `tibble` (an 'advanced' version of a `data.frame`. For more information see `?tibble`). 
 
 ```{r, message = FALSE, collapse = TRUE}
-  douglas_fir <- read_delim(file = "DouglasFir_LiveDead_OGN.txt", delim = ";")
+  douglas_fir <- read_delim(file = "data/DouglasFir_LiveDead_OGN.txt",
+                            delim = ";")
   
   class(douglas_fir)
 ```
@@ -53,7 +54,9 @@ Now, we need to convert the `tibble`  to the `ppp` class of the `spatstat` packa
 Plotting the pattern to control it is always a good idea. The plot function automatically modifies the points according to their mark. Also the `summary()` function returns many helpful information about the point pattern. The functions returns the intensity, information about the marks (in this case the frequencies, proportions and intensities of the discrete classes) and information about the plot area.
 
 ```{r, collapse = TRUE}
-  plot_area <- ripras(x = douglas_fir$x, y = douglas_fir$y, shape = "rectangle")
+  plot_area <- ripras(x = douglas_fir$x, y = douglas_fir$y, 
+                      shape = "rectangle")
+
   douglas_fir_ppp <- as.ppp(X = douglas_fir, W = plot_area)
   
   summary(douglas_fir_ppp)
@@ -89,9 +92,11 @@ As you can see in the plot, however, Besag's L-function is not centered to 0. Al
    eval.fv(l_fct-r)
   }
 
-  Oest <- function(input, correction = "Ripley", r = NULL, divisor = "d", ...){
+  Oest <- function(input, r = NULL, 
+                   correction = "Ripley", divisor = "d", ...){
     
-    p_fct <- pcf.ppp(input, correction = correction, r = r, divisor = divisor, ...)
+    p_fct <- pcf.ppp(input, r = r,
+                     correction = correction, divisor = divisor, ...)
     
     lambda <- intensity(unmark(input))
     
@@ -111,11 +116,13 @@ Now, we can calculate the summary functions and plot them.
 ```
 
 ```{r, echo = FALSE,  fig.align = "center"}
-  plot(l_function,  xlim = c(0,45), 
-       main = "Univariate L-function\nliving trees", legend = FALSE)
+  plot(l_function, xlim = c(0,45), 
+       main = "Univariate L-function\nliving trees", 
+       legend = FALSE)
   
   plot(oring_statistic, xlim = c(0,45), 
-       main = "Univariate O-ring statistic\nliving trees", legend = FALSE)
+       main = "Univariate O-ring statistic\nliving trees", 
+       legend = FALSE)
 ```
 
 Alternatively, these functions are already implemented in the `onpoint` package, a small collection of utility functions based on `spatstat`. The package is only hosted on [*GitHub*](https://github.com/mhesselbarth/onpoint). To install `onpoint`, you need the `devtools` package. In case you don't have `devtools` installed yet, do it as before and simply use `install_github(repo = "mhesselbarth/onpoint")`.
@@ -127,7 +134,8 @@ Alternatively, these functions are already implemented in the `onpoint` package,
                                   r = seq(from = 0, to = 45, by = 0.5))
 
   oring_statistic <- estimate_o_ring(x = alive, 
-                                     r = seq(from = 0, to = 45, by = 0.5))
+                                     r = seq(from = 0, to = 45, 
+                                             by = 0.5))
 ```
 
 ## Exercise 3
@@ -137,20 +145,24 @@ The function `envelope` of the `spatstat` package calculates simulation envelope
 
 ```{r, message = FALSE, warning = FALSE, results = "hide"}
   simulation_envelope_39 <- envelope(Y = alive, fun = Oest,
-                                     r = seq(from = 0, to = 45, by = 0.5),
+                                     r = seq(from = 0, to = 45, 
+                                             by = 0.5),
                                      nsim = 39, nrank = 1)
 
   simulation_envelope_199 <- envelope(Y = alive, fun = Oest, 
-                                      r = seq(from = 0, to = 45, by = 0.5),
+                                      r = seq(from = 0, to = 45, 
+                                              by = 0.5),
                                       nsim = 199, nrank = 5)
 ```
 
 ```{r, echo = FALSE,  fig.align = "center"}
   plot(simulation_envelope_39, xlim = c(0,45), 
-       main = "Univariate O-ring statistic\nnsim=39, nrank=1", legend = FALSE)
+       main = "Univariate O-ring statistic\nnsim=39, nrank=1", 
+       legend = FALSE)
 
   plot(simulation_envelope_199, xlim = c(0,45), 
-       main = "Univariate O-ring statistic\nnsim=199, nrank=5", legend = FALSE)
+       main = "Univariate O-ring statistic\nnsim=199, nrank=5", 
+       legend = FALSE)
 ```
 
 ## Exercise 4 
@@ -162,16 +174,19 @@ So this time, we want to subset all 'dead' trees.
   dead <- subset(douglas_fir_ppp, marks == "dead")
 
   simulation_envelope_dead <- envelope(Y = dead, fun = Oest,
-                                       r = seq(from = 0, to = 45, by = 0.5),
+                                       r = seq(from = 0, to = 45,
+                                               by = 0.5),
                                        nsim = 199, nrank = 5)
 ```
 
 ```{r, echo = FALSE,  fig.align = "center"}
   plot(simulation_envelope_199, xlim = c(0, 45), 
-       main = "Univariate O-ring statistic\nliving trees", legend = FALSE)
+       main = "Univariate O-ring statistic\nliving trees",
+       legend = FALSE)
 
   plot(simulation_envelope_dead, xlim = c(0, 45), 
-       main = "Univariate O-ring statistic\ndead trees", legend = FALSE)
+       main = "Univariate O-ring statistic\ndead trees", 
+       legend = FALSE)
 ```
 
 ## ...some more
@@ -181,7 +196,8 @@ So this time, we want to subset all 'dead' trees.
 ```{r, fig.align = "center"}
   quantum_plot(simulation_envelope_199, 
                xlab = "r [m]", ylab = "O(r)",
-               title = "Univariate O-ring statistic\nliving trees", size = 7.5)
+               title = "Univariate O-ring statistic\nliving trees",
+               size = 7.5)
 ```
 
 __References__:

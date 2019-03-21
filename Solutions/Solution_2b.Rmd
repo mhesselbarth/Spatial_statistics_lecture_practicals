@@ -21,14 +21,16 @@ __Task:__ Calculate the bivariate g12 function using the null model random label
 In case it is not in our workspace anymore, we import the data and convert it to a `ppp` object again.
 
 ```{r, message = FALSE}
-  douglas_fir <- read_delim(file = "DouglasFir_LiveDead_OGN.txt", delim = ";")
+  douglas_fir <- read_delim(file = "data/DouglasFir_LiveDead_OGN.txt", 
+                            delim = ";")
   
   douglas_fir <- mutate(douglas_fir,
                         mark = case_when(mark == 1 ~ "alive",
                                          mark == 2 ~ "dead"),
                         mark = as.factor(mark))
   
-  plot_area <- ripras(x = douglas_fir$x, y = douglas_fir$y, shape = "rectangle")
+  plot_area <- ripras(x = douglas_fir$x, y = douglas_fir$y, 
+                      shape = "rectangle")
   
   douglas_fir_ppp <- as.ppp(X = douglas_fir, W = plot_area)
 ```
@@ -36,9 +38,11 @@ In case it is not in our workspace anymore, we import the data and convert it to
 The same goes for the O-ring statistic.
 
 ```{r}
-  Oest <- function(input, correction = "Ripley", r = NULL, divisor = "d", ...){
+  Oest <- function(input, r = NULL, 
+                   correction = "Ripley", divisor = "d", ...){
     
-    p_fct <- pcf(input, correction = correction, r = r, divisor = divisor, ...)
+    p_fct <- pcf(input, r = r, 
+                 correction = correction, divisor = divisor, ...)
     
     lambda <- intensity(unmark(input))
     
@@ -49,16 +53,18 @@ The same goes for the O-ring statistic.
 The function `envelope()` can also be used to simulate more complex null models than 'CSR' and basically all functions (`fun`) that return a `fv` object. This time, we use the bivariate pair-correlation function as `fun` called `pcfcross` in `spatstat`. We need to specify the arguments of `pcfcross` `i` and `j` indicating the two types of marks. `simulate` allows us to specify any possible null model as an expression. Random labeling can be simulated with the help of `rlabel`. Lastly, we specify the number of simulation (`nsim`) and the highest/lowest values to use for the envelopes (`nrank`) and the distances at which the function should be evaluated (`r`) just as before.
 
 ```{r, message = FALSE, warning = FALSE, results = "hide"}
-  simulation_envelope_random_labeling <- envelope(douglas_fir_ppp, 
-                                                  fun = pcfcross, i = "alive", j = "dead", 
-                                                  r = seq(from = 0, to = 45, by = 0.5),
-                                                  divisor = "d", nsim = 199, nrank = 5,
-                                                  simulate = expression(rlabel(douglas_fir_ppp)))
+  random_labeling <- envelope(douglas_fir_ppp, 
+                              fun = pcfcross, 
+                              i = "alive",  j = "dead",
+                              r = seq(from = 0, to = 45, by = 0.5),
+                              divisor = "d", nsim = 199, nrank = 5,
+                              simulate = expression(rlabel(douglas_fir_ppp)))
 ```
 
 ```{r, echo = FALSE,  fig.align = "center"}
-  plot(simulation_envelope_random_labeling, xlim = c(0, 45), 
-       main = "Bivariate pair correlation function\nrandom labelling", legend = FALSE)
+  plot(random_labeling, xlim = c(0, 45), 
+       main = "Bivariate pair correlation function\nrandom labelling",
+       legend = FALSE)
 ```
 
 ## Exercise 6
@@ -99,10 +105,12 @@ The softcore process is very similar, with the only difference that the probabil
 ```{r, echo = FALSE,  fig.align = "center"}
   # par(mfrow=c(1,2))
   plot(envelope_hardcore, xlim = c(0,45), 
-       main = "Univariate O-ring statistic\nhard-core process", legend = FALSE)
+       main = "Univariate O-ring statistic\nhard-core process",
+       legend = FALSE)
       
   plot(envelope_softcore,xlim = c(0,45), 
-       main = "Univariate O-ring statistic\nsoft-core process", legend = FALSE)
+       main = "Univariate O-ring statistic\nsoft-core process", 
+       legend = FALSE)
   # par(mfrow=c(1,1))
 ```
 
@@ -112,14 +120,16 @@ __Task:__ Now use the data set *DouglasFir_Adult_vs_Seedling_OGN.txt*. Here, pat
 Firstly, we import the data and convert it to a `ppp` object. Also, we reclassify the mark column to 1 == 'adults' and 2 == 'seedlings' and convert is as a factor. 
 
 ```{r}
-  douglas_fir <- read_delim(file = "DouglasFir_Adult_vs_Seedling_OGN.txt", delim = ";")
+  douglas_fir <- read_delim(file = "data/DouglasFir_Adult_vs_Seedling_OGN.txt", 
+                            delim = ";")
   
   douglas_fir <- mutate(douglas_fir,
                         mark = case_when(mark == 1 ~ "adults",
                                          mark == 2 ~ "seedlings"),
                         mark = as.factor(mark))
   
-  plot_area <- ripras(x = douglas_fir$x, y = douglas_fir$y, shape = "rectangle")
+  plot_area <- ripras(x = douglas_fir$x, y = douglas_fir$y, 
+                      shape = "rectangle")
   
   douglas_fir_ppp <- as.ppp(X = douglas_fir, W = plot_area)
 ```
@@ -131,7 +141,8 @@ Firstly, we import the data and convert it to a `ppp` object. Also, we reclassif
 Now, we need to implement the bivariate O-ring statistic O12(r). We want to multiply the bivariate pair-correlation function g12(r) with the intensity of lambda2.
 
 ```{r}
-Oest_cross <- function(input,i,j, correction = "Ripley", r = NULL, divisor = "d", ...){
+Oest_cross <- function(input, i, j, r = NULL,
+                       correction = "Ripley", divisor = "d", ...){
   
   gij <- pcfcross(input, 
                   i = i, j = j, r = r,
@@ -151,7 +162,8 @@ After splitting the point pattern into seedlings and adults, we create a new, ra
 null_model_pattern <- list()
 
 for(i in 1:199){
-  seedlings <- subset.ppp(douglas_fir_ppp, marks == "seedlings", drop = TRUE)
+  seedlings <- subset.ppp(douglas_fir_ppp, 
+                          marks == "seedlings", drop = TRUE)
   
   adults <- subset.ppp(douglas_fir_ppp, marks == "adults", drop = TRUE)
   
@@ -168,16 +180,19 @@ for(i in 1:199){
 Now, we can compute the simulation envelopes as usually.
 
 ```{r,  message = FALSE, warning = FALSE, results = "hide"}
-  antecedent_conditions <- envelope(douglas_fir_ppp, fun = Oest_cross, 
+  antecedent_conditions <- envelope(douglas_fir_ppp, 
+                                    fun = Oest_cross, 
                                     i = "adults", j = "seedlings",
-                                    r = seq(from = 0, to = 45, by = 0.5),
+                                    r = seq(from = 0, to = 45, 
+                                            by = 0.5),
                                     nsim = 199,  nrank = 5,
                                     simulate = null_model_pattern)
 ```
 
 ```{r, echo = FALSE, fig.align = "center"}
   plot(antecedent_conditions, xlim = c(0, 45),
-       main = "Bivariate O-ring statistic\nantecedent conditions", legend = FALSE)
+       main = "Bivariate O-ring statistic\nantecedent conditions",
+       legend = FALSE)
 ```
 
 ## Exercise 8
@@ -190,19 +205,17 @@ toroidal_shift <- envelope(douglas_fir_ppp, fun = Oest_cross,
                            i = "adults", j = "seedlings",
                            r = seq(from = 0, to = 45, by = 0.5),
                            nsim = 199, nrank = 5,
-                           simulate = expression(rshift(douglas_fir_ppp, 
-                                                        which = "seedlings", edge = "torus")))
+                           simulate = expression(rshift(douglas_fir_ppp,
+                                                        which = "seedlings", 
+                                                        edge = "torus")))
 ```
 
 ```{r, echo = FALSE, fig.align = "center"}
 plot(toroidal_shift, xlim = c(0, 45), 
-     main = "Bivariate O-ring statistic\ntoroidal shift",  legend = FALSE)
+     main = "Bivariate O-ring statistic\ntoroidal shift",  
+     legend = FALSE)
 ```
 
 __References__:
 
-Baddeley, A., Rubak, E., Turner, R., 2015. Spatial point patterns: Methodology and applications with R. Chapman and Hall/CRC Press, London.
-
-Getzin, S., Dean, C., He, F., Trofymow, J.A., Wiegand, K., Wiegand, T., 2006. Spatial patterns and competition of tree species in a Douglas fir chronosequence on Vancouver Island. Ecography, 29, 671-682.
-
-Getzin, S., Wiegand, T., Wiegand, K., He, F., 2008. Heterogeneity influences spatial patterns and demographics in forest stands. J. Ecol. 96, 807-820.
+< ADD REFERENCES > 
