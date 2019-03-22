@@ -1,11 +1,18 @@
 ---
-title: "Spatial statistics"	
-author: "Kerstin Wiegand, Craig Simpkins, Maximilian Hesselbarth"	
-date: "Summer semester 2019"	
-output: html_document
+title: "Spatial statistics"
+author: "Kerstin Wiegand, Craig Simpkins, Maximilian Hesselbarth"
+date: "Summer semester 2019"
+output:
+  prettydoc::html_pretty:
+    theme: architect
+    highlight: vignette
 editor_options: 
   chunk_output_type: console
 ---
+
+```{r, echo = FALSE, fig.align = "center"}
+knitr::include_graphics("logo.png", auto_pdf = FALSE)
+```
 
 # Practical 3a
 
@@ -22,7 +29,7 @@ __Task:__ Perform a point-pattern analysis on the *Hemlock_Adults_vs_SmallSaps.t
 We import the data first and convert it as `ppp`. Also, we reclassify the marks as 1 == 'adults' and 2 == 'saplings'.
 
 ```{r, message = FALSE, collapse = TRUE}
-  hemlock <- read_delim(file = "data/Hemlock_Adults_vs_SmallSaps.txt", 
+  hemlock <- read_delim(file = "Data/Hemlock_Adults_vs_SmallSaps.txt", 
                         delim = ";")
   
   hemlock <- mutate(hemlock,
@@ -125,7 +132,7 @@ __Task:__ The data set *Alive_DouglasFir_OGN.txt* contains the location and stem
 First, we need to import the data, convert as `ppp` and have a look at the data. This time, the marks are continuous, i.e. the diameter at breast height in cm of each tree. Therefore, the `summary()` function automatically gives the mean, median and quantiles of the data. Also, the plot automatically scales the point according to their size. 
 
 ```{r, message = FALSE, collapse = TRUE}
-  douglas_fir <- read_delim(file = "data/Alive_DouglasFir_OGN.txt", 
+  douglas_fir <- read_delim(file = "Data/Alive_DouglasFir_OGN.txt", 
                             delim = ";")
   
   plot_area <- ripras(x = douglas_fir$x, y = douglas_fir$y, 
@@ -183,7 +190,7 @@ __Task:__ In the data set *Hemlock_Adults_vs_SmallSaps.txt*, you can observe a c
 We import the data, classify it and convert it as a `ppp` object. We plot the point pattern of only adult trees and have a look at the summary.
 
 ```{r, message = FALSE, collapse = TRUE}
-  hemlock <- read_delim(file = "data/Hemlock_Adults_vs_SmallSaps.txt", 
+  hemlock <- read_delim(file = "Data/Hemlock_Adults_vs_SmallSaps.txt", 
                         delim = ";")
   
   hemlock <- mutate(hemlock,

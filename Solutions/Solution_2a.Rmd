@@ -2,10 +2,17 @@
 title: "Spatial statistics"
 author: "Kerstin Wiegand, Craig Simpkins, Maximilian Hesselbarth"
 date: "Summer semester 2019"
-output: html_document
+output:
+  prettydoc::html_pretty:
+    theme: architect
+    highlight: vignette
 editor_options: 
   chunk_output_type: console
 ---
+
+```{r, echo = FALSE, fig.align = "center"}
+knitr::include_graphics("logo.png", auto_pdf = FALSE)
+```
 
 # Practical 2a
 
@@ -29,7 +36,7 @@ __Task__: Using the data set *DouglasFir_LiveDead_OGN.txt* calculate the O-ring 
 First, we need to import the data using `read_delim()` (make sure the data is in your working direction. See `?getwd()`/`?setwd()` for help). The columns are separated by a semicolon. By using `read_delim()`, the class of the data is automatically a `tibble` (an 'advanced' version of a `data.frame`. For more information see `?tibble`). 
 
 ```{r, message = FALSE, collapse = TRUE}
-  douglas_fir <- read_delim(file = "data/DouglasFir_LiveDead_OGN.txt",
+  douglas_fir <- read_delim(file = "Data/DouglasFir_LiveDead_OGN.txt",
                             delim = ";")
   
   class(douglas_fir)

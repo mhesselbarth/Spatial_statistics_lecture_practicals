@@ -1,11 +1,19 @@
 ---
-title: "Spatial statistics"	
-author: "Kerstin Wiegand, Craig Simpkins, Maximilian Hesselbarth"	
-date: "Summer semester 2019"	
-output: html_document
+title: "Spatial statistics"
+author: "Kerstin Wiegand, Craig Simpkins, Maximilian Hesselbarth"
+date: "Summer semester 2019"
+output:
+  prettydoc::html_pretty:
+    theme: architect
+    highlight: vignette
 editor_options: 
   chunk_output_type: console
 ---
+
+```{r, echo = FALSE, fig.align = "center"}
+knitr::include_graphics("logo.png", auto_pdf = FALSE)
+```
+
 # Practical 2b
 
 First, we load all needed packages, just as before.
@@ -21,7 +29,7 @@ __Task:__ Calculate the bivariate g12 function using the null model random label
 In case it is not in our workspace anymore, we import the data and convert it to a `ppp` object again.
 
 ```{r, message = FALSE}
-  douglas_fir <- read_delim(file = "data/DouglasFir_LiveDead_OGN.txt", 
+  douglas_fir <- read_delim(file = "Data/DouglasFir_LiveDead_OGN.txt", 
                             delim = ";")
   
   douglas_fir <- mutate(douglas_fir,
@@ -120,7 +128,7 @@ __Task:__ Now use the data set *DouglasFir_Adult_vs_Seedling_OGN.txt*. Here, pat
 Firstly, we import the data and convert it to a `ppp` object. Also, we reclassify the mark column to 1 == 'adults' and 2 == 'seedlings' and convert is as a factor. 
 
 ```{r}
-  douglas_fir <- read_delim(file = "data/DouglasFir_Adult_vs_Seedling_OGN.txt", 
+  douglas_fir <- read_delim(file = "Data/DouglasFir_Adult_vs_Seedling_OGN.txt", 
                             delim = ";")
   
   douglas_fir <- mutate(douglas_fir,
@@ -218,4 +226,8 @@ plot(toroidal_shift, xlim = c(0, 45),
 
 __References__:
 
-< ADD REFERENCES > 
+Baddeley, A., Rubak, E., Turner, R., 2015. Spatial point patterns: Methodology and applications with R. Chapman and Hall/CRC Press, London.
+
+Getzin, S., Dean, C., He, F., Trofymow, J.A., Wiegand, K., Wiegand, T., 2006. Spatial patterns and competition of tree species in a Douglas fir chronosequence on Vancouver Island. Ecography, 29, 671-682.
+
+Getzin, S., Wiegand, T., Wiegand, K., He, F., 2008. Heterogeneity influences spatial patterns and demographics in forest stands. J. Ecol. 96, 807-820.
