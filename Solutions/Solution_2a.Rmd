@@ -132,7 +132,7 @@ Now, we can calculate the summary functions and plot them.
        legend = FALSE)
 ```
 
-Alternatively, these functions are already implemented in the `onpoint` package, a small collection of utility functions based on `spatstat`. The package is only hosted on [*GitHub*](https://github.com/mhesselbarth/onpoint). To install `onpoint`, you need the `devtools` package. In case you don't have `devtools` installed yet, do it as before and simply use `install_github(repo = "mhesselbarth/onpoint")`.
+Alternatively, these functions are already implemented in the `onpoint` package, a small collection of utility functions based on `spatstat`. The package is only hosted on [*GitHub*](https://r-spatialecology.github.io/onpoint/). To install `onpoint`, you need the `devtools` package. In case you don't have `devtools` installed yet, do it as before and simply use `install_github(repo = "r-spatialecology/onpoint")`.
 
 ```{r}
   library(onpoint)
@@ -201,10 +201,10 @@ So this time, we want to subset all 'dead' trees.
 `onpoint` also provides a plotting function for `envelope` objects. Similar to `spatstat`, the simulation envelopes as well as the observed value are included, however, so-called 'quantum bars' indicate the location of the observed value in relation to the envelopes.
 
 ```{r, fig.align = "center"}
-  quantum_plot(simulation_envelope_199, 
-               xlab = "r [m]", ylab = "O(r)",
-               title = "Univariate O-ring statistic\nliving trees",
-               size = 7.5)
+  plot_quantums(simulation_envelope_199, 
+                xlab = "r [m]", ylab = "O(r)",
+                title = "Univariate O-ring statistic\nliving trees",
+                size = 7.5)
 ```
 
 __References__:

@@ -283,6 +283,8 @@ Now, we can use the simulated point patterns as input for `envelope()` to create
        main = "Heterogenous Poisson process")
 ```
 
+There is a wrapper around these function in [`onpoint`](https://r-spatialecology.github.io/onpoint/) to simulate a heterogenous Poisson process as null model (see `?simulate_heterogenous_pattern`).
+
 Alternativly, `spatstat` can calculated the inhomogenous pair-correlation function and consider the heterogneous plot conditions while estimating the pair-correlation function.
 
 ```{r, results = "hide"}

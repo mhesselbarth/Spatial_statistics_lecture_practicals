@@ -203,6 +203,8 @@ Now, we can compute the simulation envelopes as usually.
        legend = FALSE)
 ```
 
+The [`onpoint`](https://r-spatialecology.github.io/onpoint/) package also includes an function to simulate antecedent conditions as null model (see `?simulate_antecedent_conditions` for help).
+
 ## Exercise 8
 __Task:__ How does the interpretation of the 'Toroidal shift' null model differ from the null models in 7)? What is the advantage? Is it always an advantage?
   
