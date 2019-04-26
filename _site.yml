@@ -1,4 +1,5 @@
 name: "spatial-statistics"
+output_dir: "."
 navbar:
   title: "Spatial statistics"
   left:
@@ -42,4 +43,3 @@ navbar:
       - text: "Github" 
         icon: fa-github fa-lg
         href: https://github.com/r-spatialecology/
-
