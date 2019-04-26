@@ -11,12 +11,13 @@ You can choose if you prefer the results using [Programita](http://programita.or
 
 In case you have any questions or trouble, please write me an e-mail or come to my office at any time. You can find my contact information under "More..." on this homepage.
 
-All data can be found here:
+All data can be found here. Please be aware and credit that the data was published (Getzin et al. 2006, Getzin et al. 2008):
 ```{r echo=FALSE}
 xfun::embed_file('Data.zip')
 ```
 
-Please be aware and credit that the data was published:
+**References**
+
 Getzin, S., Dean, C., He, F., Trofymow, J.A., Wiegand, K., Wiegand, T., 2006. Spatial patterns and competition of tree species in a Douglas fir chronosequence on Vancouver Island. Ecography, 29, 671-682.
 
 Getzin, S., Wiegand, T., Wiegand, K., He, F., 2008. Heterogeneity influences spatial patterns and demographics in forest stands. J. Ecol. 96, 807-820.

@@ -31,7 +31,7 @@ Also look at the functions $O_{22}(r)$ and $L_{22}(r)$. You can do so by checkin
 
 For more information, see Slides 11 ff. & Slides 63 ff.
 
-… to be continued later today …
+...to be continued later today...
 
 ```{r p_2a_plot_example, echo = FALSE, message = FALSE, fig.align = "center", fig.width = 5, fig.height = 5}
   library(ggplot2)
