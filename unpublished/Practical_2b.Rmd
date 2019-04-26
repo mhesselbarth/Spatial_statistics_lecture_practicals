@@ -1,0 +1,52 @@
+---
+title: "Homogenous null model"
+author: "Wiegand, Simpkins, Hesselbarth"
+date: "Summer semester 2019"
+output: 
+  html_document:
+    theme: cosmo
+editor_options: 
+  chunk_output_type: console
+---
+
+... continiued Homogenous null model
+
+For more information, please see _Homo_NullModels.pptx_.
+
+### Exercise 5)
+Calculate the bivariate $g_{12}(r)$ function using the null model random labeling. Was the process that labeled trees as dead or alive a random process?
+
+For more information, see Slide 77 & 83 ff.
+
+### Exercise 6) 
+Can the small-scale regularity in the live Douglas fir trees be modeled by a hard-core process? What about a soft-core process?
+
+For more information, see Slides 68 ff.
+
+### Exercise 7) 
+Now use the data set _DouglasFir_Adult_vs_Seedling_OGN.dat_. Here, pattern 1 gives the locations of adult trees and pattern 2 gives the locations of seedlings. Calculate $O_{12}(r)$ and generate 95% confidence envelopes for the null model 'Pattern 1 fixed, pattern 2 random' (antecedent conditions). What would be a meaningful interpretation of the results?
+
+### Exercise 8) 
+How does the interpretation of the 'Toroidal shift' null model differ from the null models in 7)? What is the advantage? Is it always an advantage?
+
+For more information, see  Slides 91 & Slides 96 ff.
+
+```{r p_2b_plot_example, echo = FALSE, message = FALSE, fig.align = "center", fig.width = 5, fig.height = 5}
+  library(ggplot2)
+  library(spatstat)
+
+  data <- read.table("Data/DouglasFir_LiveDead_OGN.txt", 
+                     sep = ";", dec = ".", header = TRUE)
+  
+  window <- spatstat::ripras(data[,1:2], shape = "rectangle")
+
+  ggplot2::ggplot(data = data) + 
+     ggplot2::geom_polygon(data = as.data.frame(window),
+                           ggplot2::aes(x = x, y = y),
+                           col = "black", fill = "grey85") +
+    ggplot2::geom_point(ggplot2::aes(x = x, y = y, col = mark)) + 
+    ggplot2::coord_equal() + 
+    ggplot2::scale_color_viridis_c() + 
+    ggplot2::guides(col = FALSE) + 
+    ggplot2::theme_void()
+```

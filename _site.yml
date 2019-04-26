@@ -1,0 +1,45 @@
+name: "spatial-statistics"
+navbar:
+  title: "Spatial statistics"
+  left:
+    - text: "Home"
+      icon: fa-home
+      href: index.html
+    - text: "About"
+      icon: fa-question
+      href: about.html
+  right:
+    - text: "Practicals"
+      icon: fa-tasks
+      menu:
+        - text: "Practical 2a"
+          icon: fa-clipboard-check
+          href: Practical_2a.html
+        - text: "Practical 2b"
+          icon: fa-clock
+          href: Practical_2b.html
+        - text: "Practical 3"
+          icon: fa-clock
+          href: Practical_3.html
+    - text: "Solutions"
+      icon: fa-check
+      menu:
+        - text: "Solution 2a"
+          icon: fa-clock
+          href: Solution_2a.html
+        - text: "Solution 2b"
+          icon: fa-clock
+          href: Solution_2b.html
+        - text: "Solution 3"
+          icon: fa-clock
+          href: Solution_3.html
+    - text: "More..."
+      icon: fa-ellipsis-h
+      menu:
+      - text: "Contact"
+        icon: fa-user
+        hreft: https://mhesselbarth.rbind.io
+      - text: "Github" 
+        icon: fa-github fa-lg
+        href: https://github.com/r-spatialecology/
+
