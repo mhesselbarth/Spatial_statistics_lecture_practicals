@@ -5,10 +5,6 @@ output:
     theme: cosmo
 ---
 
-```{r p3_logo, echo = FALSE, fig.align = "center"}
-knitr::include_graphics("logo.png", auto_pdf = FALSE)
-```
-
 Practicals for Spatial statistics class taught at University of Goettingen by the Department of Ecosystem Modeling. For more information, click [here](https://ecampus.uni-goettingen.de/sb/rds?state=verpublish&status=init&vmfile=no&moduleCall=webInfo&publishConfFile=webInfo&publishSubDir=veranstaltung&veranstaltung.veranstid=231382).
 
 **Instructors**: 
@@ -23,3 +19,6 @@ Planning and execution of a scientific investigation based on spatial statistics
 **Statistical contents**:
 Intensity of a point pattern, K-, g- and 0-funktions, Mark correlation functions, Null models, Inhomogeneity, Monte-Carlo simulations and point processes; Collection of own field data; Analysis of own and/or sample data sets; Presentation and discussion of current ecological literature on point pattern analysis.
 
+```{r p3_logo, echo = FALSE, fig.align = "center"}
+knitr::include_graphics("logo.png", auto_pdf = FALSE)
+```
