@@ -1,0 +1,15 @@
+---
+title: "1st order properties – comparing theoretical Poisson distribution against empirical data"
+author: "Wiegand, Simpkins, Hesselbarth"
+date: "Summer semester 2019"
+output: 
+  html_document:
+    theme: cosmo
+editor_options: 
+  chunk_output_type: console
+---
+
+Please find the introduction here:
+```{r echo=FALSE}
+xfun::embed_file('Practical_1_slides.pdf')
+```

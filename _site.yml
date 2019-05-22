@@ -13,8 +13,11 @@ navbar:
     - text: "Practicals"
       icon: fa-tasks
       menu:
-        - text: "Practical 2a"
+        - text: "Practical 1"
           icon: fa-clipboard-check
+          href: Practical_1.html
+        - text: "Practical 2a"
+          icon: fa-clock
           href: Practical_2a.html
         - text: "Practical 2b"
           icon: fa-clock

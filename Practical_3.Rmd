@@ -1,5 +1,5 @@
 ---
-title: "Homogenous null model"
+title: "Cluster processes / Mark correlation function / Heterogenous conditions"
 author: "Wiegand, Simpkins, Hesselbarth"
 date: "Summer semester 2019"
 output: 
