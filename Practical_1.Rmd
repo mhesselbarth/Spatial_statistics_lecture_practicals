@@ -9,7 +9,4 @@ editor_options:
   chunk_output_type: console
 ---
 
-Please find the introduction here:
-```{r echo=FALSE}
-xfun::embed_file('Practical_1_slides.pdf')
-```
+Please find the introduction [click here](Practical_1_slides.pdf)
