@@ -1,0 +1,20 @@
+---
+title: "1st order properties"
+author: "Wiegand, Simpkins, Hesselbarth"
+date: "Summer semester 2019"
+output: 
+  html_document:
+    theme: cosmo
+editor_options: 
+  chunk_output_type: console
+---
+
+<br>
+<br>
+<br>
+
+<center>
+This site will be published once the material was covered in the lecture.
+
+![](https://media.giphy.com/media/Wdzvwq7oePwek/giphy.gif)
+</center>

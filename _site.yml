@@ -28,6 +28,9 @@ navbar:
     - text: "Solutions"
       icon: fa-check
       menu:
+        - text: "Solution 1"
+          icon: fa-clock
+          href: Solution_1.html
         - text: "Solution 2a"
           icon: fa-clock
           href: Solution_2a.html
