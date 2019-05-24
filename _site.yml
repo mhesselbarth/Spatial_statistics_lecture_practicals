@@ -17,7 +17,7 @@ navbar:
           icon: fa-clipboard-check
           href: Practical_1.html
         - text: "Practical 2a"
-          icon: fa-clipboard-check
+          icon: fa-clock
           href: Practical_2a.html
         - text: "Practical 2b"
           icon: fa-clock
@@ -29,7 +29,7 @@ navbar:
       icon: fa-check
       menu:
         - text: "Solution 1"
-          icon: fa-clock
+          icon: fa-clipboard-check
           href: Solution_1.html
         - text: "Solution 2a"
           icon: fa-clock
