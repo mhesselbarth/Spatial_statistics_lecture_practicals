@@ -13,6 +13,10 @@ editor_options:
 <br>
 <br>
 
+```{r p3_logo, echo = FALSE, fig.align = "center", out.width = '50%'}
+knitr::include_graphics("coin_flip.jpg", auto_pdf = FALSE)
+```
+
 An exemplary solution using the _Excel_ template can be found here [here](Practical_1_coin_table_solution.xlsx).
 
 We counted points covered by 35 coins that were randomly dropped onto the point pattern. The total number of points found within the circles divided by 35 gives you an estimate of the point density $\lambda$ (events per area). Note, the area here is not given in 'coin area' not $m^2$.
