@@ -19,6 +19,8 @@ Planning and execution of a scientific investigation based on spatial statistics
 **Statistical contents**:
 Intensity of a point pattern, K-, g- and 0-funktions, Mark correlation functions, Null models, Inhomogeneity, Monte-Carlo simulations and point processes; Collection of own field data; Analysis of own and/or sample data sets; Presentation and discussion of current ecological literature on point pattern analysis.
 
+Please see the [**?About**](https://mhesselbarth.github.io/spatial_statistics_practicals/) page for more information.
+
 ```{r p3_logo, echo = FALSE, fig.align = "center", out.width = '50%'}
 knitr::include_graphics("logo.png", auto_pdf = FALSE)
 ```
