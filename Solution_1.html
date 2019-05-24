@@ -320,7 +320,7 @@ $(document).ready(function () {
     </li>
     <li>
       <a href="Practical_2a.html">
-        <span class="fa fa-clock"></span>
+        <span class="fa fa-clipboard-check"></span>
          
         Practical 2a
       </a>
@@ -422,10 +422,12 @@ $(document).ready(function () {
 
 
 <p><br> <br> <br></p>
-<center>
-<p>This site will be published once the material was covered in the lecture.</p>
-<img src="https://media.giphy.com/media/Wdzvwq7oePwek/giphy.gif" />
-</center>
+<p>An exemplary solution using the <em>Excel</em> template can be found here <a href="Practical_1_coin_table_solution.xlsx">here</a>.</p>
+<p>We counted points covered by 35 coins that were randomly dropped onto the point pattern. The total number of points found within the circles divided by 35 gives you an estimate of the point density <span class="math inline">\(\lambda\)</span> (events per area). Note, the area here is not given in ‘coin area’ not <span class="math inline">\(m^2\)</span>.</p>
+<p>Using this density <span class="math inline">\(\lambda\)</span>, we calculated the probability of a coin covering n points if the points were randomly distributed. This probability multiplied by 35 gives the expected number of coins in the experiment that cover n points.</p>
+<p>We used a statistical test if your actual counts significantly deviated from the Poisson distribution. This means we tested if the points are randomly distributed. We used a chi-squared test (<span class="math inline">\(\chi^2\)</span>-test) which also works well for small sample sizes. The sample size <span class="math inline">\(k\)</span> is the number of classes (sample categories), i.e. if up to 5 points in a circle were counted, there are 6 classes (<span class="math inline">\(n=0, n=1, ..., n=5\)</span>). The test requires the expected number of discoveries in a sample category to be (as a rule of thumb) at least 3. Therefore, we merged categories 2-6 to be one category, leaving only three sample categories (<span class="math inline">\(n=0, n=1, n&gt;1\)</span>).</p>
+<p>The <span class="math inline">\(\chi^2\)</span>-value is compared to the corresponding value from the <span class="math inline">\(\chi^2\)</span>-distribution. The degrees of freedom (d.f.) was only 1, because we had only three sample categories and we had to subtract 2 d.f. because we 1) estimated the point density <span class="math inline">\(\lambda\)</span> from our data and 2) the number of sample categories <span class="math inline">\(k\)</span> also depended on our data, i.e. in your experiments you might have ended up with more than 3 categories. The critical value of the <span class="math inline">\(\chi^2\)</span>-distribution can be looked up in statistics textbooks and is also included in all statistical software, e.g. in <em>Excel</em> (=CHISQ.INV(0095;1)) or in <em>R</em> (qchisq(q=0.95, df=1)). In case the null hypothesis was rejected, the points in pattern are not random.</p>
+<p>Although in the experiment showed there were signs of the points being not randomly distributed, we finally used an index of dispersion to see if there is a (non-significant) tendency towards clustering or regularity in the pattern. Because in the Poisson-case the variance of our counts <span class="math inline">\(s^2\)</span> equals its mean density <span class="math inline">\(\lambda\)</span>, we can use the index of dispersion, which is 1 if the points are randomly distributed and larger if they are clustered.</p>
 
 
 

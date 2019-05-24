@@ -17,7 +17,7 @@ navbar:
           icon: fa-clipboard-check
           href: Practical_1.html
         - text: "Practical 2a"
-          icon: fa-clock
+          icon: fa-clipboard-check
           href: Practical_2a.html
         - text: "Practical 2b"
           icon: fa-clock
