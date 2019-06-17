@@ -16,7 +16,7 @@ Using the data set _DouglasFir_LiveDead_OGN.dat_ calculate O-ring statistics and
 
 For more information, see Slides 6 ff., Slides 26 & Slides 52 ff.
 
-###Exercise 2)
+### Exercise 2)
 The L-function is said to have a memory effect because of its cumulative nature (counting points within discs instead of circles compared to the O-statistic). Can you see it in your results?
 
 For more information, see Slides 26 & Slides 52 ff.
