@@ -32,10 +32,10 @@ navbar:
           icon: fa-clipboard-check
           href: Solution_1.html
         - text: "Solution 2a"
-          icon: fa-clock
+          icon: fa-clipboard-check
           href: Solution_2a.html
         - text: "Solution 2b"
-          icon: fa-clock
+          icon: fa-clipboard-check
           href: Solution_2b.html
         - text: "Solution 3"
           icon: fa-clock
