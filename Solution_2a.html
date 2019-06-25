@@ -421,11 +421,149 @@ $(document).ready(function () {
 </div>
 
 
-<p><br> <br> <br></p>
-<center>
-<p>This site will be published once the material was covered in the lecture.</p>
-<img src="https://media.giphy.com/media/Wdzvwq7oePwek/giphy.gif" />
-</center>
+<p><img src="logo.png" width="182" style="display: block; margin: auto;" /></p>
+<p>First, we need to import the <a href="https://spatstat.org"><code>spatstat</code></a> package for analyzing spatial point patterns. Also, we import the <a href="https://www.tidyverse.org"><code>tidyverse</code></a> package, a collection of <code>R</code> packages designed for data science.</p>
+<pre class="r"><code>  library(spatstat)
+  library(tidyverse)</code></pre>
+<p>If you don’t have the packages already installed, run the following code in order to install them.</p>
+<pre class="r"><code>  install.packages(c(&quot;spatstat&quot;, &quot;tidyverse&quot;))</code></pre>
+<div id="exercise-1" class="section level3">
+<h3>Exercise 1</h3>
+<p><strong>Task</strong>: Using the data set <em>DouglasFir_LiveDead_OGN.txt</em> calculate the O-ring statistic and the L-function. Here, pattern 1 gives the locations of live trees and pattern 2 gives the locations of dead trees. Comparing the univariate measures O11(r) and L11(r), how do they differ?</p>
+<p>First, we need to import the data using <code>read_delim()</code> (make sure the data is in your working direction. See <code>?getwd()</code>/<code>?setwd()</code> for help). The columns are separated by a semicolon. By using <code>read_delim()</code>, the class of the data is automatically a <code>tibble</code> (an ‘advanced’ version of a <code>data.frame</code>. For more information see <code>?tibble</code>).</p>
+<pre class="r"><code>  douglas_fir &lt;- read_delim(file = &quot;Data/DouglasFir_LiveDead_OGN.txt&quot;,
+                            delim = &quot;;&quot;)
+  
+  class(douglas_fir)
+## [1] &quot;spec_tbl_df&quot; &quot;tbl_df&quot;      &quot;tbl&quot;         &quot;data.frame&quot;</code></pre>
+<p>Print the data. The <code>tibble</code> contains 668 rows (one for each tree) and 3 columns(x-coordinate, y-coordinate and the marks).</p>
+<pre class="r"><code>  print(douglas_fir, collapse = TRUE)</code></pre>
+<pre><code>## # A tibble: 668 x 3
+##        x      y  mark
+##    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+##  1  69.9 43.9       1
+##  2  10.2 60.1       1
+##  3  50.4 25.5       1
+##  4  40.1  1.03      1
+##  5  40.7 15.7       1
+##  6  54.2  0.382     1
+##  7  41.8 46.3       1
+##  8  59.8 28.0       1
+##  9  75.7 69.2       1
+## 10  48.6 14.1       1
+## # ... with 658 more rows</code></pre>
+<p>We want to edit the column ‘mark’ in a way that 1 == ‘alive’ and 2 == ‘dead’. We are using two functions of the <code>dplyr</code> package. <code>mutate()</code> creates a new column (actually we overwrite the already existing column ‘mark’) and <code>case_when()</code> classifies the data. Lastly, we convert the column as <code>factors</code>.</p>
+<pre class="r"><code>  douglas_fir &lt;- mutate(douglas_fir,
+                        mark = case_when(mark == 1 ~ &quot;alive&quot;,
+                                         mark == 2 ~ &quot;dead&quot;),
+                        mark = as.factor(mark))</code></pre>
+<p>Now, we need to convert the <code>tibble</code> to the <code>ppp</code> class of the <code>spatstat</code> packages. Firstly, we need to specify our plot area (<code>spatstat</code> calls this observation window) using <code>ripras()</code>. The function calculates a window based on the provided x- and y-coordinates (the results is returned as a <code>owin</code>). We can specify the shape of the window using the <code>shape</code> argument. Secondly, we convert the <code>tibble</code> to a <code>ppp</code>. The <code>tibble</code> contains the coordinates and the marks as columns and we just need additionally to specify the observation window with the just created <code>owin</code> object.</p>
+<p>Plotting the pattern to control it is always a good idea. The plot function automatically modifies the points according to their mark. Also the <code>summary()</code> function returns many helpful information about the point pattern. The functions returns the intensity, information about the marks (in this case the frequencies, proportions and intensities of the discrete classes) and information about the plot area.</p>
+<pre class="r"><code>  plot_area &lt;- ripras(x = douglas_fir$x, y = douglas_fir$y, 
+                      shape = &quot;rectangle&quot;)
+
+  douglas_fir_ppp &lt;- as.ppp(X = douglas_fir, W = plot_area)
+  
+  summary(douglas_fir_ppp)
+## Marked planar point pattern:  668 points
+## Average intensity 0.07283247 points per square unit
+## 
+## Coordinates are given to 3 decimal places
+## i.e. rounded to the nearest multiple of 0.001 units
+## 
+## Multitype:
+##       frequency proportion  intensity
+## alive       336   0.502994 0.03663430
+## dead        332   0.497006 0.03619817
+## 
+## Window: rectangle = [-0.12483, 104.12783] x [-0.1185, 87.8575] units
+## Window area = 9171.73 square units</code></pre>
+<p><img src="Solution_2a_files/figure-html/s_2a_plot_data-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><code>spatstat</code> provides most summary functions for spatial point pattern analyses (see e.g. <code>?Kest()</code>). The result is always a <code>fv</code> (function value) object. Almost all summary functions allow you to specify the edge correction (<code>correction</code>) and the distances r (<code>r</code>). But first, we subset the data because we want only to use the ‘alive’ trees at the moment.</p>
+<pre class="r"><code>  alive &lt;- subset(douglas_fir_ppp, marks == &quot;alive&quot;)
+  
+  l_fct_alive &lt;- Lest(X = alive, correction = &quot;Ripley&quot;, 
+                      r = seq(from = 0, to = 45, by = 0.5))
+  class(l_fct_alive)
+## [1] &quot;fv&quot;         &quot;data.frame&quot;</code></pre>
+<p><img src="Solution_2a_files/figure-html/s_2a_plot_l_function-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>As you can see in the plot, however, Besag’s L-function is not centered to 0. Also, the O-ring statistic is not available. Therefore, we need to write our own functions. For that, <code>eval.fv()</code> is quite handy. The function evaluates expression involving one or more <code>fv</code> objects (<code>divisor = "d"</code> is just a little trick to improve the bias of the estimator when r is close to zero).</p>
+<pre class="r"><code>  Lest.cent &lt;- function(input, correction = &quot;Ripley&quot;, r = NULL, ...){
+    
+    l_fct &lt;- Lest(input, correction = correction, r = r, ...)
+    
+    r &lt;- l_fct$r
+    
+   eval.fv(l_fct - r)
+  }
+
+  Oest &lt;- function(input, r = NULL, 
+                   correction = &quot;Ripley&quot;, divisor = &quot;d&quot;, ...){
+    
+    p_fct &lt;- pcf.ppp(input, r = r,
+                     correction = correction, divisor = divisor, ...)
+    
+    lambda &lt;- intensity(unmark(input))
+    
+    eval.fv(p_fct*lambda)
+  }</code></pre>
+<p>Now, we can calculate the summary functions and plot them.</p>
+<pre class="r"><code>  l_function &lt;- Lest.cent(input = alive, 
+                          r = seq(from = 0, to = 45, by = 0.5))
+
+  oring_statistic &lt;- Oest(input = alive, 
+                         r = seq(from = 0, to = 45, by = 0.5))</code></pre>
+<p><img src="Solution_2a_files/figure-html/s_2a_plot_fun-1.png" width="672" style="display: block; margin: auto;" /><img src="Solution_2a_files/figure-html/s_2a_plot_fun-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Alternatively, these functions are already implemented in the <code>onpoint</code> package, a small collection of utility functions based on <code>spatstat</code>. The package is only hosted on <a href="https://r-spatialecology.github.io/onpoint/"><em>GitHub</em></a>. To install <code>onpoint</code>, you need the <code>devtools</code> package. In case you don’t have <code>devtools</code> installed yet, do it as before and simply use <code>install_github(repo = "r-spatialecology/onpoint")</code>.</p>
+<pre class="r"><code>  library(onpoint)
+
+  l_function &lt;- center_l_function(x = alive, 
+                                  r = seq(from = 0, to = 45, by = 0.5))
+
+  oring_statistic &lt;- estimate_o_ring(x = alive, 
+                                     r = seq(from = 0, to = 45, 
+                                             by = 0.5))</code></pre>
+</div>
+<div id="exercise-3" class="section level3">
+<h3>Exercise 3</h3>
+<p><strong>Task:</strong> Redo the analysis but now with simulation envelopes. How does the simulation envelope change if you change the settings for the envelope from # simulations=39/‘lowest/highest’=1 to simulations=199/‘lowest/highest’=5.</p>
+<p>The function <code>envelope</code> of the <code>spatstat</code> package calculates simulation envelopes. The number of simulations can be specified with the argument <code>nsim</code>, the lowest/highest values with the argument <code>rank</code>. When not specified otherwise, the functions uses ‘CSR’ as null model. The <code>fun</code> argument can handle any summary function that <code>spatstat</code> provides (or the ones we implemented as long as they return a <code>fv</code> object).</p>
+<pre class="r"><code>  simulation_envelope_39 &lt;- envelope(Y = alive, fun = Oest,
+                                     r = seq(from = 0, to = 45, 
+                                             by = 0.5),
+                                     nsim = 39, nrank = 1)
+
+  simulation_envelope_199 &lt;- envelope(Y = alive, fun = Oest, 
+                                      r = seq(from = 0, to = 45, 
+                                              by = 0.5),
+                                      nsim = 199, nrank = 5)</code></pre>
+<p><img src="Solution_2a_files/figure-html/s_2a_plot_envelopes-1.png" width="672" style="display: block; margin: auto;" /><img src="Solution_2a_files/figure-html/s_2a_plot_envelopes-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="exercise-4" class="section level3">
+<h3>Exercise 4</h3>
+<p><strong>Task:</strong> Also look at the functions O22(r) and L22(r). Is there a striking difference between dead and live Douglas fir trees?</p>
+<p>So this time, we want to subset all ‘dead’ trees.</p>
+<pre class="r"><code>  dead &lt;- subset(douglas_fir_ppp, marks == &quot;dead&quot;)
+
+  simulation_envelope_dead &lt;- envelope(Y = dead, fun = Oest,
+                                       r = seq(from = 0, to = 45,
+                                               by = 0.5),
+                                       nsim = 199, nrank = 5)</code></pre>
+<p><img src="Solution_2a_files/figure-html/s_2a_plot_envelope_dead-1.png" width="672" style="display: block; margin: auto;" /><img src="Solution_2a_files/figure-html/s_2a_plot_envelope_dead-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="some-more" class="section level3">
+<h3>…some more</h3>
+<p><code>onpoint</code> also provides a plotting function for <code>envelope</code> objects. Similar to <code>spatstat</code>, the simulation envelopes as well as the observed value are included, however, so-called ‘quantum bars’ indicate the location of the observed value in relation to the envelopes.</p>
+<pre class="r"><code>  plot_quantums(simulation_envelope_199, 
+                xlab = &quot;r [m]&quot;, ylab = &quot;O(r)&quot;,
+                title = &quot;Univariate O-ring statistic\nliving trees&quot;,
+                base_size = 7.5)</code></pre>
+<p><img src="Solution_2a_files/figure-html/s_2a_quantum_plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><strong>References</strong>:</p>
+<p>Baddeley, A., Rubak, E., Turner, R., 2015. Spatial point patterns: Methodology and applications with R. Chapman and Hall/CRC Press, London.</p>
+<p>Getzin, S., Dean, C., He, F., Trofymow, J.A., Wiegand, K., Wiegand, T., 2006. Spatial patterns and competition of tree species in a Douglas fir chronosequence on Vancouver Island. Ecography, 29, 671-682.</p>
+<p>Getzin, S., Wiegand, T., Wiegand, K., He, F., 2008. Heterogeneity influences spatial patterns and demographics in forest stands. J. Ecol. 96, 807-820.</p>
+</div>
 
 
 

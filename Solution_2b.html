@@ -421,11 +421,151 @@ $(document).ready(function () {
 </div>
 
 
-<p><br> <br> <br></p>
-<center>
-<p>This site will be published once the material was covered in the lecture.</p>
-<img src="https://media.giphy.com/media/Wdzvwq7oePwek/giphy.gif" />
-</center>
+<p><img src="logo.png" width="182" style="display: block; margin: auto;" /></p>
+<p>First, we load all needed packages, just as before.</p>
+<pre class="r"><code>  library(spatstat)
+  library(tidyverse)</code></pre>
+<div id="exercise-5" class="section level3">
+<h3>Exercise 5</h3>
+<p><strong>Task:</strong> Calculate the bivariate g12 function using the null model random labeling. Was the process that labeled trees as dead or alive a random process.</p>
+<p>In case it is not in our workspace anymore, we import the data and convert it to a <code>ppp</code> object again.</p>
+<pre class="r"><code>  douglas_fir &lt;- read_delim(file = &quot;Data/DouglasFir_LiveDead_OGN.txt&quot;, 
+                            delim = &quot;;&quot;)
+  
+  douglas_fir &lt;- mutate(douglas_fir,
+                        mark = case_when(mark == 1 ~ &quot;alive&quot;,
+                                         mark == 2 ~ &quot;dead&quot;),
+                        mark = as.factor(mark))
+  
+  plot_area &lt;- ripras(x = douglas_fir$x, y = douglas_fir$y, 
+                      shape = &quot;rectangle&quot;)
+  
+  douglas_fir_ppp &lt;- as.ppp(X = douglas_fir, W = plot_area)</code></pre>
+<p>The same goes for the O-ring statistic.</p>
+<pre class="r"><code>  Oest &lt;- function(input, r = NULL, 
+                   correction = &quot;Ripley&quot;, divisor = &quot;d&quot;, ...){
+    
+    p_fct &lt;- pcf(input, r = r, 
+                 correction = correction, divisor = divisor, ...)
+    
+    lambda &lt;- intensity(unmark(input))
+    
+    eval.fv(p_fct * lambda)
+  }</code></pre>
+<p>The function <code>envelope()</code> can also be used to simulate more complex null models than ‘CSR’ and basically all functions (<code>fun</code>) that return a <code>fv</code> object. This time, we use the bivariate pair-correlation function as <code>fun</code> called <code>pcfcross</code> in <code>spatstat</code>. We need to specify the arguments of <code>pcfcross</code> <code>i</code> and <code>j</code> indicating the two types of marks. <code>simulate</code> allows us to specify any possible null model as an expression. Random labeling can be simulated with the help of <code>rlabel</code>. Lastly, we specify the number of simulation (<code>nsim</code>) and the highest/lowest values to use for the envelopes (<code>nrank</code>) and the distances at which the function should be evaluated (<code>r</code>) just as before.</p>
+<pre class="r"><code>  random_labeling &lt;- envelope(douglas_fir_ppp, 
+                              fun = pcfcross, 
+                              i = &quot;alive&quot;,  j = &quot;dead&quot;,
+                              r = seq(from = 0, to = 45, by = 0.5),
+                              divisor = &quot;d&quot;, nsim = 199, nrank = 5,
+                              simulate = expression(rlabel(douglas_fir_ppp)))</code></pre>
+<p><img src="Solution_2b_files/figure-html/s_2b_plot_envelope-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="exercise-6" class="section level3">
+<h3>Exercise 6</h3>
+<p><strong>Task:</strong> Can the small-scale regularity in the live Douglas fir trees be modeled by a hard-core process? What about a soft-core process?</p>
+<p>We can use <code>rStrauss()</code> to simulate hardcore- and softcore processes. Firstly, we subset the data using only living trees. Then, we simulate the hardcore process. We want the same intensity as the observed data (<code>beta</code>). <code>R</code> is the interaction distance between the points and <code>gamma</code> is the probability of two points being separated by distances &lt; <code>R</code>. Therefore, setting this argument to 0 leads to a hardcore process. Lastly, we need to specify the number of (<code>nsim</code>) and the observation window (<code>W</code>, same as observed data) of the simulated patterns.</p>
+<pre class="r"><code>  alive &lt;- subset.ppp(douglas_fir_ppp, marks == &quot;alive&quot;, drop = T)
+  
+  simulated_patterns_hardcore &lt;- rStrauss(beta = intensity(alive),
+                                          R = 1, gamma = 0, 
+                                          nsim = 199, W = alive$window)</code></pre>
+<p>The result is a list of simulated point patterns, that can be used as the <code>simulate</code> argument of the <code>envelope()</code> function. Now, the function calculates the summary function for each pattern in the list and computes the envelopes based on the results.</p>
+<pre class="r"><code>  envelope_hardcore &lt;- envelope(Y = alive, fun = Oest, 
+                                r = seq(from = 0, to = 45, by = 0.5),
+                                nsim = 199, nrank = 5,
+                                simulate = simulated_patterns_hardcore)</code></pre>
+<p>The softcore process is very similar, with the only difference that the probability <code>gamma</code> of two points being separated by distance <code>R</code> is increased.</p>
+<pre class="r"><code>  simulated_patterns_softcore &lt;- rStrauss(beta = intensity(alive),
+                                          R = 1, gamma = 0.3, 
+                                          nsim = 199, W = alive$window)
+
+  envelope_softcore &lt;- envelope(alive, fun = Oest,
+                                r = seq(from = 0, to = 45, by = 0.5),
+                                nsim = 199, nrank = 5,
+                                simulate = simulated_patterns_softcore)</code></pre>
+<p><img src="Solution_2b_files/figure-html/s_2b_plot_hardcore-1.png" width="672" style="display: block; margin: auto;" /><img src="Solution_2b_files/figure-html/s_2b_plot_hardcore-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="exercise-7" class="section level3">
+<h3>Exercise 7</h3>
+<p><strong>Task:</strong> Now use the data set <em>DouglasFir_Adult_vs_Seedling_OGN.txt</em>. Here, pattern 1 gives the locations of adult trees and pattern 2 gives the locations of seedlings. Calculate O12(r) and generate 95% confidence envelopes for the null model ‘Pattern 1 fixed, pattern 2 random’ (‘antecedent conditions’). What would be a meaningful interpretation of the results?</p>
+<p>Firstly, we import the data and convert it to a <code>ppp</code> object. Also, we reclassify the mark column to 1 == ‘adults’ and 2 == ‘seedlings’ and convert is as a factor.</p>
+<pre class="r"><code>  douglas_fir &lt;- read_delim(file = &quot;Data/DouglasFir_Adult_vs_Seedling_OGN.txt&quot;, 
+                            delim = &quot;;&quot;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   x = col_double(),
+##   y = col_double(),
+##   mark = col_double()
+## )</code></pre>
+<pre class="r"><code>  douglas_fir &lt;- mutate(douglas_fir,
+                        mark = case_when(mark == 1 ~ &quot;adults&quot;,
+                                         mark == 2 ~ &quot;seedlings&quot;),
+                        mark = as.factor(mark))
+  
+  plot_area &lt;- ripras(x = douglas_fir$x, y = douglas_fir$y, 
+                      shape = &quot;rectangle&quot;)
+  
+  douglas_fir_ppp &lt;- as.ppp(X = douglas_fir, W = plot_area)</code></pre>
+<p><img src="Solution_2b_files/figure-html/s_2b_plot_snd_data-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Now, we need to implement the bivariate O-ring statistic O12(r). We want to multiply the bivariate pair-correlation function g12(r) with the intensity of lambda2.</p>
+<pre class="r"><code>Oest_cross &lt;- function(input, i, j, r = NULL,
+                       correction = &quot;Ripley&quot;, divisor = &quot;d&quot;, ...){
+  
+  gij &lt;- pcfcross(input, 
+                  i = i, j = j, r = r,
+                  correction = correction, divisor = divisor, ...)
+  
+  lambda &lt;- intensity(input)[j]
+  
+  eval.fv(gij * lambda)
+}</code></pre>
+<p><code>spatstat</code> has no build-in function to simulate a null model of ‘antecedent conditions’. But remember, we can give the <code>simulate</code> argument of the <code>envelope()</code> function a list of patterns. Therefore, we just need to simulate the null model and save the results in a list.</p>
+<p>After splitting the point pattern into seedlings and adults, we create a new, random pattern with the same number of points (<code>n</code>) and the same observation window (<code>win</code>) as the seedlings. Then, we superimpose the random seedlings with the unchanged adults. Lastly, we save the result in a list.</p>
+<pre class="r"><code>null_model_pattern &lt;- list()
+
+for (i in 1:199) {
+  seedlings &lt;- subset.ppp(douglas_fir_ppp, 
+                          marks == &quot;seedlings&quot;, drop = TRUE)
+  
+  adults &lt;- subset.ppp(douglas_fir_ppp, marks == &quot;adults&quot;, drop = TRUE)
+  
+  random_seedlings &lt;- rpoint(n = seedlings$n,
+                             win = seedlings$window)
+  
+  overall_pattern &lt;- superimpose(adults = unmark(adults),
+                                 seedlings = random_seedlings)
+  
+  null_model_pattern[i] &lt;- list(overall_pattern)
+}</code></pre>
+<p>Now, we can compute the simulation envelopes as usually.</p>
+<pre class="r"><code>  antecedent_conditions &lt;- envelope(douglas_fir_ppp, 
+                                    fun = Oest_cross, 
+                                    i = &quot;adults&quot;, j = &quot;seedlings&quot;,
+                                    r = seq(from = 0, to = 45, 
+                                            by = 0.5),
+                                    nsim = 199,  nrank = 5,
+                                    simulate = null_model_pattern)</code></pre>
+<p><img src="Solution_2b_files/figure-html/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The <a href="https://r-spatialecology.github.io/onpoint/"><code>onpoint</code></a> package also includes an function to simulate antecedent conditions as null model (see <code>?simulate_antecedent_conditions</code> for help).</p>
+</div>
+<div id="exercise-8" class="section level3">
+<h3>Exercise 8</h3>
+<p><strong>Task:</strong> How does the interpretation of the ‘Toroidal shift’ null model differ from the null models in 7)? What is the advantage? Is it always an advantage?</p>
+<p>There is a possibility to simulate the ‘toroidal shift’ null model with functions provided by <code>spatstat</code>. We just use the function <code>rshift()</code> and specify the behavior at the edge of the observation area (<code>edge</code>) and which points should be shifted (<code>which</code>).</p>
+<pre class="r"><code>toroidal_shift &lt;- envelope(douglas_fir_ppp, fun = Oest_cross, 
+                           i = &quot;adults&quot;, j = &quot;seedlings&quot;,
+                           r = seq(from = 0, to = 45, by = 0.5),
+                           nsim = 199, nrank = 5,
+                           simulate = expression(rshift(douglas_fir_ppp,
+                                                        which = &quot;seedlings&quot;, 
+                                                        edge = &quot;torus&quot;)))</code></pre>
+<p><img src="Solution_2b_files/figure-html/s_2b_plot_toroidal-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><strong>References</strong>:</p>
+<p>Baddeley, A., Rubak, E., Turner, R., 2015. Spatial point patterns: Methodology and applications with R. Chapman and Hall/CRC Press, London.</p>
+<p>Getzin, S., Dean, C., He, F., Trofymow, J.A., Wiegand, K., Wiegand, T., 2006. Spatial patterns and competition of tree species in a Douglas fir chronosequence on Vancouver Island. Ecography, 29, 671-682.</p>
+<p>Getzin, S., Wiegand, T., Wiegand, K., He, F., 2008. Heterogeneity influences spatial patterns and demographics in forest stands. J. Ecol. 96, 807-820.</p>
+</div>
 
 
 
