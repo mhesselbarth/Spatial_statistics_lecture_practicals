@@ -422,7 +422,7 @@ $(document).ready(function () {
 
 
 <p><img src="logo.png" width="182" style="display: block; margin: auto;" /></p>
-<p>First, we load all needed packages, just as before.</p>
+<p>First, we load all packages, just as before.</p>
 <pre class="r"><code>  library(spatstat)
   library(tidyverse)</code></pre>
 <div id="exercise-5" class="section level3">
@@ -463,7 +463,7 @@ $(document).ready(function () {
 </div>
 <div id="exercise-6" class="section level3">
 <h3>Exercise 6</h3>
-<p><strong>Task:</strong> Can the small-scale regularity in the live Douglas fir trees be modeled by a hard-core process? What about a soft-core process?</p>
+<p><strong>Task:</strong> Can the small-scale regularity in the living Douglas fir trees be modeled by a hard-core process? What about a soft-core process?</p>
 <p>We can use <code>rStrauss()</code> to simulate hardcore- and softcore processes. Firstly, we subset the data using only living trees. Then, we simulate the hardcore process. We want the same intensity as the observed data (<code>beta</code>). <code>R</code> is the interaction distance between the points and <code>gamma</code> is the probability of two points being separated by distances &lt; <code>R</code>. Therefore, setting this argument to 0 leads to a hardcore process. Lastly, we need to specify the number of (<code>nsim</code>) and the observation window (<code>W</code>, same as observed data) of the simulated patterns.</p>
 <pre class="r"><code>  alive &lt;- subset.ppp(douglas_fir_ppp, marks == &quot;alive&quot;, drop = T)
   
@@ -489,7 +489,7 @@ $(document).ready(function () {
 <div id="exercise-7" class="section level3">
 <h3>Exercise 7</h3>
 <p><strong>Task:</strong> Now use the data set <em>DouglasFir_Adult_vs_Seedling_OGN.txt</em>. Here, pattern 1 gives the locations of adult trees and pattern 2 gives the locations of seedlings. Calculate O12(r) and generate 95% confidence envelopes for the null model ‘Pattern 1 fixed, pattern 2 random’ (‘antecedent conditions’). What would be a meaningful interpretation of the results?</p>
-<p>Firstly, we import the data and convert it to a <code>ppp</code> object. Also, we reclassify the mark column to 1 == ‘adults’ and 2 == ‘seedlings’ and convert is as a factor.</p>
+<p>Firstly, we import the data and convert it to a <code>ppp</code> object. Also, we reclassify the mark column to 1 == ‘adults’ and 2 == ‘seedlings’ and convert it as a factor.</p>
 <pre class="r"><code>  douglas_fir &lt;- read_delim(file = &quot;Data/DouglasFir_Adult_vs_Seedling_OGN.txt&quot;, 
                             delim = &quot;;&quot;)</code></pre>
 <pre><code>## Parsed with column specification:
@@ -524,11 +524,12 @@ $(document).ready(function () {
 <p>After splitting the point pattern into seedlings and adults, we create a new, random pattern with the same number of points (<code>n</code>) and the same observation window (<code>win</code>) as the seedlings. Then, we superimpose the random seedlings with the unchanged adults. Lastly, we save the result in a list.</p>
 <pre class="r"><code>null_model_pattern &lt;- list()
 
-for (i in 1:199) {
-  seedlings &lt;- subset.ppp(douglas_fir_ppp, 
+seedlings &lt;- subset.ppp(douglas_fir_ppp, 
                           marks == &quot;seedlings&quot;, drop = TRUE)
   
-  adults &lt;- subset.ppp(douglas_fir_ppp, marks == &quot;adults&quot;, drop = TRUE)
+adults &lt;- subset.ppp(douglas_fir_ppp, marks == &quot;adults&quot;, drop = TRUE)
+
+for (i in 1:199) {
   
   random_seedlings &lt;- rpoint(n = seedlings$n,
                              win = seedlings$window)

@@ -429,14 +429,14 @@ $(document).ready(function () {
 <pre class="r"><code>  install.packages(c(&quot;spatstat&quot;, &quot;tidyverse&quot;))</code></pre>
 <div id="exercise-1" class="section level3">
 <h3>Exercise 1</h3>
-<p><strong>Task</strong>: Using the data set <em>DouglasFir_LiveDead_OGN.txt</em> calculate the O-ring statistic and the L-function. Here, pattern 1 gives the locations of live trees and pattern 2 gives the locations of dead trees. Comparing the univariate measures O11(r) and L11(r), how do they differ?</p>
+<p><strong>Task</strong>: Using the data set <em>DouglasFir_LiveDead_OGN.dat</em>, calculate the O-ring statistic and the L-function. Here, pattern 1 gives the locations of living trees and pattern 2 gives the locations of dead trees. Comparing the univariate measures <span class="math inline">\(O_{11}(r)\)</span> and <span class="math inline">\(L_{11}(r)\)</span>, how do they differ?</p>
 <p>First, we need to import the data using <code>read_delim()</code> (make sure the data is in your working direction. See <code>?getwd()</code>/<code>?setwd()</code> for help). The columns are separated by a semicolon. By using <code>read_delim()</code>, the class of the data is automatically a <code>tibble</code> (an ‘advanced’ version of a <code>data.frame</code>. For more information see <code>?tibble</code>).</p>
 <pre class="r"><code>  douglas_fir &lt;- read_delim(file = &quot;Data/DouglasFir_LiveDead_OGN.txt&quot;,
                             delim = &quot;;&quot;)
   
   class(douglas_fir)
 ## [1] &quot;spec_tbl_df&quot; &quot;tbl_df&quot;      &quot;tbl&quot;         &quot;data.frame&quot;</code></pre>
-<p>Print the data. The <code>tibble</code> contains 668 rows (one for each tree) and 3 columns(x-coordinate, y-coordinate and the marks).</p>
+<p>Print the data. The <code>tibble</code> contains 668 rows (one for each tree) and 3 columns (x-coordinate, y-coordinate and the marks).</p>
 <pre class="r"><code>  print(douglas_fir, collapse = TRUE)</code></pre>
 <pre><code>## # A tibble: 668 x 3
 ##        x      y  mark
@@ -457,7 +457,7 @@ $(document).ready(function () {
                         mark = case_when(mark == 1 ~ &quot;alive&quot;,
                                          mark == 2 ~ &quot;dead&quot;),
                         mark = as.factor(mark))</code></pre>
-<p>Now, we need to convert the <code>tibble</code> to the <code>ppp</code> class of the <code>spatstat</code> packages. Firstly, we need to specify our plot area (<code>spatstat</code> calls this observation window) using <code>ripras()</code>. The function calculates a window based on the provided x- and y-coordinates (the results is returned as a <code>owin</code>). We can specify the shape of the window using the <code>shape</code> argument. Secondly, we convert the <code>tibble</code> to a <code>ppp</code>. The <code>tibble</code> contains the coordinates and the marks as columns and we just need additionally to specify the observation window with the just created <code>owin</code> object.</p>
+<p>Now, we need to convert the <code>tibble</code> to the <code>ppp</code> class of the <code>spatstat</code> packages. Firstly, using <code>ripras()</code>, we need to specify our plot area (<code>spatstat</code> calls this observation window). The function calculates a window based on the provided x- and y-coordinates (the results is returned as a <code>owin</code> object). We can specify the shape of the window using the <code>shape</code> argument. Secondly, we convert the <code>tibble</code> to a <code>ppp</code>. The <code>tibble</code> contains the coordinates and the marks as columns and we just need additionally to specify the observation window using the just created <code>owin</code> object.</p>
 <p>Plotting the pattern to control it is always a good idea. The plot function automatically modifies the points according to their mark. Also the <code>summary()</code> function returns many helpful information about the point pattern. The functions returns the intensity, information about the marks (in this case the frequencies, proportions and intensities of the discrete classes) and information about the plot area.</p>
 <pre class="r"><code>  plot_area &lt;- ripras(x = douglas_fir$x, y = douglas_fir$y, 
                       shape = &quot;rectangle&quot;)
@@ -479,7 +479,7 @@ $(document).ready(function () {
 ## Window: rectangle = [-0.12483, 104.12783] x [-0.1185, 87.8575] units
 ## Window area = 9171.73 square units</code></pre>
 <p><img src="Solution_2a_files/figure-html/s_2a_plot_data-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p><code>spatstat</code> provides most summary functions for spatial point pattern analyses (see e.g. <code>?Kest()</code>). The result is always a <code>fv</code> (function value) object. Almost all summary functions allow you to specify the edge correction (<code>correction</code>) and the distances r (<code>r</code>). But first, we subset the data because we want only to use the ‘alive’ trees at the moment.</p>
+<p><code>spatstat</code> provides most summary functions for spatial point pattern analysis (see e.g. <code>?Kest()</code>). The result is always a <code>fv</code> object (function value). Almost all summary functions allow you to specify the edge correction (<code>correction</code>) and the distances r (<code>r</code>). But first, we subset the data because we want only to use the ‘alive’ trees at the moment.</p>
 <pre class="r"><code>  alive &lt;- subset(douglas_fir_ppp, marks == &quot;alive&quot;)
   
   l_fct_alive &lt;- Lest(X = alive, correction = &quot;Ripley&quot;, 
@@ -487,7 +487,7 @@ $(document).ready(function () {
   class(l_fct_alive)
 ## [1] &quot;fv&quot;         &quot;data.frame&quot;</code></pre>
 <p><img src="Solution_2a_files/figure-html/s_2a_plot_l_function-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>As you can see in the plot, however, Besag’s L-function is not centered to 0. Also, the O-ring statistic is not available. Therefore, we need to write our own functions. For that, <code>eval.fv()</code> is quite handy. The function evaluates expression involving one or more <code>fv</code> objects (<code>divisor = "d"</code> is just a little trick to improve the bias of the estimator when r is close to zero).</p>
+<p>However, as you can see in the plot, Besag’s L-function is not centered to 0. Also, the O-ring statistic is not available in <code>spatstat</code>. Therefore, we need to write our own functions. For that, <code>eval.fv()</code> is quite handy. The function evaluates expression involving one or more <code>fv</code> objects (<code>divisor = "d"</code> is just a little trick to improve the bias of the estimator when r is close to zero).</p>
 <pre class="r"><code>  Lest.cent &lt;- function(input, correction = &quot;Ripley&quot;, r = NULL, ...){
     
     l_fct &lt;- Lest(input, correction = correction, r = r, ...)
@@ -505,7 +505,7 @@ $(document).ready(function () {
     
     lambda &lt;- intensity(unmark(input))
     
-    eval.fv(p_fct*lambda)
+    eval.fv(p_fct * lambda)
   }</code></pre>
 <p>Now, we can calculate the summary functions and plot them.</p>
 <pre class="r"><code>  l_function &lt;- Lest.cent(input = alive, 
@@ -541,7 +541,7 @@ $(document).ready(function () {
 </div>
 <div id="exercise-4" class="section level3">
 <h3>Exercise 4</h3>
-<p><strong>Task:</strong> Also look at the functions O22(r) and L22(r). Is there a striking difference between dead and live Douglas fir trees?</p>
+<p><strong>Task:</strong> Also look at the functions O22(r) and L22(r). Is there a striking difference between dead and alive Douglas fir trees?</p>
 <p>So this time, we want to subset all ‘dead’ trees.</p>
 <pre class="r"><code>  dead &lt;- subset(douglas_fir_ppp, marks == &quot;dead&quot;)
 

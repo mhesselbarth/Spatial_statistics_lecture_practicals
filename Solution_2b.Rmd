@@ -13,7 +13,7 @@ editor_options:
 knitr::include_graphics("logo.png", auto_pdf = FALSE)
 ```
 
-First, we load all needed packages, just as before.
+First, we load all packages, just as before.
 
 ```{r s_2b_libaries, message = FALSE}
   library(spatstat)
@@ -73,7 +73,7 @@ The function `envelope()` can also be used to simulate more complex null models 
 ```
 
 ### Exercise 6
-__Task:__ Can the small-scale regularity in the live Douglas fir trees be modeled by a hard-core process? What about a soft-core process?
+__Task:__ Can the small-scale regularity in the living Douglas fir trees be modeled by a hard-core process? What about a soft-core process?
 
 We can use `rStrauss()` to simulate hardcore- and softcore processes. Firstly, we subset the data using only living trees. Then, we simulate the hardcore process. We want the same intensity as the observed data (`beta`). `R` is the interaction distance between the points and `gamma` is the probability of two points being separated by distances < `R`. Therefore, setting this argument to 0 leads to a hardcore process. Lastly, we need to specify the number of (`nsim`) and the observation window (`W`, same as observed data) of the simulated patterns.
 
@@ -122,7 +122,7 @@ The softcore process is very similar, with the only difference that the probabil
 ### Exercise 7 
 __Task:__ Now use the data set *DouglasFir_Adult_vs_Seedling_OGN.txt*. Here, pattern 1 gives the locations of adult trees and pattern 2 gives the locations of seedlings. Calculate O12(r) and generate 95% confidence envelopes for the null model 'Pattern 1 fixed, pattern 2 random' ('antecedent conditions'). What would be a meaningful interpretation of the results?
 
-Firstly, we import the data and convert it to a `ppp` object. Also, we reclassify the mark column to 1 == 'adults' and 2 == 'seedlings' and convert is as a factor. 
+Firstly, we import the data and convert it to a `ppp` object. Also, we reclassify the mark column to 1 == 'adults' and 2 == 'seedlings' and convert it as a factor. 
 
 ```{r s_2b_import_snd_data}
   douglas_fir <- read_delim(file = "Data/DouglasFir_Adult_vs_Seedling_OGN.txt", 
@@ -166,11 +166,12 @@ After splitting the point pattern into seedlings and adults, we create a new, ra
 ```{r s_2b_antecedent}
 null_model_pattern <- list()
 
-for (i in 1:199) {
-  seedlings <- subset.ppp(douglas_fir_ppp, 
+seedlings <- subset.ppp(douglas_fir_ppp, 
                           marks == "seedlings", drop = TRUE)
   
-  adults <- subset.ppp(douglas_fir_ppp, marks == "adults", drop = TRUE)
+adults <- subset.ppp(douglas_fir_ppp, marks == "adults", drop = TRUE)
+
+for (i in 1:199) {
   
   random_seedlings <- rpoint(n = seedlings$n,
                              win = seedlings$window)

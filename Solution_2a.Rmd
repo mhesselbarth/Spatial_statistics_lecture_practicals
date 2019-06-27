@@ -28,7 +28,7 @@ If you don't have the packages already installed, run the following code in orde
 
 ### Exercise 1 
 
-__Task__: Using the data set *DouglasFir_LiveDead_OGN.txt* calculate the O-ring statistic and the L-function. Here, pattern 1 gives the locations of live trees and pattern 2 gives the locations of dead trees. Comparing the univariate measures O11(r) and L11(r), how do they differ?
+__Task__: Using the data set _DouglasFir_LiveDead_OGN.dat_, calculate the O-ring statistic and the L-function. Here, pattern 1 gives the locations of living trees and pattern 2 gives the locations of dead trees. Comparing the univariate measures $O_{11}(r)$ and $L_{11}(r)$, how do they differ?
 
 First, we need to import the data using `read_delim()` (make sure the data is in your working direction. See `?getwd()`/`?setwd()` for help). The columns are separated by a semicolon. By using `read_delim()`, the class of the data is automatically a `tibble` (an 'advanced' version of a `data.frame`. For more information see `?tibble`). 
 
@@ -39,7 +39,7 @@ First, we need to import the data using `read_delim()` (make sure the data is in
   class(douglas_fir)
 ```
 
-Print the data. The `tibble` contains 668 rows (one for each tree) and 3 columns(x-coordinate, y-coordinate and the marks).
+Print the data. The `tibble` contains 668 rows (one for each tree) and 3 columns (x-coordinate, y-coordinate and the marks).
 ```{r s_2a_show_data}
   print(douglas_fir, collapse = TRUE)
 ```
@@ -53,7 +53,7 @@ We want to edit the column 'mark' in a way that 1 == 'alive' and 2 == 'dead'. We
                         mark = as.factor(mark))
 ```
 
-Now, we need to convert the `tibble`  to the `ppp` class of the `spatstat` packages. Firstly, we need to specify our plot area (`spatstat` calls this observation window) using `ripras()`. The function calculates a window based on the provided x- and y-coordinates (the results is returned as a `owin`). We can specify the shape of the window using the `shape` argument. Secondly, we convert the `tibble` to a `ppp`. The `tibble` contains the coordinates and the marks as columns and we just need additionally to specify the observation window with the just created `owin` object.
+Now, we need to convert the `tibble`  to the `ppp` class of the `spatstat` packages. Firstly, using `ripras()`, we need to specify our plot area (`spatstat` calls this observation window). The function calculates a window based on the provided x- and y-coordinates (the results is returned as a `owin` object). We can specify the shape of the window using the `shape` argument. Secondly, we convert the `tibble` to a `ppp`. The `tibble` contains the coordinates and the marks as columns and we just need additionally to specify the observation window using the just created `owin` object.
 
 Plotting the pattern to control it is always a good idea. The plot function automatically modifies the points according to their mark. Also the `summary()` function returns many helpful information about the point pattern. The functions returns the intensity, information about the marks (in this case the frequencies, proportions and intensities of the discrete classes) and information about the plot area.
 
@@ -70,7 +70,7 @@ Plotting the pattern to control it is always a good idea. The plot function auto
   plot(douglas_fir_ppp, main = "Douglas fir")
 ```
 
-`spatstat` provides most summary functions for spatial point pattern analyses (see e.g. `?Kest()`). The result is always a `fv` (function value) object. Almost all summary functions allow you to specify the edge correction (`correction`) and the distances r (`r`). But first, we subset the data because we want only to use the 'alive' trees at the moment.
+`spatstat` provides most summary functions for spatial point pattern analysis (see e.g. `?Kest()`). The result is always a `fv` object (function value). Almost all summary functions allow you to specify the edge correction (`correction`) and the distances r (`r`). But first, we subset the data because we want only to use the 'alive' trees at the moment.
 
 ```{r s_2a_l_function, collapse = TRUE}
   alive <- subset(douglas_fir_ppp, marks == "alive")
@@ -84,7 +84,7 @@ Plotting the pattern to control it is always a good idea. The plot function auto
   plot(l_fct_alive, xlim = c(0, 45))
 ```
 
-As you can see in the plot, however, Besag's L-function is not centered to 0. Also, the O-ring statistic is not available. Therefore, we need to write our own functions. For that, `eval.fv()` is quite handy. The function evaluates expression involving one or more `fv` objects (`divisor = "d"` is just a little trick to improve the bias of the estimator when r is close to zero).
+However, as you can see in the plot, Besag's L-function is not centered to 0. Also, the O-ring statistic is not available in `spatstat`. Therefore, we need to write our own functions. For that, `eval.fv()` is quite handy. The function evaluates expression involving one or more `fv` objects (`divisor = "d"` is just a little trick to improve the bias of the estimator when r is close to zero).
 
 ```{r s_2a_define_fun}
   Lest.cent <- function(input, correction = "Ripley", r = NULL, ...){
@@ -104,7 +104,7 @@ As you can see in the plot, however, Besag's L-function is not centered to 0. Al
     
     lambda <- intensity(unmark(input))
     
-    eval.fv(p_fct*lambda)
+    eval.fv(p_fct * lambda)
   }
 ```
 
@@ -170,7 +170,7 @@ The function `envelope` of the `spatstat` package calculates simulation envelope
 ```
 
 ### Exercise 4 
-__Task:__ Also look at the functions O22(r) and L22(r). Is there a striking difference between dead and live Douglas fir trees?
+__Task:__ Also look at the functions O22(r) and L22(r). Is there a striking difference between dead and alive Douglas fir trees?
 
 So this time, we want to subset all 'dead' trees.
 

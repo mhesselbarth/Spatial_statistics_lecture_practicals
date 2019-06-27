@@ -19,7 +19,7 @@ Calculate the bivariate $g_{12}(r)$ function using the null model random labelin
 For more information, see Slide 77 & 83 ff.
 
 ### Exercise 6) 
-Can the small-scale regularity in the live Douglas fir trees be modeled by a hard-core process? What about a soft-core process?
+Can the small-scale regularity in the living Douglas fir trees be modeled by a hard-core process? What about a soft-core process?
 
 For more information, see Slides 68 ff.
 
