@@ -23,7 +23,7 @@ navbar:
           icon: fa-clipboard-check
           href: Practical_2b.html
         - text: "Practical 3"
-          icon: fa-clock
+          icon: fa-clipboard-check
           href: Practical_3.html
     - text: "Solutions"
       icon: fa-check

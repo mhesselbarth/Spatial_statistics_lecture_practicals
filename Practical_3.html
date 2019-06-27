@@ -334,7 +334,7 @@ $(document).ready(function () {
     </li>
     <li>
       <a href="Practical_3.html">
-        <span class="fa fa-clock"></span>
+        <span class="fa fa-clipboard-check"></span>
          
         Practical 3
       </a>
@@ -421,11 +421,64 @@ $(document).ready(function () {
 </div>
 
 
-<p><br> <br> <br></p>
-<center>
-<p>This site will be published once the material was covered in the lecture.</p>
-<img src="https://media.giphy.com/media/Wdzvwq7oePwek/giphy.gif" />
-</center>
+<div id="cluster-process" class="section level1">
+<h1>Cluster process</h1>
+<p>For more information, please see <em><ADD LECTURE SLIDES></em>.</p>
+<div id="exercise-1" class="section level3">
+<h3>Exercise 1)</h3>
+<p>Perform a point-pattern analysis on the <em>Hemlock_Adults_vs_SmallSaps.dat</em> data set using CSR as null model. We are now especially interested in pattern 2, the small saplings. Using a cell size of 1 meter, calculate the <span class="math inline">\(O_{22}(r)\)</span>. Up to which scale do we find significant clustering of the saplings?</p>
+</div>
+<div id="exercise-2" class="section level3">
+<h3>Exercise 2)</h3>
+<p>Programita is a little quirky when it comes to use a cluster null model on the second pattern. Therefore, uncheck ‘Change patterns’, choose ‘Cluster Process’, check ‘Change pattern’ again and in the new window choose ‘Univar. cluster’ and click ok.</p>
+<p>Choose ‘optimize -&gt; g-function’ (since we are only interested into the O-ring statistic here) and press fit. Programita now tries to estimate optimal values for <span class="math inline">\(\sigma\)</span> and <span class="math inline">\(\rho\)</span>. The success can be assessed by looking at the upper left plot, where the red line should match the black one. You might obtain a better fit if you click ‘Zoom’ and fit a few times until the fitted parameters stop changing. Once you are satisfied with the fit, press ok and run ‘Calculate index’.</p>
+<p>For more information, see Slides 19 ff.</p>
+</div>
+<div id="exercise-3" class="section level3">
+<h3>Exercise 3)</h3>
+<p>If the <span class="math inline">\(O_{11}(r)\)</span> function falls into the new envelope, you fitted good parameters for the cluster process. You can review them by clicking ‘Parameter’. Here, the typical cluster size and number of parents are given.</p>
+<p>For more information, see Slides 27 ff.</p>
+</div>
+<div id="exercise-4." class="section level3">
+<h3>Exercise 4.)</h3>
+<p>Looking at the pattern of adult trees and saplings, is the fitted value for the number of parents realistic? If not so, what could be the reason?</p>
+<p>For more information, see Slides 27 ff.</p>
+</div>
+</div>
+<div id="mark-correlation-function-stoyans-k_mm" class="section level1">
+<h1>Mark correlation function (Stoyan’s <span class="math inline">\(k_{mm}\)</span>)</h1>
+<p>For more information, please see <em>SpatStat06_Homo_NullModels_Marked.pptx</em>, Slides 35 – 49</p>
+<div id="exercise-1-1" class="section level3">
+<h3>Exercise 1)</h3>
+<p>The data set <em>Alive_DouglasFir_OGN.dat</em> contains the location and stem diameters (diameter at breast height, DBH) for all live Douglas fir trees in the Old-growth North plot.</p>
+<p>Choose ‘Mark correlation function’ and check ‘List with coordinates, no grid’ and set the bin width to 0.5 (giving you a ring width of 1 meter). Also check the ‘Edge correction’ box to avoid edge effects. ‘Click Calculate index’. What do these results suggest?</p>
+</div>
+<div id="exercise-2-1" class="section level3">
+<h3>Exercise 2)</h3>
+<p>Check Calculate ‘simulation envelopes’ to test for significance. As a null model use ‘Marks pat 1 and 2 random’, which is the only appropriate model here, because we look only at one type of points. What could be a possible ecological explanation of your results?</p>
+</div>
+</div>
+<div id="inhomogeneous-point-patterns" class="section level1">
+<h1>Inhomogeneous point patterns</h1>
+<p>For more information, please see <em>SpatStat07_Hetero.pptx</em>.</p>
+<div id="exercise-1-2" class="section level3">
+<h3>Exercise 1)</h3>
+<p>In the data set <em>Hemlock_Adults_vs_SmallSaps.dat</em>, you can observe a clear gradient in the density of adult trees. Calculate <span class="math inline">\(O_{11}(r)\)</span> and <span class="math inline">\(L_{11}(r)\)</span> for pattern 1 (adult trees) to see up to which scale clustering of the trees can be observed using CSR as null model.</p>
+</div>
+<div id="exercise-2-slides-32-ff." class="section level3">
+<h3>Exercise 2) Slides 32 ff.</h3>
+<p>Getzin et al. (2008) show that the study area is heterogenous. We are going to account for this heterogeneity by fitting a heterogeneous Poisson processes. Check the ‘Heterogeneous Poisson box’ and click OK in the opening window. Press ‘Calculate index’. Programita will now estimate <span class="math inline">\(\lambda(x,y)\)</span> and show you a map of the results. The gradient should be well visible.</p>
+</div>
+<div id="exercise-3-slides-32-ff." class="section level3">
+<h3>Exercise 3) Slides 32 ff.</h3>
+<p>Press OK in the message box and observe how Programita generates Poisson-processes that follow the estimated density map. Does <span class="math inline">\(O_{11}(r)\)</span> now fit into the simulation envelope? How do you interpret the result?</p>
+<p><img src="Practical_3_files/figure-html/p_3_plot_example-1.png" width="960" style="display: block; margin: auto;" /></p>
+<div id="literature" class="section level4">
+<h4>Literature:</h4>
+<p>Getzin, S., Wiegand, T., Wiegand, K., He, F., 2008. Heterogeneity influences spatial patterns and demographics in forest stands. J. Ecol. 96, 807–820</p>
+</div>
+</div>
+</div>
 
 
 
