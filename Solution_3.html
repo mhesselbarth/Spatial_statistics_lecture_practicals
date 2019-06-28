@@ -421,11 +421,234 @@ $(document).ready(function () {
 </div>
 
 
-<p><br> <br> <br></p>
-<center>
-<p>This site will be published once the material was covered in the lecture.</p>
-<img src="https://media.giphy.com/media/Wdzvwq7oePwek/giphy.gif" />
-</center>
+<p><img src="logo.png" style="display: block; margin: auto;" /></p>
+<p>As always, we load all needed packages.</p>
+<pre class="r"><code>  library(spatstat)
+  library(tidyverse)</code></pre>
+<div id="cluster-process" class="section level1">
+<h1>Cluster process</h1>
+<div id="exercise-1" class="section level3">
+<h3>Exercise 1</h3>
+<p><strong>Task:</strong> Perform a point-pattern analysis on the <em>Hemlock_Adults_vs_SmallSaps.txt</em> data set using ‘CSR’ as null model. We are now especially interested in pattern 2, the small saplings. Using a cell size of 1 meter, calculate the O22(r). Up to which scale do we find significant clustering of the saplings?</p>
+<p>We import the data first and convert it as <code>ppp</code>. Also, we reclassify the marks as 1 == ‘adults’ and 2 == ‘saplings’.</p>
+<pre class="r"><code>  hemlock &lt;- read_delim(file = &quot;Data/Hemlock_Adults_vs_SmallSaps.txt&quot;, 
+                        delim = &quot;;&quot;)
+  
+  hemlock &lt;- mutate(hemlock,
+                    mark = case_when(mark == 1 ~ &quot;adults&quot;,
+                                     mark == 2 ~ &quot;saplings&quot;),
+                    mark = as.factor(mark))
+  
+  plot_area &lt;- ripras(x = hemlock$x, y = hemlock$y, shape = &quot;rectangle&quot;)
+  
+  hemlock_ppp &lt;- as.ppp(X = hemlock, W = plot_area)
+  
+  summary(hemlock_ppp)
+## Marked planar point pattern:  427 points
+## Average intensity 0.06190762 points per square unit
+## 
+## Coordinates are given to 2 decimal places
+## i.e. rounded to the nearest multiple of 0.01 units
+## 
+## Multitype:
+##          frequency proportion  intensity
+## adults         234  0.5480094 0.03392596
+## saplings       193  0.4519906 0.02798167
+## 
+## Window: rectangle = [1.22493, 80.43507] x [-1.64345, 85.43345] units
+## Window area = 6897.37 square units</code></pre>
+<p><img src="Solution_3_files/figure-html/s_3_plot_data-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Then, we implement the O-ring statistic.</p>
+<pre class="r"><code>  Oest &lt;- function(input, r = NULL, 
+                   correction = &quot;Ripley&quot;, divisor = &quot;d&quot;, ...){
+    
+    p_fct &lt;- pcf(input, r = r,
+                 correction = correction, 
+                 divisor = divisor)
+    
+    lambda &lt;- intensity(unmark(input))
+    
+    eval.fv(p_fct*lambda)
+  }</code></pre>
+<p>We are just interested in the saplings, therefore we subset them first. Then we calculate the O-ring statistic with simulation envelopes and ‘CSR’ as null model.</p>
+<pre class="r"><code>  saplings &lt;- subset.ppp(hemlock_ppp, marks == &quot;saplings&quot;, drop = TRUE)
+  
+  o_ring_saplings &lt;- envelope(saplings, fun = Oest,
+                              r = seq(from = 0, to = 45, by = 0.5), 
+                              nsim = 199, nrank = 5)</code></pre>
+<p><img src="Solution_3_files/figure-html/s_3_plot_subset-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="exercise-2" class="section level3">
+<h3>Exercise 2</h3>
+<p><strong>Task:</strong> Use the pair-correlation function to fit a cluster process to the data and use the fitted model to simulate null model data</p>
+<p>We use the function <code>kkpm()</code> to fit a cluster point process model. We need to provide the point pattern (<code>X</code>, here we need to remove all marks with <code>unmark()</code> because <code>subset.ppp()</code> only drops all unused levels, but does not remove all marks). We specify the cluster type we want to fit (<code>cluster</code>) and which summary function to use (<code>pcf</code>). Then, we simulate patterns using the fitted process with <code>simulate.kppm()</code>. We need to provide the model (<code>object</code>) and the number of simulations (<code>nsim</code>). The result is a list of simulated patterns.</p>
+<pre class="r"><code>  thomas_process &lt;- kppm(X = unmark(saplings), clusters = &quot;Thomas&quot;, 
+                         statistic = &quot;pcf&quot;)
+  
+  simulated_pattern &lt;- simulate.kppm(object = thomas_process, nsim = 199)</code></pre>
+<p>Now, we can compute the envelopes of the null model and compare it to the observed data.</p>
+<pre class="r"><code>  o22_saplings_thomas &lt;- envelope(saplings, fun = Oest, 
+                                  r = seq(from = 0, to = 45, by = 0.5),
+                                  nsim = 199, nrank = 5, 
+                                  simulate = simulated_pattern)</code></pre>
+<p><img src="Solution_3_files/figure-html/s_3_plot_thomas-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="exercise-3" class="section level3">
+<h3>Exercise 3</h3>
+<p><strong>Task:</strong> If the function of the observed data falls into the new envelope, you fitted good parameters for the cluster process. You can review them by inspecting the object. Here, the typical cluster size and number of parents are given.</p>
+<p><code>kappa</code> is the intensity of cluster centers. In order to get the ‘number of parents’, we need to multiply the number with the area of the observation window (remember: the intensity is the number per unit area). Luckily, <code>spatstat</code> contains a function (<code>area()</code>) to calculate the area. The <code>scale</code> parameter gives the standard deviation of random displacement of a point from its cluster center. To calculate the area of a cluster, we need to calculate the area of the according ‘circle’. The <code>Mean cluster size</code> gives exactly what it says.</p>
+<pre class="r"><code>  print(thomas_process)
+## Stationary cluster point process model
+## Fitted to point pattern dataset &#39;unmark(saplings)&#39;
+## Fitted by minimum contrast
+##  Summary statistic: pair correlation function
+## 
+## Uniform intensity:   0.02798167
+## 
+## Cluster model: Thomas process
+## Fitted cluster parameters:
+##        kappa        scale 
+## 0.0007933329 2.9586691460 
+## Mean cluster size:  35.27102 points</code></pre>
+<pre><code>## [1] &quot;Number of parents: 5.47&quot;
+## [1] &quot;Cluster area: 27.5&quot;</code></pre>
+</div>
+</div>
+<div id="mark-correlation-function-stoyans-k_mm" class="section level1">
+<h1>Mark correlation function (Stoyan’s <span class="math inline">\(k_{mm}\)</span>)</h1>
+<div id="exercise-1-1" class="section level3">
+<h3>Exercise 1</h3>
+<p><strong>Task:</strong> The data set <em>Alive_DouglasFir_OGN.txt</em> contains the location and stem diameters (diameter at breast height, DBH) for all living Douglas fir trees in the Old-growth North plot. Calculate the mark correlation function. What do these results suggest?</p>
+<p>First, we need to import the data, convert them as <code>ppp</code> object and have a look at the data. This time, the marks are continuous, i.e. the diameter at breast height in cm of each tree. Therefore, the <code>summary()</code> function automatically gives the mean, median and quantiles of the data. Also, the plot automatically scales the point according to their size.</p>
+<pre class="r"><code>  douglas_fir &lt;- read_delim(file = &quot;Data/Alive_DouglasFir_OGN.txt&quot;, 
+                            delim = &quot;;&quot;)
+  
+  plot_area &lt;- ripras(x = douglas_fir$x, y = douglas_fir$y, 
+                      shape = &quot;rectangle&quot;)
+  
+  douglas_fir_ppp &lt;- as.ppp(X = douglas_fir, W = plot_area)
+  
+  summary(douglas_fir_ppp)
+## Marked planar point pattern:  335 points
+## Average intensity 0.03662751 points per square unit
+## 
+## Coordinates are given to 2 decimal places
+## i.e. rounded to the nearest multiple of 0.01 units
+## 
+## marks are numeric, of type &#39;double&#39;
+## Summary:
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    1.90   35.60   48.80   46.05   57.90   99.00 
+## 
+## Window: rectangle = [-0.28027, 103.97027] x [0.04889, 87.78111] units
+## Window area = 9146.13 square units</code></pre>
+<p><img src="Solution_3_files/figure-html/s_3_plot_snd_data-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The mark-correlation function can be calculated with <code>markcorr()</code>. This is very straightforward.</p>
+<pre class="r"><code>  mark_corrlation_douglas_fir &lt;- markcorr(X = douglas_fir_ppp, 
+                                          r = seq(from = 0, to = 45,
+                                                  by = 0.5),
+                                          correction = &quot;Ripley&quot;)</code></pre>
+<p><img src="Solution_3_files/figure-html/s_3_plot_mark_correlation-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="exercise-2-1" class="section level3">
+<h3>Exercise 2</h3>
+<p><strong>Task:</strong> Check Calculate simulation envelopes to test for significance. What could be a possible ecological explanation of your results?</p>
+<p>We use <code>envelope()</code> to calculate the simulation envelopes. As null model, we use random labeling, shuffling only the marks but not the points (<code>simulate</code> argument using <code>rlabel()</code>).</p>
+<pre class="r"><code>  envelopes_mark_correlation_alive &lt;- envelope(Y = douglas_fir_ppp, 
+                                               fun = markcorr,
+                                               r = seq(from = 0, to = 45, 
+                                                       by = 0.5),
+                                               nsim = 199, nrank = 5,
+                                               simulate = expression(rlabel(douglas_fir_ppp)))</code></pre>
+<p><img src="Solution_3_files/figure-html/s_3_plot_envelopes_mark_correlation-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="inhomogeneous-point-patterns" class="section level1">
+<h1>Inhomogeneous point patterns</h1>
+<div id="exercise-1-2" class="section level3">
+<h3>Exercise 1</h3>
+<p><strong>Task:</strong> In the data set <em>Hemlock_Adults_vs_SmallSaps.txt</em>, you can observe a clear gradient in the density of adult trees. Calculate O11(r) and L11(r) for pattern 1 (adult trees) to see up to which scale clustering of the trees can be observed using ‘CSR’ as null model.</p>
+<p>We import the data, classify it and convert it as <code>ppp</code> object. We plot the point pattern of only adult trees and have a look at the summary.</p>
+<pre class="r"><code>  hemlock &lt;- read_delim(file = &quot;Data/Hemlock_Adults_vs_SmallSaps.txt&quot;, 
+                        delim = &quot;;&quot;)
+  
+  hemlock &lt;- mutate(hemlock,
+                    mark = case_when(mark == 1 ~ &quot;adults&quot;,
+                                     mark == 2 ~ &quot;saplings&quot;),
+                    mark = as.factor(mark))
+  
+  plot_area &lt;- ripras(x = hemlock$x, y = hemlock$y, 
+                      shape = &quot;rectangle&quot;)
+  
+  hemlock_ppp &lt;- as.ppp(X = hemlock, W = plot_area)
+  
+  summary(hemlock_ppp)
+## Marked planar point pattern:  427 points
+## Average intensity 0.06190762 points per square unit
+## 
+## Coordinates are given to 2 decimal places
+## i.e. rounded to the nearest multiple of 0.01 units
+## 
+## Multitype:
+##          frequency proportion  intensity
+## adults         234  0.5480094 0.03392596
+## saplings       193  0.4519906 0.02798167
+## 
+## Window: rectangle = [1.22493, 80.43507] x [-1.64345, 85.43345] units
+## Window area = 6897.37 square units</code></pre>
+<p><img src="Solution_3_files/figure-html/s_3_plot_trd_data%20-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Also, we need to implement the O-ring statistic as before.</p>
+<pre class="r"><code>  Oest &lt;- function(input,r = NULL,
+                   correction = &quot;Ripley&quot;, divisor = &quot;d&quot;, ...){
+    
+    p_fct &lt;- pcf(input,  r = r,
+                 correction = correction, divisor = divisor, ...)
+    
+    lambda &lt;- intensity(unmark(input))
+    
+    eval.fv(p_fct*lambda)
+  }</code></pre>
+<p>We calculate the O-ring statistic for the adult trees only, using <code>envelope()</code> and the null model of ‘CSR’.</p>
+<pre class="r"><code>  adults &lt;- subset.ppp(hemlock_ppp, marks == &quot;adults&quot;, drop = TRUE)
+  
+  envelopes_adults_homo &lt;- envelope(Y = adults, fun = Oest,
+                                    r = seq(from = 0, to = 45, by = 0.5), 
+                                    nsim = 199, rank = 5)</code></pre>
+<p><img src="Solution_3_files/figure-html/s_3_plot_oring_adults-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="exercise-2-2" class="section level3">
+<h3>Exercise 2</h3>
+<p><strong>Task:</strong> Getzin et al. (2008) show that the study area is heterogeneous. We are going to account for this heterogeneity by fitting a heterogeneous Poisson processes.</p>
+<p>Firstly, we need to get the intensity <span class="math inline">\(\lambda(xy)\)</span> at every point of the observation window. The result is a <code>im</code> (pixel image) object.</p>
+<pre class="r"><code>  lambda_xy &lt;- density(x = adults)
+
+  class(lambda_xy)
+## [1] &quot;im&quot;</code></pre>
+<p><img src="Solution_3_files/figure-html/s_3_plot_lambda-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Now, we can simulate heterogeneous point patterns following the intensity of the pattern. Therefore, we use <code>rpoispp()</code> and specify the argument <code>lambda</code> with the created <code>im</code> object. Also, we specify the number of simulated patterns (<code>nsim</code>). The result is a list with heterogeneous point patterns. If you plot one realization of the simulated data, you can see how the random points ‘follow’ the intensity.</p>
+<pre class="r"><code>  simulated_heterogenous_pattern &lt;- rpoispp(lambda = lambda_xy, nsim = 199)</code></pre>
+<p><img src="Solution_3_files/figure-html/s_3_plot_hetero-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Now, we can use the simulated point patterns as input for <code>envelope()</code> to create simulation envelopes with the null model of a heterogeneous Poisson process.</p>
+<pre class="r"><code>  envelopes_adults_hetero &lt;- envelope(Y = adults, fun = Oest,
+                                      r = seq(from = 0, to = 45, 
+                                              by = 0.5), 
+                                      nsim = 199, rank = 5, 
+                                      simulate = simulated_heterogenous_pattern)</code></pre>
+<p><img src="Solution_3_files/figure-html/s_3_plot_sim_hetero-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>There is a wrapper around these function in <a href="https://r-spatialecology.github.io/onpoint/"><code>onpoint</code></a> to simulate a heterogenous Poisson process as null model (see <code>?simulate_heterogenous_pattern</code>).</p>
+<p>Alternativly, <code>spatstat</code> can calculated the inhomogenous pair-correlation function and consider the heterogneous plot conditions while estimating the pair-correlation function.</p>
+<pre class="r"><code>  envelopes_adults_inhomo &lt;- envelope(Y = adults, fun = pcfinhom, 
+                                      divisor = &quot;d&quot;,
+                                      correction = &quot;Ripley&quot;,
+                                      r = seq(from = 0, to = 45, by = 0.5),
+                                      nsim = 199, rank = 5)</code></pre>
+<p><img src="Solution_3_files/figure-html/s_3_plot_envelopes_hetero-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><strong>References</strong>:</p>
+<p>Baddeley, A., Rubak, E., Turner, R., 2015. Spatial point patterns: Methodology and applications with R. Chapman and Hall/CRC Press, London.</p>
+<p>Getzin, S., Dean, C., He, F., Trofymow, J.A., Wiegand, K., Wiegand, T., 2006. Spatial patterns and competition of tree species in a Douglas fir chronosequence on Vancouver Island. Ecography, 29, 671-682.</p>
+<p>Getzin, S., Wiegand, T., Wiegand, K., He, F., 2008. Heterogeneity influences spatial patterns and demographics in forest stands. J. Ecol. 96, 807-820.</p>
+</div>
+</div>
 
 
 

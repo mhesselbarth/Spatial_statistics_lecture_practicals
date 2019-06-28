@@ -421,7 +421,7 @@ $(document).ready(function () {
 </div>
 
 
-<p><img src="logo.png" width="182" style="display: block; margin: auto;" /></p>
+<p><img src="logo.png" style="display: block; margin: auto;" /></p>
 <p>First, we need to import the <a href="https://spatstat.org"><code>spatstat</code></a> package for analyzing spatial point patterns. Also, we import the <a href="https://www.tidyverse.org"><code>tidyverse</code></a> package, a collection of <code>R</code> packages designed for data science.</p>
 <pre class="r"><code>  library(spatstat)
   library(tidyverse)</code></pre>
@@ -451,7 +451,7 @@ $(document).ready(function () {
 ##  8  59.8 28.0       1
 ##  9  75.7 69.2       1
 ## 10  48.6 14.1       1
-## # ... with 658 more rows</code></pre>
+## # … with 658 more rows</code></pre>
 <p>We want to edit the column ‘mark’ in a way that 1 == ‘alive’ and 2 == ‘dead’. We are using two functions of the <code>dplyr</code> package. <code>mutate()</code> creates a new column (actually we overwrite the already existing column ‘mark’) and <code>case_when()</code> classifies the data. Lastly, we convert the column as <code>factors</code>.</p>
 <pre class="r"><code>  douglas_fir &lt;- mutate(douglas_fir,
                         mark = case_when(mark == 1 ~ &quot;alive&quot;,
@@ -479,7 +479,7 @@ $(document).ready(function () {
 ## Window: rectangle = [-0.12483, 104.12783] x [-0.1185, 87.8575] units
 ## Window area = 9171.73 square units</code></pre>
 <p><img src="Solution_2a_files/figure-html/s_2a_plot_data-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p><code>spatstat</code> provides most summary functions for spatial point pattern analysis (see e.g. <code>?Kest()</code>). The result is always a <code>fv</code> object (function value). Almost all summary functions allow you to specify the edge correction (<code>correction</code>) and the distances r (<code>r</code>). But first, we subset the data because we want only to use the ‘alive’ trees at the moment.</p>
+<p><code>spatstat</code> provides most summary functions for spatial point pattern analysis (see e.g. <code>?Kest()</code>). The result is always a <code>fv</code> object (function value). Almost all summary functions allow you to specify the edge correction (<code>correction</code>) and the distances r (<code>r</code>). But first, we subset the data because we want only to use the ‘alive’ trees at the moment.</p>
 <pre class="r"><code>  alive &lt;- subset(douglas_fir_ppp, marks == &quot;alive&quot;)
   
   l_fct_alive &lt;- Lest(X = alive, correction = &quot;Ripley&quot;, 
@@ -487,7 +487,7 @@ $(document).ready(function () {
   class(l_fct_alive)
 ## [1] &quot;fv&quot;         &quot;data.frame&quot;</code></pre>
 <p><img src="Solution_2a_files/figure-html/s_2a_plot_l_function-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>However, as you can see in the plot, Besag’s L-function is not centered to 0. Also, the O-ring statistic is not available in <code>spatstat</code>. Therefore, we need to write our own functions. For that, <code>eval.fv()</code> is quite handy. The function evaluates expression involving one or more <code>fv</code> objects (<code>divisor = "d"</code> is just a little trick to improve the bias of the estimator when r is close to zero).</p>
+<p>However, as you can see in the plot, Besag’s L-function is not centered to 0. Also, the O-ring statistic is not available in <code>spatstat</code>. Therefore, we need to write our own functions. For that, <code>eval.fv()</code> is quite handy. The function evaluates expression involving one or more <code>fv</code> objects (<code>divisor = &quot;d&quot;</code> is just a little trick to improve the bias of the estimator when r is close to zero).</p>
 <pre class="r"><code>  Lest.cent &lt;- function(input, correction = &quot;Ripley&quot;, r = NULL, ...){
     
     l_fct &lt;- Lest(input, correction = correction, r = r, ...)
@@ -514,7 +514,7 @@ $(document).ready(function () {
   oring_statistic &lt;- Oest(input = alive, 
                          r = seq(from = 0, to = 45, by = 0.5))</code></pre>
 <p><img src="Solution_2a_files/figure-html/s_2a_plot_fun-1.png" width="672" style="display: block; margin: auto;" /><img src="Solution_2a_files/figure-html/s_2a_plot_fun-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Alternatively, these functions are already implemented in the <code>onpoint</code> package, a small collection of utility functions based on <code>spatstat</code>. The package is only hosted on <a href="https://r-spatialecology.github.io/onpoint/"><em>GitHub</em></a>. To install <code>onpoint</code>, you need the <code>devtools</code> package. In case you don’t have <code>devtools</code> installed yet, do it as before and simply use <code>install_github(repo = "r-spatialecology/onpoint")</code>.</p>
+<p>Alternatively, these functions are already implemented in the <code>onpoint</code> package, a small collection of utility functions based on <code>spatstat</code>. The package is only hosted on <a href="https://r-spatialecology.github.io/onpoint/"><em>GitHub</em></a>. To install <code>onpoint</code>, you need the <code>devtools</code> package. In case you don’t have <code>devtools</code> installed yet, do it as before and simply use <code>install_github(repo = &quot;r-spatialecology/onpoint&quot;)</code>.</p>
 <pre class="r"><code>  library(onpoint)
 
   l_function &lt;- center_l_function(x = alive, 
