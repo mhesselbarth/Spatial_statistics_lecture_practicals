@@ -40,6 +40,9 @@ navbar:
         - text: "Solution 3"
           icon: fa-clipboard-check
           href: Solution_3.html
+        - text: "Solution Programita"
+          icon: fa-clipboard-check
+          href: Solution_Programita.html
     - text: "More..."
       icon: fa-ellipsis-h
       menu:

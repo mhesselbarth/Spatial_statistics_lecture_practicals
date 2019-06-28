@@ -1,0 +1,16 @@
+---
+title: "Solutions Programita"
+author: "Wiegand, Simpkins, Hesselbarth"
+date: "Summer semester 2019"
+output: 
+  html_document:
+    theme: cosmo
+---
+
+# Solutions Programita
+
+In case you used [Programita](http://programita.org) for the practicals, some slides with the solutions can be found [click here](Slides_Practicals.zip)
+
+```{r p3_logo, echo = FALSE, fig.align = "center", out.width = '50%'}
+knitr::include_graphics("logo.png", auto_pdf = FALSE)
+```

@@ -378,6 +378,13 @@ $(document).ready(function () {
         Solution 3
       </a>
     </li>
+    <li>
+      <a href="Solution_Programita.html">
+        <span class="fa fa-clipboard-check"></span>
+         
+        Solution Programita
+      </a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -421,7 +428,7 @@ $(document).ready(function () {
 </div>
 
 
-<p><img src="logo.png" style="display: block; margin: auto;" /></p>
+<p><img src="logo.png" width="182" style="display: block; margin: auto;" /></p>
 <p>As always, we load all needed packages.</p>
 <pre class="r"><code>  library(spatstat)
   library(tidyverse)</code></pre>
@@ -491,8 +498,6 @@ $(document).ready(function () {
                                   r = seq(from = 0, to = 45, by = 0.5),
                                   nsim = 199, nrank = 5, 
                                   simulate = simulated_pattern)</code></pre>
-<pre><code>## Warning in (function (x, bw = &quot;nrd0&quot;, adjust = 1, kernel = c(&quot;gaussian&quot;, :
-## sum(weights) != 1 -- will not get true density</code></pre>
 <p><img src="Solution_3_files/figure-html/s_3_plot_thomas-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="exercise-3" class="section level3">
@@ -620,7 +625,7 @@ $(document).ready(function () {
 </div>
 <div id="exercise-2-2" class="section level3">
 <h3>Exercise 2</h3>
-<p><strong>Task:</strong> Getzin et al. (2008) show that the study area is heterogeneous. We are going to account for this heterogeneity by fitting a heterogeneous Poisson processes.</p>
+<p><strong>Task:</strong> Getzin et al. (2008) show that the study area is heterogeneous. We are going to account for this heterogeneity by fitting a heterogeneous Poisson processes.</p>
 <p>Firstly, we need to get the intensity <span class="math inline">\(\lambda(xy)\)</span> at every point of the observation window. The result is a <code>im</code> (pixel image) object.</p>
 <pre class="r"><code>  lambda_xy &lt;- density(x = adults)
 
