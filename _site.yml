@@ -38,7 +38,7 @@ navbar:
           icon: fa-clipboard-check
           href: Solution_2b.html
         - text: "Solution 3"
-          icon: fa-clock
+          icon: fa-clipboard-check
           href: Solution_3.html
     - text: "More..."
       icon: fa-ellipsis-h
