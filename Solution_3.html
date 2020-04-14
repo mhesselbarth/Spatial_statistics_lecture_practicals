@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Wiegand, Simpkins, Hesselbarth" />
+<meta name="author" content="Wiegand, Getzin, Hesselbarth" />
 
 
 <title>Cluster processes / Mark correlation function / Heterogenous conditions</title>
@@ -86,7 +86,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -235,6 +234,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -246,18 +246,6 @@ $(document).ready(function () {
   display: none;
 }
 </style>
-
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
 
 <!-- code folding -->
 
@@ -422,8 +410,8 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Cluster processes / Mark correlation function / Heterogenous conditions</h1>
-<h4 class="author">Wiegand, Simpkins, Hesselbarth</h4>
-<h4 class="date">Summer semester 2019</h4>
+<h4 class="author">Wiegand, Getzin, Hesselbarth</h4>
+<h4 class="date">Summer semester 2020</h4>
 
 </div>
 
@@ -463,6 +451,7 @@ $(document).ready(function () {
 ## saplings       193  0.4519906 0.02798167
 ## 
 ## Window: rectangle = [1.22493, 80.43507] x [-1.64345, 85.43345] units
+##                     (79.21 x 87.08 units)
 ## Window area = 6897.37 square units</code></pre>
 <p><img src="Solution_3_files/figure-html/s_3_plot_data-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Then, we implement the O-ring statistic.</p>
@@ -548,6 +537,7 @@ $(document).ready(function () {
 ##    1.90   35.60   48.80   46.05   57.90   99.00 
 ## 
 ## Window: rectangle = [-0.28027, 103.97027] x [0.04889, 87.78111] units
+##                     (104.3 x 87.73 units)
 ## Window area = 9146.13 square units</code></pre>
 <p><img src="Solution_3_files/figure-html/s_3_plot_snd_data-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>The mark-correlation function can be calculated with <code>markcorr()</code>. This is very straightforward.</p>
@@ -602,6 +592,7 @@ $(document).ready(function () {
 ## saplings       193  0.4519906 0.02798167
 ## 
 ## Window: rectangle = [1.22493, 80.43507] x [-1.64345, 85.43345] units
+##                     (79.21 x 87.08 units)
 ## Window area = 6897.37 square units</code></pre>
 <p><img src="Solution_3_files/figure-html/s_3_plot_trd_data%20-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Also, we need to implement the O-ring statistic as before.</p>
@@ -674,6 +665,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

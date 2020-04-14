@@ -1,7 +1,7 @@
 ---
 title: "Cluster processes / Mark correlation function / Heterogenous conditions"
-author: "Wiegand, Simpkins, Hesselbarth"
-date: "Summer semester 2019"
+author: "Wiegand, Getzin, Hesselbarth"
+date: "Summer semester 2020"
 output: 
   html_document:
     theme: cosmo
@@ -117,7 +117,7 @@ __Task:__ If the function of the observed data falls into the new envelope, you 
 ```{r s_3_no_parents, echo = FALSE, collapse = TRUE}
   # Check with Programita!
   paste0("Number of parents: ", 
-         round(thomas_process$clustpar[["kappa"]] * area(saplings$window), 2))
+         round(thomas_process$clustpar[["kappa"]] * spatstat::area(saplings$window), 2))
 
   paste0("Cluster area: ", 
          round((thomas_process$clustpar[["scale"]] ^ 2) * pi, 2))
