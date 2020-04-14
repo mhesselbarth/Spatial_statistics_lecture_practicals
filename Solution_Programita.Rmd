@@ -1,7 +1,7 @@
 ---
 title: "Solutions Programita"
 author: "Wiegand, Getzin, Hesselbarth"
-date: "Summer semester 2019"
+date: "Summer semester 2020"
 output: 
   html_document:
     theme: cosmo
