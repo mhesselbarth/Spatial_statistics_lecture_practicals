@@ -417,33 +417,17 @@ $(document).ready(function () {
 
 
 <p><br> <br> <br></p>
+<p>Please find the introduction slides <a href="Practical_1_slides.pdf">here</a>. If you want to print the point pattern to flip coins on it, you can find a DIN A4 .pdf-file <a href="Practical_1_pattern.pdf">here</a>. Addtionally, there is an <em>Excel</em> template, you can find <a href="Practical_1_coin_table.xlsx">here</a>.</p>
 <p><img src="coin_flip.jpg" width="50%" style="display: block; margin: auto;" /></p>
-<p>Please find the introduction slides <a href="Practical_1_slides.pdf">here</a>. If you want to print the point pattern to flip coins on it, you can find a DIN A4 .pdf-file <a href="Practical_1_pattern.pdf">here</a> Addtionally, there is an <em>Excel</em> template, you can find <a href="Practical_1_coin_table.xlsx">here</a>.</p>
 <p>In case you do not want to print the pattern and actually flip a coin, you could use the following code to “simulate” a coin flip.</p>
-<pre class="r"><code>library(tidyverse)
-library(spatstat)
-
-# read x and y coords of data
-douglas_fir &lt;- read_delim(file = &quot;Data/DouglasFir_Adult_vs_Seedling_OGN.txt&quot;,
-                          delim = &#39;;&#39;)
-
-# filter for only living trees
-douglas_fir &lt;- filter(douglas_fir, mark == 1)
-
-# convert to spatstat point pattern object
-douglas_fir_ppp &lt;- spatstat::ppp(x = douglas_fir$x, y = douglas_fir$y, 
-                                 window = spatstat::ripras(x = douglas_fir$x,
-                                                           y = douglas_fir$y, 
-                                                           shape = &quot;rectangle&quot;))
-
-# function to virtually flip coins
+<pre class="r"><code># function to virtually flip coins
 flip_coin &lt;- function(pattern, n = 50, radius = 5) {
   
   # loop through number of coin flips
   vapply(X = 1:n, FUN = function(x) {
   
   # random coord within plot as coin center
-  coin_center &lt;- runifpoint(n = 1, win = pattern$window)
+  coin_center &lt;- spatstat::runifpoint(n = 1, win = pattern$window)
   
   # calculate coords of circle around center using radius
   coin_x &lt;- sin(seq(0, 2 * pi, length.out = 250)) * radius + coin_center$x
@@ -457,10 +441,25 @@ flip_coin &lt;- function(pattern, n = 50, radius = 5) {
   }, FUN.VALUE = numeric(1))
 }</code></pre>
 <p>You can use the resulting count of events within each virtual coin flip to fill the <em>Excel</em> template. Have a look at different <code>radius</code> arguments, to analyse various sizes of the “moving window”.</p>
-<pre class="r"><code># create 35 coin flips
+<pre class="r"><code>library(dplyr)
+library(spatstat)
+
+# read x and y coords of data
+douglas_fir &lt;- read.table(file = &quot;Data/DouglasFir_Adult_vs_Seedling_OGN.txt&quot;,
+                          sep = &#39;;&#39;, header = TRUE)
+
+# filter for only living trees
+douglas_fir &lt;- dplyr::filter(douglas_fir, mark == 1)
+
+# convert to spatstat point pattern object
+douglas_fir_ppp &lt;- spatstat::ppp(x = douglas_fir$x, y = douglas_fir$y, 
+                                 window = spatstat::ripras(x = douglas_fir$x,
+                                                           y = douglas_fir$y, 
+                                                           shape = &quot;rectangle&quot;))
+
+# create 35 coin flips
 flip_coin(pattern = douglas_fir_ppp, n = 35)</code></pre>
-<pre><code>##  [1]  5  8  5  6  5  6  2  5  6  4  3 10  5  4  7  2  3  6  8  5 14  2  3  6  9
-## [26]  3  4  9  5  9  3  5  4  2  8</code></pre>
+<pre><code>##  [1] 3 0 0 0 0 1 0 4 0 0 3 3 0 1 2 4 0 0 0 2 3 0 0 1 3 1 0 2 0 2 1 1 0 0 1</code></pre>
 
 
 

@@ -13,31 +13,15 @@ editor_options:
 <br>
 <br>
 
+Please find the introduction slides [here](Practical_1_slides.pdf). If you want to print the point pattern to flip coins on it, you can find a DIN A4 .pdf-file [here](Practical_1_pattern.pdf). Addtionally, there is an _Excel_ template, you can find [here](Practical_1_coin_table.xlsx).
+
 ```{r p3_logo, echo = FALSE, fig.align = "center", out.width = '50%'}
 knitr::include_graphics("coin_flip.jpg", auto_pdf = FALSE)
 ```
 
-Please find the introduction slides [here](Practical_1_slides.pdf). If you want to print the point pattern to flip coins on it, you can find a DIN A4 .pdf-file [here](Practical_1_pattern.pdf) Addtionally, there is an _Excel_ template, you can find [here](Practical_1_coin_table.xlsx).
-
 In case you do not want to print the pattern and actually flip a coin, you could use the following code to "simulate" a coin flip.
 
-```{r, eval = FALSE}
-library(tidyverse)
-library(spatstat)
-
-# read x and y coords of data
-douglas_fir <- read_delim(file = "Data/DouglasFir_Adult_vs_Seedling_OGN.txt",
-                          delim = ';')
-
-# filter for only living trees
-douglas_fir <- filter(douglas_fir, mark == 1)
-
-# convert to spatstat point pattern object
-douglas_fir_ppp <- spatstat::ppp(x = douglas_fir$x, y = douglas_fir$y, 
-                                 window = spatstat::ripras(x = douglas_fir$x,
-                                                           y = douglas_fir$y, 
-                                                           shape = "rectangle"))
-
+```{r}
 # function to virtually flip coins
 flip_coin <- function(pattern, n = 50, radius = 5) {
   
@@ -45,7 +29,7 @@ flip_coin <- function(pattern, n = 50, radius = 5) {
   vapply(X = 1:n, FUN = function(x) {
   
   # random coord within plot as coin center
-  coin_center <- runifpoint(n = 1, win = pattern$window)
+  coin_center <- spatstat::runifpoint(n = 1, win = pattern$window)
   
   # calculate coords of circle around center using radius
   coin_x <- sin(seq(0, 2 * pi, length.out = 250)) * radius + coin_center$x
@@ -60,10 +44,25 @@ flip_coin <- function(pattern, n = 50, radius = 5) {
 }
 ```
 
-
 You can use the resulting count of events within each virtual coin flip to fill the _Excel_ template. Have a look at different `radius` arguments, to analyse various sizes of the "moving window".
 
 ```{r}
+library(dplyr)
+library(spatstat)
+
+# read x and y coords of data
+douglas_fir <- read.table(file = "Data/DouglasFir_Adult_vs_Seedling_OGN.txt",
+                          sep = ';', header = TRUE)
+
+# filter for only living trees
+douglas_fir <- dplyr::filter(douglas_fir, mark == 1)
+
+# convert to spatstat point pattern object
+douglas_fir_ppp <- spatstat::ppp(x = douglas_fir$x, y = douglas_fir$y, 
+                                 window = spatstat::ripras(x = douglas_fir$x,
+                                                           y = douglas_fir$y, 
+                                                           shape = "rectangle"))
+
 # create 35 coin flips
 flip_coin(pattern = douglas_fir_ppp, n = 35)
 ```
