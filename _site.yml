@@ -14,35 +14,27 @@ navbar:
       icon: fa-tasks
       menu:
         - text: "Practical 1"
-          icon: fa-clipboard-check
+          icon: fa-tasks
           href: Practical_1.html
-        - text: "Practical 2a"
-          icon: fa-clipboard-check
-          href: Practical_2a.html
-        - text: "Practical 2b"
-          icon: fa-clipboard-check
-          href: Practical_2b.html
-        - text: "Practical 3"
-          icon: fa-clipboard-check
-          href: Practical_3.html
+        - text: "Practical 2"
+          icon: fa-tasks
+          href: Practical_2.html
     - text: "Solutions"
       icon: fa-check
       menu:
         - text: "Solution 1"
           icon: fa-clipboard-check
           href: Solution_1.html
-        - text: "Solution 2a"
+        - text: "Solution 2"
           icon: fa-clipboard-check
           href: Solution_2a.html
-        - text: "Solution 2b"
-          icon: fa-clipboard-check
-          href: Solution_2b.html
-        - text: "Solution 3"
-          icon: fa-clipboard-check
-          href: Solution_3.html
-        - text: "Solution Programita"
-          icon: fa-clipboard-check
-          href: Solution_Programita.html
+    - text: "Additional material"
+      icon: fa-plus-square
+      menu:
+        - text: "1st order properties"
+          icon: fa-tasks
+        - text: "Cluster processes/Mark correlation function/Heterogenous conditions"
+          icon: fa-tasks
     - text: "More..."
       icon: fa-ellipsis-h
       menu:

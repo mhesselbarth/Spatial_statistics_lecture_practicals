@@ -12,7 +12,7 @@
 <meta name="author" content="Wiegand, Getzin, Hesselbarth" />
 
 
-<title>Spatial statistics</title>
+<title>1st order properties</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -387,20 +387,21 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Spatial statistics</h1>
+<h1 class="title toc-ignore">1st order properties</h1>
 <h4 class="author">Wiegand, Getzin, Hesselbarth</h4>
 <h4 class="date">Summer semester 2020</h4>
 
 </div>
 
 
-<p>Here you can find all practicals for the Spatial statistics course. The practicals will be availaible bit by bit once the topics were covered in the lectures.</p>
-<p>You can choose if you prefer using <a href="http://programita.org">Programita</a> or <a href="https://www.r-project.org">R</a> to work on the practicals. Anyways, for the following plenum discussions, I suggest taking screenshots of the results for each exercise.</p>
-<p>In case you have any questions or trouble, please write me an e-mail or come to my office at any time. You can find my contact information under “More…” on this homepage.</p>
-<p>To download all data needed for the practicals, <a href="Data.zip">click here</a>. Please be aware and credit that the data was published (Getzin et al. 2006, Getzin et al. 2008).</p>
-<p><strong>References</strong></p>
-<p>Getzin, S., Dean, C., He, F., Trofymow, J.A., Wiegand, K., Wiegand, T., 2006. Spatial patterns and competition of tree species in a Douglas fir chronosequence on Vancouver Island. Ecography, 29, 671-682.</p>
-<p>Getzin, S., Wiegand, T., Wiegand, K., He, F., 2008. Heterogeneity influences spatial patterns and demographics in forest stands. J. Ecol. 96, 807-820.</p>
+<p><br> <br> <br></p>
+<p><img src="coin_flip.jpg" width="50%" style="display: block; margin: auto;" /></p>
+<p>An exemplary solution using the <em>Excel</em> template can be found here <a href="Practical_1_coin_table_solution.xlsx">here</a>.</p>
+<p>We counted points covered by 35 coins that were randomly dropped onto the point pattern. The total number of points found within the circles divided by 35 gives you an estimate of the point density <span class="math inline">\(\lambda\)</span> (events per area). Note, the area here is not given in ‘coin area’ not <span class="math inline">\(m^2\)</span>.</p>
+<p>Using this density <span class="math inline">\(\lambda\)</span>, we calculated the probability of a coin covering n points if the points were randomly distributed. This probability multiplied by 35 gives the expected number of coins in the experiment that cover n points.</p>
+<p>We used a statistical test if your actual counts significantly deviated from the Poisson distribution. This means we tested if the points are randomly distributed. We used a chi-squared test (<span class="math inline">\(\chi^2\)</span>-test) which also works well for small sample sizes. The sample size <span class="math inline">\(k\)</span> is the number of classes (sample categories), i.e. if up to 5 points in a circle were counted, there are 6 classes (<span class="math inline">\(n=0, n=1, ..., n=5\)</span>). The test requires the expected number of discoveries in a sample category to be (as a rule of thumb) at least 3. Therefore, we merged categories 2-6 to be one category, leaving only three sample categories (<span class="math inline">\(n=0, n=1, n&gt;1\)</span>).</p>
+<p>The <span class="math inline">\(\chi^2\)</span>-value is compared to the corresponding value from the <span class="math inline">\(\chi^2\)</span>-distribution. The degrees of freedom (d.f.) was only 1, because we had only three sample categories and we had to subtract 2 d.f. because we 1) estimated the point density <span class="math inline">\(\lambda\)</span> from our data and 2) the number of sample categories <span class="math inline">\(k\)</span> also depended on our data, i.e. in your experiments you might have ended up with more than 3 categories. The critical value of the <span class="math inline">\(\chi^2\)</span>-distribution can be looked up in statistics textbooks and is also included in all statistical software, e.g. in <em>Excel</em> (=CHISQ.INV(0095;1)) or in <em>R</em> (qchisq(q=0.95, df=1)). In case the null hypothesis was rejected, the points in pattern are not random.</p>
+<p>Although in the experiment showed there were signs of the points being not randomly distributed, we finally used an index of dispersion to see if there is a (non-significant) tendency towards clustering or regularity in the pattern. Because in the Poisson-case the variance of our counts <span class="math inline">\(s^2\)</span> equals its mean density <span class="math inline">\(\lambda\)</span>, we can use the index of dispersion, which is 1 if the points are randomly distributed and larger if they are clustered.</p>
 
 
 

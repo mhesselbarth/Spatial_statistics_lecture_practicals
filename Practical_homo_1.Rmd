@@ -1,0 +1,54 @@
+---
+title: "Homogenous null model"
+author: "Wiegand, Getzin, Hesselbarth"
+date: "Summer semester 2020"
+output: 
+  html_document:
+    theme: cosmo
+editor_options: 
+  chunk_output_type: console
+---
+
+For more information, please see _Homo_NullModels.pptx_.
+
+### Exercise 1) 
+Using the data set _DouglasFir_LiveDead_OGN.dat_, calculate the O-ring statistic and the L-function. Here, pattern 1 gives the locations of living trees and pattern 2 gives the locations of dead trees. Comparing the univariate measures $O_{11}(r)$ and $L_{11}(r)$, how do they differ?
+
+For more information, see Slides 6 ff., Slides 26 & Slides 52 ff.
+
+### Exercise 2)
+The L-function is said to have a memory effect because of its cumulative nature (counting points within discs instead of circles compared to the O-statistic). Can you see it in your results?
+
+For more information, see Slides 26 & Slides 52 ff.
+
+### Exercise 3 )
+Redo the analysis but now with simulation envelopes. How does the simulation envelope change, if you change the settings for the envelope from 'simulations = 39' to 'simulations = 199' ('lowest/highest' = 5). Hint: for easier comparison copy screenshots of the results to some PowerPoint slides.
+
+For more information, see Slides 11 ff. & Slides 63 ff.
+
+### Exercise 4 )
+Also look at the functions $O_{22}(r)$ and $L_{22}(r)$. You can do so by checking the 'Change patterns' box in the lower right panel. Note that the plotted functions will still say $O_{11}(r)$ and $L_{11}(r)$ because you only switched the marks. Is there a striking difference between dead and living Douglas fir trees?
+
+For more information, see Slides 11 ff. & Slides 63 ff.
+
+...to be continued later today...
+
+```{r p_2a_plot_example, echo = FALSE, message = FALSE, fig.align = "center", fig.width = 5, fig.height = 5}
+  library(ggplot2)
+  library(spatstat)
+
+  data <- read.table("Data/DouglasFir_LiveDead_OGN.txt", 
+                     sep = ";", dec = ".", header = TRUE)
+  
+  window <- spatstat::ripras(data[,1:2], shape = "rectangle")
+
+  ggplot2::ggplot(data = data) + 
+     ggplot2::geom_polygon(data = as.data.frame(window),
+                           ggplot2::aes(x = x, y = y),
+                           col = "black", fill = "grey85") +
+    ggplot2::geom_point(ggplot2::aes(x = x, y = y, col = mark)) + 
+    ggplot2::coord_equal() + 
+    ggplot2::scale_color_viridis_c() + 
+    ggplot2::guides(col = FALSE) + 
+    ggplot2::theme_void()
+```
