@@ -9,8 +9,8 @@ output:
 
 # Solutions Programita
 
-In case you used [Programita](http://programita.org) for the practicals, some slides with the solutions can be found [here](Slides_Practicals.zip)
-
-```{r p3_logo, echo = FALSE, fig.align = "center", out.width = '50%'}
+```{r p3_logo, echo = FALSE, fig.align = "center"}
 knitr::include_graphics("logo.png", auto_pdf = FALSE)
 ```
+
+In case you used [Programita](http://programita.org) for the practicals, some slides with the solutions can be found [here](Slides_Practicals.zip)

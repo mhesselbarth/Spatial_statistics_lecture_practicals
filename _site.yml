@@ -49,6 +49,9 @@ navbar:
             - text: "Advanced SPPA"
               icon: fa-clipboard-check
               href: Solution_cluster.html
+            - text: "Solution Programita"
+              icon: fa-clipboard-check
+              href: Solution_Programita.html
     - text: "More..."
       icon: fa-ellipsis-h
       menu:
