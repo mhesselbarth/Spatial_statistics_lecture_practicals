@@ -9,6 +9,8 @@ editor_options:
   chunk_output_type: console
 ---
 
+<br>
+
 ... continiued Homogenous null model
 
 For more information, please see _Homo_NullModels.pptx_.

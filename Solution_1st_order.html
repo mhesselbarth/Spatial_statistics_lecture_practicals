@@ -445,9 +445,9 @@ $(document).ready(function () {
 </div>
 
 
-<p><br> <br> <br></p>
+<p><br></p>
 <p><img src="coin_flip.jpg" width="50%" style="display: block; margin: auto;" /></p>
-<p>An exemplary solution using the <em>Excel</em> template can be found here <a href="Practical_1_coin_table_solution.xlsx">here</a>.</p>
+<p>An exemplary solution using the <em>Excel</em> template can be found here <a href="Practical_1st_order_coin_table_solution.xlsx">here</a>.</p>
 <p>We counted points covered by 35 coins that were randomly dropped onto the point pattern. The total number of points found within the circles divided by 35 gives you an estimate of the point density <span class="math inline">\(\lambda\)</span> (events per area). Note, the area here is not given in ‘coin area’ not <span class="math inline">\(m^2\)</span>.</p>
 <p>Using this density <span class="math inline">\(\lambda\)</span>, we calculated the probability of a coin covering n points if the points were randomly distributed. This probability multiplied by 35 gives the expected number of coins in the experiment that cover n points.</p>
 <p>We used a statistical test if your actual counts significantly deviated from the Poisson distribution. This means we tested if the points are randomly distributed. We used a chi-squared test (<span class="math inline">\(\chi^2\)</span>-test) which also works well for small sample sizes. The sample size <span class="math inline">\(k\)</span> is the number of classes (sample categories), i.e. if up to 5 points in a circle were counted, there are 6 classes (<span class="math inline">\(n=0, n=1, ..., n=5\)</span>). The test requires the expected number of discoveries in a sample category to be (as a rule of thumb) at least 3. Therefore, we merged categories 2-6 to be one category, leaving only three sample categories (<span class="math inline">\(n=0, n=1, n&gt;1\)</span>).</p>

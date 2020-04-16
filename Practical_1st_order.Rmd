@@ -10,8 +10,6 @@ editor_options:
 ---
 
 <br>
-<br>
-<br>
 
 Please find the introduction slides [here](Practical_1st_order_intro.pdf). If you want to print the point pattern to flip coins on it, you can find a DIN A4 .pdf-file [here](Practical_1st_order_pattern.pdf). Addtionally, there is an _Excel_ template, you can find [here](Practical_1st_order_coin_table.xlsx).
 

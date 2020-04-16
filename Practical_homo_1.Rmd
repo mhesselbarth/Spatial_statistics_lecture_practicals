@@ -9,6 +9,8 @@ editor_options:
   chunk_output_type: console
 ---
 
+<br>
+
 For more information, please see _Homo_NullModels.pptx_.
 
 ### Exercise 1) 

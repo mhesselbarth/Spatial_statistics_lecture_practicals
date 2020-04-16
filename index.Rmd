@@ -7,6 +7,8 @@ output:
     theme: cosmo
 ---
 
+<br>
+
 Practicals for Spatial statistics class taught at the University of Goettingen by the [Department of Ecosystem Modeling](https://www.uni-goettingen.de/en/102170.html). For more information, click [here](https://ecampus.uni-goettingen.de/sb/rds?state=verpublish&status=init&vmfile=no&moduleCall=webInfo&publishConfFile=webInfo&publishSubDir=veranstaltung&veranstaltung.veranstid=252259).
 
 **Instructors**: 

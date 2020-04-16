@@ -7,13 +7,17 @@ output:
     theme: cosmo
 ---
 
+<br>
+
 Here you can find all practicals for the Spatial statistics course. The practicals will be availaible bit by bit once the topics were covered in the lectures.
 
 You can choose if you prefer using [Programita](http://programita.org) or [R](https://www.r-project.org) to work on the practicals. Anyways, for the following plenum discussions, I suggest taking screenshots of the results for each exercise.
 
 In case you have any questions or trouble, please write me an e-mail or come to my office at any time. You can find my contact information under "More..." on this homepage.
 
-To download all data needed for the practicals, [click here](Data.zip). Please be aware and credit that the data was published (Getzin et al. 2006, Getzin et al. 2008).
+> To download all data needed for the practicals, [click here](Data.zip). Please be aware and credit that the data was published (Getzin et al. 2006, Getzin et al. 2008).
+
+
 
 **References**
 

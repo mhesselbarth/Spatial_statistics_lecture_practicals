@@ -9,6 +9,8 @@ editor_options:
   chunk_output_type: console
 ---
 
+<br>
+
 # Cluster process
 For more information, please see _SpatStat06_Homo.pptx_, Slides 9 - 28
 
