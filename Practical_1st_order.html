@@ -300,14 +300,14 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="Practical_1.html">
+      <a href="Practical_homo_1.html">
         <span class="fa fa-tasks"></span>
          
         Practical 1
       </a>
     </li>
     <li>
-      <a href="Practical_2.html">
+      <a href="Practical_homo_2.html">
         <span class="fa fa-tasks"></span>
          
         Practical 2
@@ -349,8 +349,29 @@ $(document).ready(function () {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">1st order properties</li>
-    <li class="dropdown-header">Cluster processes/Mark correlation function/Heterogenous conditions</li>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+        <span class="fa fa-tasks"></span>
+         
+        Practicals
+      </a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="Practical_1st_order.html">
+            <span class="fa fa-tasks"></span>
+             
+            1st order properties
+          </a>
+        </li>
+        <li>
+          <a href="Practical_cluster.html">
+            <span class="fa fa-tasks"></span>
+             
+            Cluster processes/Mark correlation function/Heterogenous conditions
+          </a>
+        </li>
+      </ul>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -419,31 +440,10 @@ flip_coin &lt;- function(pattern, n = 50, radius = 5) {
   }, FUN.VALUE = numeric(1))
 }</code></pre>
 <p>You can use the resulting count of events within each virtual coin flip to fill the <em>Excel</em> template. Have a look at different <code>radius</code> arguments, to analyse various sizes of the “moving window”.</p>
-<pre class="r"><code>library(dplyr)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;dplyr&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     filter, lag</code></pre>
-<pre><code>## The following objects are masked from &#39;package:base&#39;:
-## 
-##     intersect, setdiff, setequal, union</code></pre>
-<pre class="r"><code>library(spatstat)</code></pre>
-<pre><code>## Loading required package: spatstat.data</code></pre>
-<pre><code>## Loading required package: nlme</code></pre>
-<pre><code>## 
-## Attaching package: &#39;nlme&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
-## 
-##     collapse</code></pre>
-<pre><code>## Loading required package: rpart</code></pre>
-<pre><code>## Registered S3 method overwritten by &#39;spatstat&#39;:
-##   method     from
-##   print.boxx cli</code></pre>
-<pre><code>## 
-## spatstat 1.63-3       (nickname: &#39;Wet paint&#39;) 
-## For an introduction to spatstat, type &#39;beginner&#39;</code></pre>
-<pre class="r"><code># read x and y coords of data
+<pre class="r"><code>library(dplyr)
+library(spatstat)
+
+# read x and y coords of data
 douglas_fir &lt;- read.table(file = &quot;Data/DouglasFir_Adult_vs_Seedling_OGN.txt&quot;,
                           sep = &#39;;&#39;, header = TRUE)
 
@@ -458,7 +458,7 @@ douglas_fir_ppp &lt;- spatstat::ppp(x = douglas_fir$x, y = douglas_fir$y,
 
 # create 35 coin flips
 flip_coin(pattern = douglas_fir_ppp, n = 35)</code></pre>
-<pre><code>##  [1] 1 1 0 0 0 0 0 0 3 0 0 2 0 0 0 0 1 0 0 2 2 2 1 0 2 0 5 1 0 1 2 0 0 2 1</code></pre>
+<pre><code>##  [1] 0 0 2 0 1 1 0 0 3 0 0 0 5 0 0 0 2 0 1 0 1 2 0 0 0 0 0 0 0 0 2 0 0 1 0</code></pre>
 
 
 

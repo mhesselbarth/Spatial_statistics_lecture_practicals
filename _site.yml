@@ -15,10 +15,10 @@ navbar:
       menu:
         - text: "Practical 1"
           icon: fa-tasks
-          href: Practical_1.html
+          href: Practical_homo_1.html
         - text: "Practical 2"
           icon: fa-tasks
-          href: Practical_2.html
+          href: Practical_homo_2.html
     - text: "Solutions"
       icon: fa-check
       menu:
@@ -31,10 +31,15 @@ navbar:
     - text: "Additional material"
       icon: fa-plus-square
       menu:
-        - text: "1st order properties"
+        - text: "Practicals"
           icon: fa-tasks
-        - text: "Cluster processes/Mark correlation function/Heterogenous conditions"
-          icon: fa-tasks
+          menu:
+            - text: "1st order properties"
+              icon: fa-tasks
+              href: Practical_1st_order.html
+            - text: "Cluster processes/Mark correlation function/Heterogenous conditions"
+              icon: fa-tasks
+              href: Practical_cluster.html
     - text: "More..."
       icon: fa-ellipsis-h
       menu:
