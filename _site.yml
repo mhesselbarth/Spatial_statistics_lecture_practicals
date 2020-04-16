@@ -24,10 +24,10 @@ navbar:
       menu:
         - text: "Solution 1"
           icon: fa-clipboard-check
-          href: Solution_1.html
+          href: Solution_homo_1.html
         - text: "Solution 2"
           icon: fa-clipboard-check
-          href: Solution_2a.html
+          href: Solution_homo_2.html
     - text: "Additional material"
       icon: fa-plus-square
       menu:
@@ -37,9 +37,18 @@ navbar:
             - text: "1st order properties"
               icon: fa-tasks
               href: Practical_1st_order.html
-            - text: "Cluster processes/Mark correlation function/Heterogenous conditions"
+            - text: "Advanced SPPA"
               icon: fa-tasks
               href: Practical_cluster.html
+        - text: "Solutions"
+          icon: fa-check
+          menu:
+            - text: "1st order properties"
+              icon: fa-clipboard-check
+              href: Solution_1st_order.html
+            - text: "Advanced SPPA"
+              icon: fa-clipboard-check
+              href: Solution_cluster.html
     - text: "More..."
       icon: fa-ellipsis-h
       menu:
