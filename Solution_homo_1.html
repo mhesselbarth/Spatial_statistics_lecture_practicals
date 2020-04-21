@@ -282,10 +282,10 @@ $(document).ready(function () {
   </a>
 </li>
 <li>
-  <a href="about.html">
-    <span class="fa fa-question"></span>
+  <a href="data.html">
+    <span class="fa fa-database"></span>
      
-    About
+    Data
   </a>
 </li>
       </ul>
@@ -504,7 +504,7 @@ $(document).ready(function () {
 ## Window: rectangle = [-0.12483, 104.12783] x [-0.1185, 87.8575] units
 ##                     (104.3 x 87.98 units)
 ## Window area = 9171.73 square units</code></pre>
-<p><img src="Solution_homo_1_files/figure-html/s_2a_plot_data-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="Solution_homo_1_files/figure-html/solution_1_plot_data-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p><code>spatstat</code> provides most summary functions for spatial point pattern analysis (see e.g. <code>?Kest()</code>). The result is always a <code>fv</code> object (function value). Almost all summary functions allow you to specify the edge correction (<code>correction</code>) and the distances r (<code>r</code>). But first, we subset the data because we want only to use the ‘alive’ trees at the moment.</p>
 <pre class="r"><code>  alive &lt;- subset(douglas_fir_ppp, marks == &quot;alive&quot;)
   
@@ -512,7 +512,7 @@ $(document).ready(function () {
                       r = seq(from = 0, to = 45, by = 0.5))
   class(l_fct_alive)
 ## [1] &quot;fv&quot;         &quot;data.frame&quot;</code></pre>
-<p><img src="Solution_homo_1_files/figure-html/s_2a_plot_l_function-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="Solution_homo_1_files/figure-html/solution_1_plot_l_function-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>However, as you can see in the plot, Besag’s L-function is not centered to 0. Also, the O-ring statistic is not available in <code>spatstat</code>. Therefore, we need to write our own functions. For that, <code>eval.fv()</code> is quite handy. The function evaluates expression involving one or more <code>fv</code> objects (<code>divisor = "d"</code> is just a little trick to improve the bias of the estimator when r is close to zero).</p>
 <pre class="r"><code>  Lest.cent &lt;- function(input, correction = &quot;Ripley&quot;, r = NULL, ...){
     
@@ -539,7 +539,7 @@ $(document).ready(function () {
 
   oring_statistic &lt;- Oest(input = alive, 
                          r = seq(from = 0, to = 45, by = 0.5))</code></pre>
-<p><img src="Solution_homo_1_files/figure-html/s_2a_plot_fun-1.png" width="672" style="display: block; margin: auto;" /><img src="Solution_homo_1_files/figure-html/s_2a_plot_fun-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="Solution_homo_1_files/figure-html/solution_1_plot_fun-1.png" width="672" style="display: block; margin: auto;" /><img src="Solution_homo_1_files/figure-html/solution_1_plot_fun-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Alternatively, these functions are already implemented in the <code>onpoint</code> package, a small collection of utility functions based on <code>spatstat</code>. The package is only hosted on <a href="https://r-spatialecology.github.io/onpoint/"><em>GitHub</em></a>. To install <code>onpoint</code>, you need the <code>devtools</code> package. In case you don’t have <code>devtools</code> installed yet, do it as before and simply use <code>install_github(repo = "r-spatialecology/onpoint")</code>.</p>
 <pre class="r"><code>  library(onpoint)
 
@@ -563,7 +563,7 @@ $(document).ready(function () {
                                       r = seq(from = 0, to = 45, 
                                               by = 0.5),
                                       nsim = 199, nrank = 5)</code></pre>
-<p><img src="Solution_homo_1_files/figure-html/s_2a_plot_envelopes-1.png" width="672" style="display: block; margin: auto;" /><img src="Solution_homo_1_files/figure-html/s_2a_plot_envelopes-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="Solution_homo_1_files/figure-html/solution_1_plot_envelopes-1.png" width="672" style="display: block; margin: auto;" /><img src="Solution_homo_1_files/figure-html/solution_1_plot_envelopes-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="exercise-4" class="section level3">
 <h3>Exercise 4</h3>
@@ -575,7 +575,7 @@ $(document).ready(function () {
                                        r = seq(from = 0, to = 45,
                                                by = 0.5),
                                        nsim = 199, nrank = 5)</code></pre>
-<p><img src="Solution_homo_1_files/figure-html/s_2a_plot_envelope_dead-1.png" width="672" style="display: block; margin: auto;" /><img src="Solution_homo_1_files/figure-html/s_2a_plot_envelope_dead-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="Solution_homo_1_files/figure-html/solution_1_plot_envelope_dead-1.png" width="672" style="display: block; margin: auto;" /><img src="Solution_homo_1_files/figure-html/solution_1_plot_envelope_dead-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="some-more" class="section level3">
 <h3>…some more</h3>
@@ -584,7 +584,7 @@ $(document).ready(function () {
                 xlab = &quot;r [m]&quot;, ylab = &quot;O(r)&quot;,
                 title = &quot;Univariate O-ring statistic\nliving trees&quot;,
                 base_size = 7.5)</code></pre>
-<p><img src="Solution_homo_1_files/figure-html/s_2a_quantum_plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="Solution_homo_1_files/figure-html/solution_1_quantum_plot-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p><strong>References</strong>:</p>
 <p>Baddeley, A., Rubak, E., Turner, R., 2015. Spatial point patterns: Methodology and applications with R. Chapman and Hall/CRC Press, London.</p>
 <p>Getzin, S., Dean, C., He, F., Trofymow, J.A., Wiegand, K., Wiegand, T., 2006. Spatial patterns and competition of tree species in a Douglas fir chronosequence on Vancouver Island. Ecography, 29, 671-682.</p>

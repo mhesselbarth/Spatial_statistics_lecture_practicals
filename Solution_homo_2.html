@@ -282,10 +282,10 @@ $(document).ready(function () {
   </a>
 </li>
 <li>
-  <a href="about.html">
-    <span class="fa fa-question"></span>
+  <a href="data.html">
+    <span class="fa fa-database"></span>
      
-    About
+    Data
   </a>
 </li>
       </ul>
@@ -484,36 +484,44 @@ $(document).ready(function () {
                               r = seq(from = 0, to = 45, by = 0.5),
                               divisor = &quot;d&quot;, nsim = 199, nrank = 5,
                               simulate = expression(rlabel(douglas_fir_ppp)))</code></pre>
-<p><img src="Solution_homo_2_files/figure-html/s_2b_plot_envelope-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="Solution_homo_2_files/figure-html/solution_2_plot_envelope-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="exercise-6" class="section level3">
 <h3>Exercise 6</h3>
-<p><strong>Task:</strong> Can the small-scale regularity in the living Douglas fir trees be modeled by a hard-core process? What about a soft-core process?</p>
-<p>We can use <code>rStrauss()</code> to simulate hardcore- and softcore processes. Firstly, we subset the data using only living trees. Then, we simulate the hardcore process. We want the same intensity as the observed data (<code>beta</code>). <code>R</code> is the interaction distance between the points and <code>gamma</code> is the probability of two points being separated by distances &lt; <code>R</code>. Therefore, setting this argument to 0 leads to a hardcore process. Lastly, we need to specify the number of (<code>nsim</code>) and the observation window (<code>W</code>, same as observed data) of the simulated patterns.</p>
-<pre class="r"><code>  alive &lt;- subset.ppp(douglas_fir_ppp, marks == &quot;alive&quot;, drop = T)
-  
-  simulated_patterns_hardcore &lt;- rStrauss(beta = intensity(alive),
-                                          R = 1, gamma = 0, 
-                                          nsim = 199, W = alive$window)</code></pre>
-<p>The result is a list of simulated point patterns, that can be used as the <code>simulate</code> argument of the <code>envelope()</code> function. Now, the function calculates the summary function for each pattern in the list and computes the envelopes based on the results.</p>
-<pre class="r"><code>  envelope_hardcore &lt;- envelope(Y = alive, fun = Oest, 
-                                r = seq(from = 0, to = 45, by = 0.5),
-                                nsim = 199, nrank = 5,
-                                simulate = simulated_patterns_hardcore)</code></pre>
-<p>The softcore process is very similar, with the only difference that the probability <code>gamma</code> of two points being separated by distance <code>R</code> is increased.</p>
-<pre class="r"><code>  simulated_patterns_softcore &lt;- rStrauss(beta = intensity(alive),
-                                          R = 1, gamma = 0.3, 
-                                          nsim = 199, W = alive$window)
+<p><strong>Task:</strong> Redo the analysis from 5) and try out different settings for the number of simulations and the used lowest/highest values (e.g. n = 39, 199, 499 and lowest/highest = 1, 5, 10). Do the results change?</p>
+<p>All we need to do is change the <code>nsim</code> and the <code>nrank</code> argument of the <code>envelope()</code> function and save the results in order to compare them later. In order to avoid typing the same code all the time, we are going to create a <code>tibble</code> with all possible parameter combinations first and then loop through this <code>tibble</code>. We are going to use the <code>map()</code> function from the <code>purrr</code>-package. The function is an easy way to create a loop and the result is type stable (i.e. a <code>list</code>). We can then convert this <code>list</code> to a <code>tibble</code> again and use e.g. <code>ggplot2</code> to create a nice overview plot.</p>
+<pre class="r"><code>nsim &lt;- c(39, 199, 499)
+nrank &lt;- c(1, 5, 10)
 
-  envelope_softcore &lt;- envelope(alive, fun = Oest,
-                                r = seq(from = 0, to = 45, by = 0.5),
-                                nsim = 199, nrank = 5,
-                                simulate = simulated_patterns_softcore)</code></pre>
-<p><img src="Solution_homo_2_files/figure-html/s_2b_plot_hardcore-1.png" width="672" style="display: block; margin: auto;" /><img src="Solution_homo_2_files/figure-html/s_2b_plot_hardcore-2.png" width="672" style="display: block; margin: auto;" /></p>
+param_envelopes &lt;- expand.grid(nsim = nsim, nrank = nrank)
+
+param_envelopes &lt;- arrange(param_envelopes, nsim, nrank)
+
+random_labeling_multiple &lt;- purrr::map(1:nrow(param_envelopes), function(i) {
+  
+  as_tibble(envelope(douglas_fir_ppp, 
+                     fun = pcfcross, 
+                     i = &quot;alive&quot;,  j = &quot;dead&quot;,
+                     r = seq(from = 0, to = 45, by = 0.5),
+                     divisor = &quot;d&quot;, nsim = param_envelopes[i, 1], nrank = param_envelopes[i, 2],
+                     simulate = expression(rlabel(douglas_fir_ppp))))
+})
+
+names(random_labeling_multiple) &lt;- paste0(&quot;nsim_&quot;, param_envelopes$nsim, &quot;_nrank_&quot;, param_envelopes$nrank)
+
+random_labeling_multiple &lt;- bind_rows(random_labeling_multiple, .id = &quot;id&quot;)</code></pre>
+<pre class="r"><code>  ggplot(data = random_labeling_multiple) + 
+    geom_ribbon(aes(x = r, ymin = lo, ymax = hi, fill = &quot;Simulation envelope&quot;), alpha = 0.75) + 
+    geom_line(aes(x = r, y = obs, col = &quot;Observed value&quot;)) + 
+    scale_fill_manual(name = &quot;&quot;, values = c(&quot;Simulation envelope&quot; = &quot;grey&quot;)) +
+    scale_colour_manual(name = &quot;&quot;, values = c(&quot;Observed value&quot; = &quot;black&quot;)) +
+    facet_wrap(~id) +
+    theme_minimal()</code></pre>
+<p><img src="Solution_homo_2_files/figure-html/solution_2_plot_different_envelope-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="exercise-7" class="section level3">
 <h3>Exercise 7</h3>
-<p><strong>Task:</strong> Now use the data set <em>DouglasFir_Adult_vs_Seedling_OGN.txt</em>. Here, pattern 1 gives the locations of adult trees and pattern 2 gives the locations of seedlings. Calculate O12(r) and generate 95% confidence envelopes for the null model ‘Pattern 1 fixed, pattern 2 random’ (‘antecedent conditions’). What would be a meaningful interpretation of the results?</p>
+<p><strong>Task:</strong> Now use the data set <em>DouglasFir_Adult_vs_Seedling_OGN</em>. Here, pattern 1 gives the locations of adult trees and pattern 2 gives the locations of seedlings. Calculate <span class="math inline">\(O_{12}(r)\)</span> and generate 95% confidence envelopes for the null model antecedent conditions (Pattern 1: fixed, pattern 2: random). What would be a meaningful interpretation of the results?</p>
 <p>Firstly, we import the data and convert it to a <code>ppp</code> object. Also, we reclassify the mark column to 1 == ‘adults’ and 2 == ‘seedlings’ and convert it as a factor.</p>
 <pre class="r"><code>  douglas_fir &lt;- read_delim(file = &quot;Data/DouglasFir_Adult_vs_Seedling_OGN.txt&quot;, 
                             delim = &quot;;&quot;)</code></pre>
@@ -532,7 +540,7 @@ $(document).ready(function () {
                       shape = &quot;rectangle&quot;)
   
   douglas_fir_ppp &lt;- as.ppp(X = douglas_fir, W = plot_area)</code></pre>
-<p><img src="Solution_homo_2_files/figure-html/s_2b_plot_snd_data-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="Solution_homo_2_files/figure-html/solution_2_plot_snd_data-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Now, we need to implement the bivariate O-ring statistic O12(r). We want to multiply the bivariate pair-correlation function g12(r) with the intensity of lambda2.</p>
 <pre class="r"><code>Oest_cross &lt;- function(input, i, j, r = NULL,
                        correction = &quot;Ripley&quot;, divisor = &quot;d&quot;, ...){
@@ -586,7 +594,7 @@ for (i in 1:199) {
                            simulate = expression(rshift(douglas_fir_ppp,
                                                         which = &quot;seedlings&quot;, 
                                                         edge = &quot;torus&quot;)))</code></pre>
-<p><img src="Solution_homo_2_files/figure-html/s_2b_plot_toroidal-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="Solution_homo_2_files/figure-html/solution_2_plot_toroidal-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p><strong>References</strong>:</p>
 <p>Baddeley, A., Rubak, E., Turner, R., 2015. Spatial point patterns: Methodology and applications with R. Chapman and Hall/CRC Press, London.</p>
 <p>Getzin, S., Dean, C., He, F., Trofymow, J.A., Wiegand, K., Wiegand, T., 2006. Spatial patterns and competition of tree species in a Douglas fir chronosequence on Vancouver Island. Ecography, 29, 671-682.</p>

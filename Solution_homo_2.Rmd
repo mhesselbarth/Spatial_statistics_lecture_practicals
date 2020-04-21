@@ -11,13 +11,13 @@ editor_options:
 
 <br>
 
-```{r s_2b_logo, echo = FALSE, fig.align = "center"}
+```{r solution_2_logo, echo = FALSE, fig.align = "center"}
 knitr::include_graphics("logo.png", auto_pdf = FALSE)
 ```
 
 First, we load all packages, just as before.
 
-```{r s_2b_libaries, message = FALSE}
+```{r solution_2_libaries, message = FALSE}
   library(spatstat)
   library(tidyverse)
 ```
@@ -27,7 +27,7 @@ __Task:__ Calculate the bivariate g12 function using the null model random label
 
 In case it is not in our workspace anymore, we import the data and convert it to a `ppp` object again.
 
-```{r s_2b_import_data, message = FALSE}
+```{r solution_2_import_data_a, message = FALSE}
   douglas_fir <- read_delim(file = "Data/DouglasFir_LiveDead_OGN.txt", 
                             delim = ";")
   
@@ -44,7 +44,7 @@ In case it is not in our workspace anymore, we import the data and convert it to
 
 The same goes for the O-ring statistic.
 
-```{r s_2b_define_fun}
+```{r solution_2_define_fun}
   Oest <- function(input, r = NULL, 
                    correction = "Ripley", divisor = "d", ...){
     
@@ -59,7 +59,7 @@ The same goes for the O-ring statistic.
 
 The function `envelope()` can also be used to simulate more complex null models than 'CSR' and basically all functions (`fun`) that return a `fv` object. This time, we use the bivariate pair-correlation function as `fun` called `pcfcross` in `spatstat`. We need to specify the arguments of `pcfcross` `i` and `j` indicating the two types of marks. `simulate` allows us to specify any possible null model as an expression. Random labeling can be simulated with the help of `rlabel`. Lastly, we specify the number of simulation (`nsim`) and the highest/lowest values to use for the envelopes (`nrank`) and the distances at which the function should be evaluated (`r`) just as before.
 
-```{r s_2b_calculate_envelope, message = FALSE, warning = FALSE, results = "hide"}
+```{r solution_2_calculate_envelope, message = FALSE, warning = FALSE, results = "hide"}
   random_labeling <- envelope(douglas_fir_ppp, 
                               fun = pcfcross, 
                               i = "alive",  j = "dead",
@@ -68,65 +68,60 @@ The function `envelope()` can also be used to simulate more complex null models 
                               simulate = expression(rlabel(douglas_fir_ppp)))
 ```
 
-```{r s_2b_plot_envelope, echo = FALSE,  fig.align = "center"}
+```{r solution_2_plot_envelope, echo = FALSE,  fig.align = "center"}
   plot(random_labeling, xlim = c(0, 45), 
        main = "Bivariate pair correlation function\nrandom labelling",
        legend = FALSE)
 ```
 
 ### Exercise 6
-__Task:__ Can the small-scale regularity in the living Douglas fir trees be modeled by a hard-core process? What about a soft-core process?
+__Task:__ Redo the analysis from 5) and try out different settings for the number of simulations and the used lowest/highest values (e.g. n = 39, 199, 499 and lowest/highest = 1, 5, 10). Do the results change?
 
-We can use `rStrauss()` to simulate hardcore- and softcore processes. Firstly, we subset the data using only living trees. Then, we simulate the hardcore process. We want the same intensity as the observed data (`beta`). `R` is the interaction distance between the points and `gamma` is the probability of two points being separated by distances < `R`. Therefore, setting this argument to 0 leads to a hardcore process. Lastly, we need to specify the number of (`nsim`) and the observation window (`W`, same as observed data) of the simulated patterns.
+All we need to do is change the `nsim` and the `nrank` argument of the `envelope()` function and save the results in order to compare them later. In order to avoid typing the same code all the time, we are going to create a `tibble` with all possible parameter combinations first and then loop through this `tibble`. We are going to use the `map()` function from the `purrr`-package. The function is an easy way to create a loop and the result is type stable (i.e. a `list`). We can then convert this `list` to a `tibble` again and use e.g. `ggplot2` to create a nice overview plot.
 
-```{r s_2b_sim_hardcore}
-  alive <- subset.ppp(douglas_fir_ppp, marks == "alive", drop = T)
+```{r solution_2_different_envelopes, message = FALSE, warning = FALSE, results = "hide"}
+
+nsim <- c(39, 199, 499)
+nrank <- c(1, 5, 10)
+
+param_envelopes <- expand.grid(nsim = nsim, nrank = nrank)
+
+param_envelopes <- arrange(param_envelopes, nsim, nrank)
+
+random_labeling_multiple <- purrr::map(1:nrow(param_envelopes), function(i) {
   
-  simulated_patterns_hardcore <- rStrauss(beta = intensity(alive),
-                                          R = 1, gamma = 0, 
-                                          nsim = 199, W = alive$window)
+  as_tibble(envelope(douglas_fir_ppp, 
+                     fun = pcfcross, 
+                     i = "alive",  j = "dead",
+                     r = seq(from = 0, to = 45, by = 0.5),
+                     divisor = "d", nsim = param_envelopes[i, 1], nrank = param_envelopes[i, 2],
+                     simulate = expression(rlabel(douglas_fir_ppp))))
+})
+
+names(random_labeling_multiple) <- paste0("nsim_", param_envelopes$nsim, "_nrank_", param_envelopes$nrank)
+
+random_labeling_multiple <- bind_rows(random_labeling_multiple, .id = "id")
+
 ```
 
-The result is a list of simulated point patterns, that can be used as the `simulate` argument of the `envelope()` function. Now, the function calculates the summary function for each pattern in the list and computes the envelopes based on the results.
+```{r solution_2_plot_different_envelope, fig.align = "center"}
 
-```{r s_2b_envelopes_hardcore, message = FALSE, warning = FALSE, results = "hide"}
-  envelope_hardcore <- envelope(Y = alive, fun = Oest, 
-                                r = seq(from = 0, to = 45, by = 0.5),
-                                nsim = 199, nrank = 5,
-                                simulate = simulated_patterns_hardcore)
-```
+  ggplot(data = random_labeling_multiple) + 
+    geom_ribbon(aes(x = r, ymin = lo, ymax = hi, fill = "Simulation envelope"), alpha = 0.75) + 
+    geom_line(aes(x = r, y = obs, col = "Observed value")) + 
+    scale_fill_manual(name = "", values = c("Simulation envelope" = "grey")) +
+    scale_colour_manual(name = "", values = c("Observed value" = "black")) +
+    facet_wrap(~id) +
+    theme_minimal()
 
-The softcore process is very similar, with the only difference that the probability `gamma` of two points being separated by distance `R` is increased.
-
-```{r s_2b_softcore, message = FALSE, warning = FALSE, results = "hide"}
-  simulated_patterns_softcore <- rStrauss(beta = intensity(alive),
-                                          R = 1, gamma = 0.3, 
-                                          nsim = 199, W = alive$window)
-
-  envelope_softcore <- envelope(alive, fun = Oest,
-                                r = seq(from = 0, to = 45, by = 0.5),
-                                nsim = 199, nrank = 5,
-                                simulate = simulated_patterns_softcore)
-```
-
-```{r s_2b_plot_hardcore, echo = FALSE,  fig.align = "center"}
-  # par(mfrow=c(1,2))
-  plot(envelope_hardcore, xlim = c(0,45), 
-       main = "Univariate O-ring statistic\nhard-core process",
-       legend = FALSE)
-      
-  plot(envelope_softcore,xlim = c(0,45), 
-       main = "Univariate O-ring statistic\nsoft-core process", 
-       legend = FALSE)
-  # par(mfrow=c(1,1))
 ```
 
 ### Exercise 7 
-__Task:__ Now use the data set *DouglasFir_Adult_vs_Seedling_OGN.txt*. Here, pattern 1 gives the locations of adult trees and pattern 2 gives the locations of seedlings. Calculate O12(r) and generate 95% confidence envelopes for the null model 'Pattern 1 fixed, pattern 2 random' ('antecedent conditions'). What would be a meaningful interpretation of the results?
+__Task:__ Now use the data set _DouglasFir_Adult_vs_Seedling_OGN_. Here, pattern 1 gives the locations of adult trees and pattern 2 gives the locations of seedlings. Calculate $O_{12}(r)$ and generate 95% confidence envelopes for the null model antecedent conditions (Pattern 1: fixed, pattern 2: random). What would be a meaningful interpretation of the results?
 
 Firstly, we import the data and convert it to a `ppp` object. Also, we reclassify the mark column to 1 == 'adults' and 2 == 'seedlings' and convert it as a factor. 
 
-```{r s_2b_import_snd_data}
+```{r solution_2_import_data_b}
   douglas_fir <- read_delim(file = "Data/DouglasFir_Adult_vs_Seedling_OGN.txt", 
                             delim = ";")
   
@@ -141,13 +136,13 @@ Firstly, we import the data and convert it to a `ppp` object. Also, we reclassif
   douglas_fir_ppp <- as.ppp(X = douglas_fir, W = plot_area)
 ```
 
-```{r s_2b_plot_snd_data, echo = FALSE, fig.align = "center"}
+```{r solution_2_plot_snd_data, echo = FALSE, fig.align = "center"}
   plot(douglas_fir_ppp, main = "Douglas fir")
 ```
 
 Now, we need to implement the bivariate O-ring statistic O12(r). We want to multiply the bivariate pair-correlation function g12(r) with the intensity of lambda2.
 
-```{r s_2b_define_ocross}
+```{r solution_2_define_ocross}
 Oest_cross <- function(input, i, j, r = NULL,
                        correction = "Ripley", divisor = "d", ...){
   
@@ -165,7 +160,7 @@ Oest_cross <- function(input, i, j, r = NULL,
 
 After splitting the point pattern into seedlings and adults, we create a new, random pattern with the same number of points (`n`) and the same observation window (`win`) as the seedlings. Then, we superimpose the random seedlings with the unchanged adults. Lastly, we save the result in a list.
 
-```{r s_2b_antecedent}
+```{r solution_2_antecedent}
 null_model_pattern <- list()
 
 seedlings <- subset.ppp(douglas_fir_ppp, 
@@ -187,7 +182,7 @@ for (i in 1:199) {
 
 Now, we can compute the simulation envelopes as usually.
 
-```{r s_2b_envelopes_antecedent,  message = FALSE, warning = FALSE, results = "hide"}
+```{r solution_2_envelopes_antecedent,  message = FALSE, warning = FALSE, results = "hide"}
   antecedent_conditions <- envelope(douglas_fir_ppp, 
                                     fun = Oest_cross, 
                                     i = "adults", j = "seedlings",
@@ -208,9 +203,9 @@ The [`onpoint`](https://r-spatialecology.github.io/onpoint/) package also includ
 ### Exercise 8
 __Task:__ How does the interpretation of the 'Toroidal shift' null model differ from the null models in 7)? What is the advantage? Is it always an advantage?
   
-  There is a possibility to simulate the 'toroidal shift' null model with functions provided by `spatstat`. We just use the function `rshift()` and specify the behavior at the edge of the observation area (`edge`) and which points should be shifted (`which`).
+There is a possibility to simulate the 'toroidal shift' null model with functions provided by `spatstat`. We just use the function `rshift()` and specify the behavior at the edge of the observation area (`edge`) and which points should be shifted (`which`).
 
-```{r s_2b_calcluate_toroidal, message = FALSE, warning = FALSE, results = "hide"}
+```{r solution_2_calcluate_toroidal, message = FALSE, warning = FALSE, results = "hide"}
 toroidal_shift <- envelope(douglas_fir_ppp, fun = Oest_cross, 
                            i = "adults", j = "seedlings",
                            r = seq(from = 0, to = 45, by = 0.5),
@@ -220,7 +215,7 @@ toroidal_shift <- envelope(douglas_fir_ppp, fun = Oest_cross,
                                                         edge = "torus")))
 ```
 
-```{r s_2b_plot_toroidal, echo = FALSE, fig.align = "center"}
+```{r solution_2_plot_toroidal, echo = FALSE, fig.align = "center"}
 plot(toroidal_shift, xlim = c(0, 45), 
      main = "Bivariate O-ring statistic\ntoroidal shift",  
      legend = FALSE)

@@ -11,20 +11,20 @@ editor_options:
 
 <br>
 
-```{r s_2a_setup, echo = FALSE, fig.align = "center"}
+```{r solution_1_setup, echo = FALSE, fig.align = "center"}
 knitr::include_graphics("logo.png", auto_pdf = FALSE)
 ```
 
 First, we need to import the [`spatstat`](https://spatstat.org) package for analyzing spatial point patterns. Also, we import the [`tidyverse`](https://www.tidyverse.org) package, a collection of `R` packages designed for data science.
 
-```{r s_2a_libraries, message = FALSE}
+```{r solution_1_libraries, message = FALSE}
   library(spatstat)
   library(tidyverse)
 ```
 
 If you don't have the packages already installed, run the following code in order to install them. 
 
-```{r s_2a_install_packages, eval = FALSE, include = TRUE}
+```{r solution_1_install_packages, eval = FALSE, include = TRUE}
   install.packages(c("spatstat", "tidyverse"))
 ```
 
@@ -34,7 +34,7 @@ __Task__: Using the data set _DouglasFir_LiveDead_OGN.dat_, calculate the O-ring
 
 First, we need to import the data using `read_delim()` (make sure the data is in your working direction. See `?getwd()`/`?setwd()` for help). The columns are separated by a semicolon. By using `read_delim()`, the class of the data is automatically a `tibble` (an 'advanced' version of a `data.frame`. For more information see `?tibble`). 
 
-```{r s_2a_read_data, message = FALSE, collapse = TRUE}
+```{r solution_1_read_data, message = FALSE, collapse = TRUE}
   douglas_fir <- read_delim(file = "Data/DouglasFir_LiveDead_OGN.txt",
                             delim = ";")
   
@@ -42,13 +42,13 @@ First, we need to import the data using `read_delim()` (make sure the data is in
 ```
 
 Print the data. The `tibble` contains 668 rows (one for each tree) and 3 columns (x-coordinate, y-coordinate and the marks).
-```{r s_2a_show_data}
+```{r solution_1_show_data}
   print(douglas_fir, collapse = TRUE)
 ```
 
 We want to edit the column 'mark' in a way that 1 == 'alive' and 2 == 'dead'. We are using two functions of the `dplyr` package. `mutate()` creates a new column (actually we overwrite the already existing column 'mark') and `case_when()` classifies the data. Lastly, we convert the column as `factors`. 
 
-```{r s_2a_mutate_data}
+```{r solution_1_mutate_data}
   douglas_fir <- mutate(douglas_fir,
                         mark = case_when(mark == 1 ~ "alive",
                                          mark == 2 ~ "dead"),
@@ -59,7 +59,7 @@ Now, we need to convert the `tibble`  to the `ppp` class of the `spatstat` packa
 
 Plotting the pattern to control it is always a good idea. The plot function automatically modifies the points according to their mark. Also the `summary()` function returns many helpful information about the point pattern. The functions returns the intensity, information about the marks (in this case the frequencies, proportions and intensities of the discrete classes) and information about the plot area.
 
-```{r s_2a_convert_data, collapse = TRUE}
+```{r solution_1_convert_data, collapse = TRUE}
   plot_area <- ripras(x = douglas_fir$x, y = douglas_fir$y, 
                       shape = "rectangle")
 
@@ -68,13 +68,13 @@ Plotting the pattern to control it is always a good idea. The plot function auto
   summary(douglas_fir_ppp)
 ``` 
 
-```{r s_2a_plot_data, echo = FALSE,  fig.align = "center"}
+```{r solution_1_plot_data, echo = FALSE,  fig.align = "center"}
   plot(douglas_fir_ppp, main = "Douglas fir")
 ```
 
 `spatstat` provides most summary functions for spatial point pattern analysis (see e.g. `?Kest()`). The result is always a `fv` object (function value). Almost all summary functions allow you to specify the edge correction (`correction`) and the distances r (`r`). But first, we subset the data because we want only to use the 'alive' trees at the moment.
 
-```{r s_2a_l_function, collapse = TRUE}
+```{r solution_1_l_function, collapse = TRUE}
   alive <- subset(douglas_fir_ppp, marks == "alive")
   
   l_fct_alive <- Lest(X = alive, correction = "Ripley", 
@@ -82,13 +82,13 @@ Plotting the pattern to control it is always a good idea. The plot function auto
   class(l_fct_alive)
 ```
 
-```{r s_2a_plot_l_function, echo = FALSE,  fig.align = "center"}
+```{r solution_1_plot_l_function, echo = FALSE,  fig.align = "center"}
   plot(l_fct_alive, xlim = c(0, 45))
 ```
 
 However, as you can see in the plot, Besag's L-function is not centered to 0. Also, the O-ring statistic is not available in `spatstat`. Therefore, we need to write our own functions. For that, `eval.fv()` is quite handy. The function evaluates expression involving one or more `fv` objects (`divisor = "d"` is just a little trick to improve the bias of the estimator when r is close to zero).
 
-```{r s_2a_define_fun}
+```{r solution_1_define_fun}
   Lest.cent <- function(input, correction = "Ripley", r = NULL, ...){
     
     l_fct <- Lest(input, correction = correction, r = r, ...)
@@ -112,7 +112,7 @@ However, as you can see in the plot, Besag's L-function is not centered to 0. Al
 
 Now, we can calculate the summary functions and plot them.
 
-```{r s_2a_calculate_fun}
+```{r solution_1_calculate_fun}
   l_function <- Lest.cent(input = alive, 
                           r = seq(from = 0, to = 45, by = 0.5))
 
@@ -121,7 +121,7 @@ Now, we can calculate the summary functions and plot them.
 
 ```
 
-```{r s_2a_plot_fun, echo = FALSE,  fig.align = "center"}
+```{r solution_1_plot_fun, echo = FALSE,  fig.align = "center"}
   plot(l_function, xlim = c(0,45), 
        main = "Univariate L-function\nliving trees", 
        legend = FALSE)
@@ -133,7 +133,7 @@ Now, we can calculate the summary functions and plot them.
 
 Alternatively, these functions are already implemented in the `onpoint` package, a small collection of utility functions based on `spatstat`. The package is only hosted on [*GitHub*](https://r-spatialecology.github.io/onpoint/). To install `onpoint`, you need the `devtools` package. In case you don't have `devtools` installed yet, do it as before and simply use `install_github(repo = "r-spatialecology/onpoint")`.
 
-```{r s_2a_onpoint}
+```{r solution_1_onpoint}
   library(onpoint)
 
   l_function <- center_l_function(x = alive, 
@@ -149,7 +149,7 @@ __Task:__ Redo the analysis but now with simulation envelopes. How does the simu
 
 The function `envelope` of the `spatstat` package calculates simulation envelopes. The number of simulations can be specified with the argument `nsim`, the lowest/highest values with the argument `rank`. When not specified otherwise, the functions uses 'CSR' as null model. The `fun` argument can handle any summary function that `spatstat` provides (or the ones we implemented as long as they return a `fv` object).
 
-```{r s_2a_calculate_envelopes, message = FALSE, warning = FALSE, results = "hide"}
+```{r solution_1_calculate_envelopes, message = FALSE, warning = FALSE, results = "hide"}
   simulation_envelope_39 <- envelope(Y = alive, fun = Oest,
                                      r = seq(from = 0, to = 45, 
                                              by = 0.5),
@@ -161,7 +161,7 @@ The function `envelope` of the `spatstat` package calculates simulation envelope
                                       nsim = 199, nrank = 5)
 ```
 
-```{r s_2a_plot_envelopes, echo = FALSE,  fig.align = "center"}
+```{r solution_1_plot_envelopes, echo = FALSE,  fig.align = "center"}
   plot(simulation_envelope_39, xlim = c(0,45), 
        main = "Univariate O-ring statistic\nnsim=39, nrank=1", 
        legend = FALSE)
@@ -176,7 +176,7 @@ __Task:__ Also look at the functions O22(r) and L22(r). Is there a striking diff
 
 So this time, we want to subset all 'dead' trees.
 
-```{r s_2a_calculate_envelope_dead, message = FALSE, warning = FALSE, results = "hide"}
+```{r solution_1_calculate_envelope_dead, message = FALSE, warning = FALSE, results = "hide"}
   dead <- subset(douglas_fir_ppp, marks == "dead")
 
   simulation_envelope_dead <- envelope(Y = dead, fun = Oest,
@@ -185,7 +185,7 @@ So this time, we want to subset all 'dead' trees.
                                        nsim = 199, nrank = 5)
 ```
 
-```{r s_2a_plot_envelope_dead, echo = FALSE,  fig.align = "center"}
+```{r solution_1_plot_envelope_dead, echo = FALSE,  fig.align = "center"}
   plot(simulation_envelope_199, xlim = c(0, 45), 
        main = "Univariate O-ring statistic\nliving trees",
        legend = FALSE)
@@ -199,7 +199,7 @@ So this time, we want to subset all 'dead' trees.
 
 `onpoint` also provides a plotting function for `envelope` objects. Similar to `spatstat`, the simulation envelopes as well as the observed value are included, however, so-called 'quantum bars' indicate the location of the observed value in relation to the envelopes.
 
-```{r s_2a_quantum_plot, fig.align = "center"}
+```{r solution_1_quantum_plot, fig.align = "center"}
   plot_quantums(simulation_envelope_199, 
                 xlab = "r [m]", ylab = "O(r)",
                 title = "Univariate O-ring statistic\nliving trees",

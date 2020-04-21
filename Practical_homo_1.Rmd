@@ -11,29 +11,31 @@ editor_options:
 
 <br>
 
-For more information, please see _Homo_NullModels.pptx_.
+You can find a link to download the data [**here**](https://mhesselbarth.github.io/spatial_statistics_practicals/data.html). The `.zip`-folder includes two sub-folders, in which you can find the same datasets formatted for both _Programita_ (filename extension `.dat`/`.mcf`) and _R_ (filename extension `.txt`).
+
+Especially when using _Programita_, but also using _R_, make screenshots of your results (or save the results to your disk in any other way) for the plenum discussion later.
+
+For more information/background, please see _Homo_NullModels.pptx_.
 
 ### Exercise 1) 
-Using the data set _DouglasFir_LiveDead_OGN.dat_, calculate the O-ring statistic and the L-function. Here, pattern 1 gives the locations of living trees and pattern 2 gives the locations of dead trees. Comparing the univariate measures $O_{11}(r)$ and $L_{11}(r)$, how do they differ?
+Using the data set _DouglasFir_LiveDead_OGN_, calculate the O-ring statistic and the L-function. Here, pattern 1 gives the locations of living trees and pattern 2 gives the locations of dead trees. Comparing the univariate measures $O_{11}(r)$ and $L_{11}(r)$, how do they differ?
 
-For more information, see Slides 6 ff., Slides 26 & Slides 52 ff.
+For more information, see Slides 6 ff., Slides 26 & Slides 51 ff.
 
 ### Exercise 2)
 The L-function is said to have a memory effect because of its cumulative nature (counting points within discs instead of circles compared to the O-statistic). Can you see it in your results?
 
-For more information, see Slides 26 & Slides 52 ff.
+For more information, see Slides 26 & Slides 51 ff.
 
 ### Exercise 3 )
-Redo the analysis but now with simulation envelopes. How does the simulation envelope change, if you change the settings for the envelope from 'simulations = 39' to 'simulations = 199' ('lowest/highest' = 5). Hint: for easier comparison copy screenshots of the results to some PowerPoint slides.
+Redo the analysis but now with simulation envelopes and the null model CSR. How does the simulation envelope change, if you change the number of simulations from n = 39 to n = 199 (using the $5^{th}$ lowest/highest values).
 
-For more information, see Slides 11 ff. & Slides 63 ff.
+For more information, see Slides 10 ff. & Slides 51 ff.
 
 ### Exercise 4 )
-Also look at the functions $O_{22}(r)$ and $L_{22}(r)$. You can do so by checking the 'Change patterns' box in the lower right panel. Note that the plotted functions will still say $O_{11}(r)$ and $L_{11}(r)$ because you only switched the marks. Is there a striking difference between dead and living Douglas fir trees?
+Also look at the O-ring statistic $O_{22}(r)$ and the L-function $L_{22}(r)$ for all dead trees. Is there a striking difference between dead and living Douglas fir trees? Again, use simulation envelopes and the null model CSR.
 
-For more information, see Slides 11 ff. & Slides 63 ff.
-
-...to be continued later today...
+For more information, see Slides 10 ff. & Slides 51 ff.
 
 ```{r p_2a_plot_example, echo = FALSE, message = FALSE, fig.align = "center", fig.width = 5, fig.height = 5}
   library(ggplot2)
@@ -54,3 +56,5 @@ For more information, see Slides 11 ff. & Slides 63 ff.
     ggplot2::guides(col = FALSE) + 
     ggplot2::theme_void()
 ```
+
+...to be continued later today...

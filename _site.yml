@@ -6,9 +6,9 @@ navbar:
     - text: "Home"
       icon: fa-home
       href: index.html
-    - text: "About"
-      icon: fa-question
-      href: about.html
+    - text: "Data"
+      icon: fa-database
+      href: data.html
   right:
     - text: "Practicals"
       icon: fa-tasks
