@@ -11,15 +11,15 @@ editor_options:
 
 <br>
 
-Please find the introduction slides [here](Practical_1st_order_intro.pdf). If you want to print the point pattern to flip coins on it, you can find a DIN A4 .pdf-file [here](Practical_1st_order_pattern.pdf). Addtionally, there is an _Excel_ template, you can find [here](Practical_1st_order_coin_table.xlsx).
+Please find the introduction slides [here](Practical_1st_order_intro.pdf). If you want to print the point pattern to flip coins on it, you can find a DIN A4 .pdf-file [here](Practical_1st_order_pattern.pdf). Addtionally, there is an *Excel* template, you can find [here](Practical_1st_order_coin_table.xlsx).
 
-```{r p3_logo, echo = FALSE, fig.align = "center", out.width = '50%'}
+```{r practical_1st_order_logo, echo = FALSE, fig.align = "center", out.width = '50%'}
 knitr::include_graphics("coin_flip.jpg", auto_pdf = FALSE)
 ```
 
 In case you do not want to print the pattern and actually flip a coin, you could use the following code to "simulate" a coin flip.
 
-```{r}
+```{r practical_1st_order_fun}
 # function to virtually flip coins
 flip_coin <- function(pattern, n = 50, radius = 5) {
   
@@ -42,9 +42,9 @@ flip_coin <- function(pattern, n = 50, radius = 5) {
 }
 ```
 
-You can use the resulting count of events within each virtual coin flip to fill the _Excel_ template. Have a look at different `radius` arguments, to analyse various sizes of the "moving window".
+You can use the resulting count of events within each virtual coin flip to fill the *Excel* template. Have a look at different `radius` arguments, to analyse various sizes of the "moving window".
 
-```{r}
+```{r practical_1st_order_example}
 library(dplyr)
 library(spatstat)
 

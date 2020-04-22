@@ -11,13 +11,13 @@ editor_options:
 
 <br>
 
-```{r s_3_logo, echo = FALSE, fig.align = "center"}
+```{r solution_adv_logo, echo = FALSE, fig.align = "center"}
 knitr::include_graphics("logo.png", auto_pdf = FALSE)
 ```
 
 As always, we load all needed packages.
 
-```{r s_3_libraries, message = FALSE}
+```{r solution_adv_libraries, message = FALSE}
   library(spatstat)
   library(tidyverse)
 ```
@@ -25,11 +25,11 @@ As always, we load all needed packages.
 # Cluster process
 
 ### Exercise 1 
-__Task:__ Perform a point-pattern analysis on the *Hemlock_Adults_vs_SmallSaps.txt* data set using 'CSR' as null model. We are now especially interested in pattern 2, the small saplings. Using a cell size of 1 meter, calculate the O22(r). Up to which scale do we find significant clustering of the saplings?
+**Task:** Perform a point-pattern analysis on the *Hemlock_Adults_vs_SmallSaps* data set using 'CSR' as null model. We are now especially interested in pattern 2, the small saplings. Using a cell size of 1 meter, calculate the O22(r). Up to which scale do we find significant clustering of the saplings?
 
 We import the data first and convert it as `ppp`. Also, we reclassify the marks as 1 == 'adults' and 2 == 'saplings'.
 
-```{r s_3_import_data, message = FALSE, collapse = TRUE}
+```{r solution_adv_import_data_a, message = FALSE, collapse = TRUE}
   hemlock <- read_delim(file = "Data/Hemlock_Adults_vs_SmallSaps.txt", 
                         delim = ";")
   
@@ -45,13 +45,13 @@ We import the data first and convert it as `ppp`. Also, we reclassify the marks 
   summary(hemlock_ppp)
 ```
 
-```{r s_3_plot_data, echo = FALSE, fig.align = "center"}
+```{r solution_adv_plot_data, echo = FALSE, fig.align = "center"}
   plot(hemlock_ppp, main = "Hemlock")
 ```
 
 Then, we implement the O-ring statistic.
 
-```{r s_3_define_fun}
+```{r solution_adv_define_fun}
   Oest <- function(input, r = NULL, 
                    correction = "Ripley", divisor = "d", ...){
     
@@ -67,7 +67,7 @@ Then, we implement the O-ring statistic.
 
 We are just interested in the saplings, therefore we subset them first. Then we calculate the O-ring statistic with simulation envelopes and 'CSR' as null model.
 
-```{r s_3_subset_data, results = "hide"}
+```{r solution_adv_subset_data, results = "hide"}
   saplings <- subset.ppp(hemlock_ppp, marks == "saplings", drop = TRUE)
   
   o_ring_saplings <- envelope(saplings, fun = Oest,
@@ -75,18 +75,18 @@ We are just interested in the saplings, therefore we subset them first. Then we 
                               nsim = 199, nrank = 5)
 ```
 
-```{r s_3_plot_subset, echo = FALSE, fig.align = "center"}
+```{r solution_adv_plot_subset, echo = FALSE, fig.align = "center"}
   plot(o_ring_saplings, xlim = c(0, 45), 
        main = "O-ring statistic\nsaplings", 
        legend = FALSE)
 ```
 
 ### Exercise 2 
-__Task:__ Use the pair-correlation function to fit a cluster process to the data and use the fitted model to simulate null model data
+**Task:** Use the pair-correlation function to fit a cluster process to the data and use the fitted model to simulate null model data
 
 We use the function `kkpm()` to fit a cluster point process model. We need to provide the point pattern (`X`, here we need to remove all marks with `unmark()` because `subset.ppp()` only drops all unused levels, but does not remove all marks). We specify the cluster type we want to fit (`cluster`) and which summary function to use (`pcf`). Then, we simulate patterns using the fitted process with `simulate.kppm()`. We need to provide the model (`object`) and the number of simulations (`nsim`). The result is a list of simulated patterns.
 
-```{r s_3_thomas, results = "hide", warning = FALSE}
+```{r solution_adv_thomas, results = "hide", warning = FALSE}
   thomas_process <- kppm(X = unmark(saplings), clusters = "Thomas", 
                          statistic = "pcf")
   
@@ -95,28 +95,28 @@ We use the function `kkpm()` to fit a cluster point process model. We need to pr
 
 Now, we can compute the envelopes of the null model and compare it to the observed data.
 
-```{r s_3_envelopes_thomas, results = "hide"}  
+```{r solution_adv_envelopes_thomas, results = "hide"}  
   o22_saplings_thomas <- envelope(saplings, fun = Oest, 
                                   r = seq(from = 0, to = 45, by = 0.5),
                                   nsim = 199, nrank = 5, 
                                   simulate = simulated_pattern)
 ```
 
-```{r s_3_plot_thomas, echo = FALSE, fig.align = "center"}
+```{r solution_adv_plot_thomas, echo = FALSE, fig.align = "center"}
   plot(o22_saplings_thomas, xlim = c(0, 45), 
        main = "Hemlock saplings\nThomas process", legend = FALSE)
 ```
 
 ### Exercise 3
-__Task:__ If the function of the observed data falls into the new envelope, you fitted good parameters for the cluster process. You can review them by inspecting the object. Here, the typical cluster size and number of parents are given.
+**Task:** If the $O_{11}(r)$ function falls into the new envelope, you fitted good parameters for the cluster process. Have a look at the fitted parameters. Here, the typical cluster size and number of parents are  of interest.
 
 `kappa` is the intensity of cluster centers. In order to get the 'number of parents', we need to multiply the number with the area of the observation window (remember: the intensity is the number per unit area). Luckily, `spatstat` contains a function (`area()`) to calculate the area. The `scale` parameter gives the standard deviation of random displacement of a point from its cluster center. To calculate the area of a cluster, we need to calculate the area of the according 'circle'. The `Mean cluster size` gives exactly what it says.
 
-```{r s_3_model_parameter, collapse = TRUE}
+```{r solution_adv_model_parameter, collapse = TRUE}
   print(thomas_process)
 ```
   
-```{r s_3_no_parents, echo = FALSE, collapse = TRUE}
+```{r solution_adv_no_parents, echo = FALSE, collapse = TRUE}
   # Check with Programita!
   paste0("Number of parents: ", 
          round(thomas_process$clustpar[["kappa"]] * spatstat::area(saplings$window), 2))
@@ -128,11 +128,11 @@ __Task:__ If the function of the observed data falls into the new envelope, you 
 # Mark correlation function (Stoyan's $k_{mm}$)
 
 ### Exercise 1 
-__Task:__ The data set *Alive_DouglasFir_OGN.txt* contains the location and stem diameters (diameter at breast height, DBH) for all living Douglas fir trees in the Old-growth North plot. Calculate the mark correlation function. What do these results suggest?
+**Task:** The data set *Alive_DouglasFir_OGN* contains the location and stem diameters (diameter at breast height, DBH) for all live Douglas fir trees in the Old-growth North plot. Calculate the mark-correlation function for the DBH. What do these results suggest?
 
 First, we need to import the data, convert them as `ppp` object and have a look at the data. This time, the marks are continuous, i.e. the diameter at breast height in cm of each tree. Therefore, the `summary()` function automatically gives the mean, median and quantiles of the data. Also, the plot automatically scales the point according to their size. 
 
-```{r s_3_import_snd_data, message = FALSE, collapse = TRUE}
+```{r solution_adv_import_data_b, message = FALSE, collapse = TRUE}
   douglas_fir <- read_delim(file = "Data/Alive_DouglasFir_OGN.txt", 
                             delim = ";")
   
@@ -144,31 +144,31 @@ First, we need to import the data, convert them as `ppp` object and have a look 
   summary(douglas_fir_ppp)
 ```
 
-```{r s_3_plot_snd_data, echo = FALSE, fig.align = "center"}
+```{r solution_adv_plot_snd_data, echo = FALSE, fig.align = "center"}
   plot(douglas_fir_ppp, main = "Douglas fir")
 ```
 
 The mark-correlation function can be calculated with `markcorr()`. This is very straightforward.
 
-```{r s_3_mark_correlation}
+```{r solution_adv_mark_correlation}
   mark_corrlation_douglas_fir <- markcorr(X = douglas_fir_ppp, 
                                           r = seq(from = 0, to = 45,
                                                   by = 0.5),
                                           correction = "Ripley")
 ```
 
-```{r s_3_plot_mark_correlation, echo = FALSE, fig.align = "center"}
+```{r solution_adv_plot_mark_correlation, echo = FALSE, fig.align = "center"}
   plot(mark_corrlation_douglas_fir, xlim = c(0, 45), 
        main = "Mark correlation function\nDouglas fir", 
        legend = FALSE)
 ```
 
 ### Exercise 2 
-__Task:__ Check Calculate simulation envelopes to test for significance. What could be a possible ecological explanation of your results?
+**Task:** Calculate simulation envelopes to test for significance. As a null model use random labelling. What could be a possible ecological explanation of your results?
 
 We use `envelope()` to calculate the simulation envelopes. As null model, we use random labeling, shuffling only the marks but not the points (`simulate` argument using `rlabel()`).
 
-```{r s_3_envelopes_mark_correlation, results = "hide"}
+```{r solution_adv_envelopes_mark_correlation, results = "hide"}
   envelopes_mark_correlation_alive <- envelope(Y = douglas_fir_ppp, 
                                                fun = markcorr,
                                                r = seq(from = 0, to = 45, 
@@ -177,7 +177,7 @@ We use `envelope()` to calculate the simulation envelopes. As null model, we use
                                                simulate = expression(rlabel(douglas_fir_ppp)))
 ```
 
-```{r s_3_plot_envelopes_mark_correlation, echo = FALSE, fig.align = "center"}
+```{r solution_adv_plot_envelopes_mark_correlation, echo = FALSE, fig.align = "center"}
   plot(envelopes_mark_correlation_alive, xlim = c(0, 45), 
        main = "Mark correlation function\nDouglas fir", 
        legend = FALSE)
@@ -186,11 +186,11 @@ We use `envelope()` to calculate the simulation envelopes. As null model, we use
 # Inhomogeneous point patterns 
 
 ### Exercise 1 
-__Task:__ In the data set *Hemlock_Adults_vs_SmallSaps.txt*, you can observe a clear gradient in the density of adult trees. Calculate O11(r) and L11(r) for pattern 1 (adult trees) to see up to which scale clustering of the trees can be observed using 'CSR' as null model.
+**Task:** In the data set *Hemlock_Adults_vs_SmallSaps*, you can observe a clear gradient in the density of adult trees. Calculate O11(r) and L11(r) for pattern 1 (adult trees) to see up to which scale clustering of the trees can be observed using 'CSR' as null model.
 
 We import the data, classify it and convert it as `ppp` object. We plot the point pattern of only adult trees and have a look at the summary.
 
-```{r s_3_import_trd_data, message = FALSE, collapse = TRUE}
+```{r solution_adv_import_trd_data, message = FALSE, collapse = TRUE}
   hemlock <- read_delim(file = "Data/Hemlock_Adults_vs_SmallSaps.txt", 
                         delim = ";")
   
@@ -207,14 +207,14 @@ We import the data, classify it and convert it as `ppp` object. We plot the poin
   summary(hemlock_ppp)
 ```
 
-```{r s_3_plot_trd_data , echo = FALSE, fig.align = "center"}
+```{r solution_adv_plot_trd_data , echo = FALSE, fig.align = "center"}
   plot(subset.ppp(hemlock_ppp, marks == "adults", drop = TRUE), 
        main = "Hemlock \nadults")
 ```
 
 Also, we need to implement the O-ring statistic as before.
 
-```{r s_3_define_fun_new}
+```{r solution_adv_define_fun_new}
   Oest <- function(input,r = NULL,
                    correction = "Ripley", divisor = "d", ...){
     
@@ -229,7 +229,7 @@ Also, we need to implement the O-ring statistic as before.
 
 We calculate the O-ring statistic for the adult trees only, using `envelope()` and the null model of 'CSR'. 
 
-```{r s_3_oring_adults, results = "hide"}
+```{r solution_adv_oring_adults, results = "hide"}
   adults <- subset.ppp(hemlock_ppp, marks == "adults", drop = TRUE)
   
   envelopes_adults_homo <- envelope(Y = adults, fun = Oest,
@@ -237,33 +237,36 @@ We calculate the O-ring statistic for the adult trees only, using `envelope()` a
                                     nsim = 199, rank = 5)
 ```
 
-```{r s_3_plot_oring_adults, echo = FALSE, fig.align = "center"}
+```{r solution_adv_plot_oring_adults, echo = FALSE, fig.align = "center"}
   plot(envelopes_adults_homo, xlim = c(0,45), 
        main = "Homogenous Poisson process")
 ```
 
 ### Exercise 2 
-__Task:__ Getzin et al. (2008) show that the study area is heterogeneous. We are going to account for this heterogeneity by fitting a heterogeneous Poisson processes.
+**Task:** Getzin et al. (2008) show that the study area is heterogenous. We are going to account for this heterogeneity by fitting a heterogeneous Poisson processes. Estimate $\lambda(x,y)$ and plot a map of the results. The gradient should be well visible.
 
 Firstly, we need to get the intensity $\lambda(xy)$ at every point of the observation window. The result is a `im` (pixel image) object. 
 
-```{r s_3_lambda, collapse = TRUE}
+```{r solution_adv_lambda, collapse = TRUE}
   lambda_xy <- density(x = adults)
 
   class(lambda_xy)
 ```
 
-```{r s_3_plot_lambda, echo = FALSE, fig.align = "center"}
+```{r solution_adv_plot_lambda, echo = FALSE, fig.align = "center"}
   plot(lambda_xy, main = "lambda(xy)")
 ```
 
+### Exercise 3
+**Task:** Use the previously estimated intensity $\lambda(x,y)$ to simulate a heterogenous Poisson process. Does $O_{11}(r)$ now fit into the simulation envelope? How do you interpret the result?
+
 Now, we can simulate heterogeneous point patterns following the intensity of the pattern. Therefore, we use `rpoispp()` and specify the argument `lambda` with the created `im` object. Also, we specify the number of simulated patterns (`nsim`). The result is a list with heterogeneous point patterns. If you plot one realization of the simulated data, you can see how the random points 'follow' the intensity.
 
-```{r s_3_simul_hetero}
+```{r solution_adv_simul_hetero}
   simulated_heterogenous_pattern <- rpoispp(lambda = lambda_xy, nsim = 199)
 ```
 
-```{r s_3_plot_hetero, echo = FALSE, fig.align = "center"}
+```{r solution_adv_plot_hetero, echo = FALSE, fig.align = "center"}
   plot(lambda_xy, main = "Simulated data")
 
   points(simulated_heterogenous_pattern[[5]], pch = 19)
@@ -271,7 +274,7 @@ Now, we can simulate heterogeneous point patterns following the intensity of the
 
 Now, we can use the simulated point patterns as input for `envelope()` to create simulation envelopes with the null model of a heterogeneous Poisson process.
 
-```{r s_3_envelopes_hetero, results = "hide"}
+```{r solution_adv_envelopes_hetero, results = "hide"}
   envelopes_adults_hetero <- envelope(Y = adults, fun = Oest,
                                       r = seq(from = 0, to = 45, 
                                               by = 0.5), 
@@ -280,7 +283,7 @@ Now, we can use the simulated point patterns as input for `envelope()` to create
 
 ```
 
-```{r s_3_plot_sim_hetero, echo = FALSE, fig.align = "center"}
+```{r solution_adv_plot_sim_hetero, echo = FALSE, fig.align = "center"}
   plot(envelopes_adults_hetero, xlim = c(0, 45), 
        main = "Heterogenous Poisson process")
 ```
@@ -289,7 +292,7 @@ There is a wrapper around these function in [`onpoint`](https://r-spatialecology
 
 Alternativly, `spatstat` can calculated the inhomogenous pair-correlation function and consider the heterogneous plot conditions while estimating the pair-correlation function.
 
-```{r s_3_envelopes_inhomo, results = "hide"}
+```{r solution_adv_envelopes_inhomo, results = "hide"}
   envelopes_adults_inhomo <- envelope(Y = adults, fun = pcfinhom, 
                                       divisor = "d",
                                       correction = "Ripley",
@@ -297,10 +300,76 @@ Alternativly, `spatstat` can calculated the inhomogenous pair-correlation functi
                                       nsim = 199, rank = 5)
 ```
 
-```{r s_3_plot_envelopes_hetero, echo = FALSE, fig.align = "center"}
+```{r solution_adv_plot_envelopes_hetero, echo = FALSE, fig.align = "center"}
   plot(envelopes_adults_inhomo, xlim = c(0,45),
        main = "Inhomogenous pair correlation function",
        legend = FALSE)
+```
+
+
+# Softcore- and Hardcore Process
+### Exercise 1
+**Task:** Can the small-scale regularity in the living Douglas fir trees be modeled by a hard-core process? What about a soft-core process?
+ 
+First, we need to import the data and convert it to a `ppp` object. 
+
+```{r solution_adv_import_data_c, message = FALSE}
+  douglas_fir <- read_delim(file = "Data/DouglasFir_LiveDead_OGN.txt", 
+                            delim = ";")
+  
+  douglas_fir <- mutate(douglas_fir,
+                        mark = case_when(mark == 1 ~ "alive",
+                                         mark == 2 ~ "dead"),
+                        mark = as.factor(mark))
+  
+  plot_area <- ripras(x = douglas_fir$x, y = douglas_fir$y, 
+                      shape = "rectangle")
+  
+  douglas_fir_ppp <- as.ppp(X = douglas_fir, W = plot_area)
+```
+  
+We can use `rStrauss()` to simulate hardcore- and softcore processes. Firstly, we subset the data using only living trees. Then, we simulate the hardcore process. We want the same intensity as the observed data (`beta`). `R` is the interaction distance between the points and `gamma` is the probability of two points being separated by distances < `R`. Therefore, setting this argument to 0 leads to a hardcore process. Lastly, we need to specify the number of (`nsim`) and the observation window (`W`, same as observed data) of the simulated patterns.
+
+```{r s_2b_sim_hardcore}
+alive <- subset.ppp(douglas_fir_ppp, marks == "alive", drop = T)
+
+simulated_patterns_hardcore <- rStrauss(beta = intensity(alive),
+                                        R = 1, gamma = 0, 
+                                        nsim = 199, W = alive$window)
+```
+
+The result is a list of simulated point patterns, that can be used as the `simulate` argument of the `envelope()` function. Now, the function calculates the summary function for each pattern in the list and computes the envelopes based on the results.
+
+```{r s_2b_envelopes_hardcore, message = FALSE, warning = FALSE, results = "hide"}
+envelope_hardcore <- envelope(Y = alive, fun = Oest, 
+                              r = seq(from = 0, to = 45, by = 0.5),
+                              nsim = 199, nrank = 5,
+                              simulate = simulated_patterns_hardcore)
+```
+
+The softcore process is very similar, with the only difference that the probability `gamma` of two points being separated by distance `R` is increased.
+
+```{r s_2b_softcore, message = FALSE, warning = FALSE, results = "hide"}
+simulated_patterns_softcore <- rStrauss(beta = intensity(alive),
+                                        R = 1, gamma = 0.3, 
+                                        nsim = 199, W = alive$window)
+
+envelope_softcore <- envelope(alive, fun = Oest,
+                              r = seq(from = 0, to = 45, by = 0.5),
+                              nsim = 199, nrank = 5,
+                              simulate = simulated_patterns_softcore)
+```
+
+```{r s_2b_plot_hardcore, echo = FALSE,  fig.align = "center"}
+# par(mfrow=c(1,2))
+plot(envelope_hardcore, xlim = c(0,45), 
+     main = "Univariate O-ring statistic\nhard-core process",
+     legend = FALSE)
+
+plot(envelope_softcore,xlim = c(0,45), 
+     main = "Univariate O-ring statistic\nsoft-core process", 
+     legend = FALSE)
+# par(mfrow=c(1,1))
 ```
 
 __References__:

@@ -23,7 +23,7 @@ First, we load all packages, just as before.
 ```
 
 ### Exercise 5 
-__Task:__ Calculate the bivariate g12 function using the null model random labeling. Was the process that labeled trees as dead or alive a random process. 
+**Task:** Calculate the bivariate g12 function using the null model random labeling. Was the process that labeled trees as dead or alive a random process. 
 
 In case it is not in our workspace anymore, we import the data and convert it to a `ppp` object again.
 
@@ -75,7 +75,7 @@ The function `envelope()` can also be used to simulate more complex null models 
 ```
 
 ### Exercise 6
-__Task:__ Redo the analysis from 5) and try out different settings for the number of simulations and the used lowest/highest values (e.g. n = 39, 199, 499 and lowest/highest = 1, 5, 10). Do the results change?
+**Task:** Redo the analysis from 5) and try out different settings for the number of simulations and the used lowest/highest values (e.g. n = 39, 199, 499 and lowest/highest = 1, 5, 10). Do the results change?
 
 All we need to do is change the `nsim` and the `nrank` argument of the `envelope()` function and save the results in order to compare them later. In order to avoid typing the same code all the time, we are going to create a `tibble` with all possible parameter combinations first and then loop through this `tibble`. We are going to use the `map()` function from the `purrr`-package. The function is an easy way to create a loop and the result is type stable (i.e. a `list`). We can then convert this `list` to a `tibble` again and use e.g. `ggplot2` to create a nice overview plot.
 
@@ -117,7 +117,7 @@ random_labeling_multiple <- bind_rows(random_labeling_multiple, .id = "id")
 ```
 
 ### Exercise 7 
-__Task:__ Now use the data set _DouglasFir_Adult_vs_Seedling_OGN_. Here, pattern 1 gives the locations of adult trees and pattern 2 gives the locations of seedlings. Calculate $O_{12}(r)$ and generate 95% confidence envelopes for the null model antecedent conditions (Pattern 1: fixed, pattern 2: random). What would be a meaningful interpretation of the results?
+**Task:** Now use the data set *DouglasFir_Adult_vs_Seedling_OGN*. Here, pattern 1 gives the locations of adult trees and pattern 2 gives the locations of seedlings. Calculate $O_{12}(r)$ and generate 95% confidence envelopes for the null model antecedent conditions (Pattern 1: fixed, pattern 2: random). What would be a meaningful interpretation of the results?
 
 Firstly, we import the data and convert it to a `ppp` object. Also, we reclassify the mark column to 1 == 'adults' and 2 == 'seedlings' and convert it as a factor. 
 
@@ -201,7 +201,7 @@ Now, we can compute the simulation envelopes as usually.
 The [`onpoint`](https://r-spatialecology.github.io/onpoint/) package also includes an function to simulate antecedent conditions as null model (see `?simulate_antecedent_conditions` for help).
 
 ### Exercise 8
-__Task:__ How does the interpretation of the 'Toroidal shift' null model differ from the null models in 7)? What is the advantage? Is it always an advantage?
+**Task:** How does the interpretation of the 'Toroidal shift' null model differ from the null models in 7)? What is the advantage? Is it always an advantage?
   
 There is a possibility to simulate the 'toroidal shift' null model with functions provided by `spatstat`. We just use the function `rshift()` and specify the behavior at the edge of the observation area (`edge`) and which points should be shifted (`which`).
 
@@ -221,7 +221,7 @@ plot(toroidal_shift, xlim = c(0, 45),
      legend = FALSE)
 ```
 
-__References__:
+**References**:
 
 Baddeley, A., Rubak, E., Turner, R., 2015. Spatial point patterns: Methodology and applications with R. Chapman and Hall/CRC Press, London.
 

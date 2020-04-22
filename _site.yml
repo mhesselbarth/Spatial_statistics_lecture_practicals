@@ -39,7 +39,7 @@ navbar:
               href: Practical_1st_order.html
             - text: "Advanced SPPA"
               icon: fa-tasks
-              href: Practical_cluster.html
+              href: Practical_advanced.html
         - text: "Solutions"
           icon: fa-check
           menu:

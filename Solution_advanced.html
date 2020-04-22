@@ -364,7 +364,7 @@ $(document).ready(function () {
           </a>
         </li>
         <li>
-          <a href="Practical_cluster.html">
+          <a href="Practical_advanced.html">
             <span class="fa fa-tasks"></span>
              
             Advanced SPPA
@@ -454,7 +454,7 @@ $(document).ready(function () {
 <h1>Cluster process</h1>
 <div id="exercise-1" class="section level3">
 <h3>Exercise 1</h3>
-<p><strong>Task:</strong> Perform a point-pattern analysis on the <em>Hemlock_Adults_vs_SmallSaps.txt</em> data set using ‘CSR’ as null model. We are now especially interested in pattern 2, the small saplings. Using a cell size of 1 meter, calculate the O22(r). Up to which scale do we find significant clustering of the saplings?</p>
+<p><strong>Task:</strong> Perform a point-pattern analysis on the <em>Hemlock_Adults_vs_SmallSaps</em> data set using ‘CSR’ as null model. We are now especially interested in pattern 2, the small saplings. Using a cell size of 1 meter, calculate the O22(r). Up to which scale do we find significant clustering of the saplings?</p>
 <p>We import the data first and convert it as <code>ppp</code>. Also, we reclassify the marks as 1 == ‘adults’ and 2 == ‘saplings’.</p>
 <pre class="r"><code>  hemlock &lt;- read_delim(file = &quot;Data/Hemlock_Adults_vs_SmallSaps.txt&quot;, 
                         delim = &quot;;&quot;)
@@ -483,7 +483,7 @@ $(document).ready(function () {
 ## Window: rectangle = [1.22493, 80.43507] x [-1.64345, 85.43345] units
 ##                     (79.21 x 87.08 units)
 ## Window area = 6897.37 square units</code></pre>
-<p><img src="Solution_cluster_files/figure-html/s_3_plot_data-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="Solution_advanced_files/figure-html/solution_adv_plot_data-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Then, we implement the O-ring statistic.</p>
 <pre class="r"><code>  Oest &lt;- function(input, r = NULL, 
                    correction = &quot;Ripley&quot;, divisor = &quot;d&quot;, ...){
@@ -502,7 +502,7 @@ $(document).ready(function () {
   o_ring_saplings &lt;- envelope(saplings, fun = Oest,
                               r = seq(from = 0, to = 45, by = 0.5), 
                               nsim = 199, nrank = 5)</code></pre>
-<p><img src="Solution_cluster_files/figure-html/s_3_plot_subset-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="Solution_advanced_files/figure-html/solution_adv_plot_subset-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="exercise-2" class="section level3">
 <h3>Exercise 2</h3>
@@ -517,11 +517,11 @@ $(document).ready(function () {
                                   r = seq(from = 0, to = 45, by = 0.5),
                                   nsim = 199, nrank = 5, 
                                   simulate = simulated_pattern)</code></pre>
-<p><img src="Solution_cluster_files/figure-html/s_3_plot_thomas-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="Solution_advanced_files/figure-html/solution_adv_plot_thomas-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="exercise-3" class="section level3">
 <h3>Exercise 3</h3>
-<p><strong>Task:</strong> If the function of the observed data falls into the new envelope, you fitted good parameters for the cluster process. You can review them by inspecting the object. Here, the typical cluster size and number of parents are given.</p>
+<p><strong>Task:</strong> If the <span class="math inline">\(O_{11}(r)\)</span> function falls into the new envelope, you fitted good parameters for the cluster process. Have a look at the fitted parameters. Here, the typical cluster size and number of parents are of interest.</p>
 <p><code>kappa</code> is the intensity of cluster centers. In order to get the ‘number of parents’, we need to multiply the number with the area of the observation window (remember: the intensity is the number per unit area). Luckily, <code>spatstat</code> contains a function (<code>area()</code>) to calculate the area. The <code>scale</code> parameter gives the standard deviation of random displacement of a point from its cluster center. To calculate the area of a cluster, we need to calculate the area of the according ‘circle’. The <code>Mean cluster size</code> gives exactly what it says.</p>
 <pre class="r"><code>  print(thomas_process)
 ## Stationary cluster point process model
@@ -544,7 +544,7 @@ $(document).ready(function () {
 <h1>Mark correlation function (Stoyan’s <span class="math inline">\(k_{mm}\)</span>)</h1>
 <div id="exercise-1-1" class="section level3">
 <h3>Exercise 1</h3>
-<p><strong>Task:</strong> The data set <em>Alive_DouglasFir_OGN.txt</em> contains the location and stem diameters (diameter at breast height, DBH) for all living Douglas fir trees in the Old-growth North plot. Calculate the mark correlation function. What do these results suggest?</p>
+<p><strong>Task:</strong> The data set <em>Alive_DouglasFir_OGN</em> contains the location and stem diameters (diameter at breast height, DBH) for all live Douglas fir trees in the Old-growth North plot. Calculate the mark-correlation function for the DBH. What do these results suggest?</p>
 <p>First, we need to import the data, convert them as <code>ppp</code> object and have a look at the data. This time, the marks are continuous, i.e. the diameter at breast height in cm of each tree. Therefore, the <code>summary()</code> function automatically gives the mean, median and quantiles of the data. Also, the plot automatically scales the point according to their size.</p>
 <pre class="r"><code>  douglas_fir &lt;- read_delim(file = &quot;Data/Alive_DouglasFir_OGN.txt&quot;, 
                             delim = &quot;;&quot;)
@@ -569,17 +569,17 @@ $(document).ready(function () {
 ## Window: rectangle = [-0.28027, 103.97027] x [0.04889, 87.78111] units
 ##                     (104.3 x 87.73 units)
 ## Window area = 9146.13 square units</code></pre>
-<p><img src="Solution_cluster_files/figure-html/s_3_plot_snd_data-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="Solution_advanced_files/figure-html/solution_adv_plot_snd_data-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>The mark-correlation function can be calculated with <code>markcorr()</code>. This is very straightforward.</p>
 <pre class="r"><code>  mark_corrlation_douglas_fir &lt;- markcorr(X = douglas_fir_ppp, 
                                           r = seq(from = 0, to = 45,
                                                   by = 0.5),
                                           correction = &quot;Ripley&quot;)</code></pre>
-<p><img src="Solution_cluster_files/figure-html/s_3_plot_mark_correlation-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="Solution_advanced_files/figure-html/solution_adv_plot_mark_correlation-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="exercise-2-1" class="section level3">
 <h3>Exercise 2</h3>
-<p><strong>Task:</strong> Check Calculate simulation envelopes to test for significance. What could be a possible ecological explanation of your results?</p>
+<p><strong>Task:</strong> Calculate simulation envelopes to test for significance. As a null model use random labelling. What could be a possible ecological explanation of your results?</p>
 <p>We use <code>envelope()</code> to calculate the simulation envelopes. As null model, we use random labeling, shuffling only the marks but not the points (<code>simulate</code> argument using <code>rlabel()</code>).</p>
 <pre class="r"><code>  envelopes_mark_correlation_alive &lt;- envelope(Y = douglas_fir_ppp, 
                                                fun = markcorr,
@@ -587,14 +587,14 @@ $(document).ready(function () {
                                                        by = 0.5),
                                                nsim = 199, nrank = 5,
                                                simulate = expression(rlabel(douglas_fir_ppp)))</code></pre>
-<p><img src="Solution_cluster_files/figure-html/s_3_plot_envelopes_mark_correlation-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="Solution_advanced_files/figure-html/solution_adv_plot_envelopes_mark_correlation-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="inhomogeneous-point-patterns" class="section level1">
 <h1>Inhomogeneous point patterns</h1>
 <div id="exercise-1-2" class="section level3">
 <h3>Exercise 1</h3>
-<p><strong>Task:</strong> In the data set <em>Hemlock_Adults_vs_SmallSaps.txt</em>, you can observe a clear gradient in the density of adult trees. Calculate O11(r) and L11(r) for pattern 1 (adult trees) to see up to which scale clustering of the trees can be observed using ‘CSR’ as null model.</p>
+<p><strong>Task:</strong> In the data set <em>Hemlock_Adults_vs_SmallSaps</em>, you can observe a clear gradient in the density of adult trees. Calculate O11(r) and L11(r) for pattern 1 (adult trees) to see up to which scale clustering of the trees can be observed using ‘CSR’ as null model.</p>
 <p>We import the data, classify it and convert it as <code>ppp</code> object. We plot the point pattern of only adult trees and have a look at the summary.</p>
 <pre class="r"><code>  hemlock &lt;- read_delim(file = &quot;Data/Hemlock_Adults_vs_SmallSaps.txt&quot;, 
                         delim = &quot;;&quot;)
@@ -624,7 +624,7 @@ $(document).ready(function () {
 ## Window: rectangle = [1.22493, 80.43507] x [-1.64345, 85.43345] units
 ##                     (79.21 x 87.08 units)
 ## Window area = 6897.37 square units</code></pre>
-<p><img src="Solution_cluster_files/figure-html/s_3_plot_trd_data%20-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="Solution_advanced_files/figure-html/solution_adv_plot_trd_data%20-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Also, we need to implement the O-ring statistic as before.</p>
 <pre class="r"><code>  Oest &lt;- function(input,r = NULL,
                    correction = &quot;Ripley&quot;, divisor = &quot;d&quot;, ...){
@@ -642,27 +642,31 @@ $(document).ready(function () {
   envelopes_adults_homo &lt;- envelope(Y = adults, fun = Oest,
                                     r = seq(from = 0, to = 45, by = 0.5), 
                                     nsim = 199, rank = 5)</code></pre>
-<p><img src="Solution_cluster_files/figure-html/s_3_plot_oring_adults-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="Solution_advanced_files/figure-html/solution_adv_plot_oring_adults-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="exercise-2-2" class="section level3">
 <h3>Exercise 2</h3>
-<p><strong>Task:</strong> Getzin et al. (2008) show that the study area is heterogeneous. We are going to account for this heterogeneity by fitting a heterogeneous Poisson processes.</p>
+<p><strong>Task:</strong> Getzin et al. (2008) show that the study area is heterogenous. We are going to account for this heterogeneity by fitting a heterogeneous Poisson processes. Estimate <span class="math inline">\(\lambda(x,y)\)</span> and plot a map of the results. The gradient should be well visible.</p>
 <p>Firstly, we need to get the intensity <span class="math inline">\(\lambda(xy)\)</span> at every point of the observation window. The result is a <code>im</code> (pixel image) object.</p>
 <pre class="r"><code>  lambda_xy &lt;- density(x = adults)
 
   class(lambda_xy)
 ## [1] &quot;im&quot;</code></pre>
-<p><img src="Solution_cluster_files/figure-html/s_3_plot_lambda-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="Solution_advanced_files/figure-html/solution_adv_plot_lambda-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="exercise-3-1" class="section level3">
+<h3>Exercise 3</h3>
+<p><strong>Task:</strong> Use the previously estimated intensity <span class="math inline">\(\lambda(x,y)\)</span> to simulate a heterogenous Poisson process. Does <span class="math inline">\(O_{11}(r)\)</span> now fit into the simulation envelope? How do you interpret the result?</p>
 <p>Now, we can simulate heterogeneous point patterns following the intensity of the pattern. Therefore, we use <code>rpoispp()</code> and specify the argument <code>lambda</code> with the created <code>im</code> object. Also, we specify the number of simulated patterns (<code>nsim</code>). The result is a list with heterogeneous point patterns. If you plot one realization of the simulated data, you can see how the random points ‘follow’ the intensity.</p>
 <pre class="r"><code>  simulated_heterogenous_pattern &lt;- rpoispp(lambda = lambda_xy, nsim = 199)</code></pre>
-<p><img src="Solution_cluster_files/figure-html/s_3_plot_hetero-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="Solution_advanced_files/figure-html/solution_adv_plot_hetero-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Now, we can use the simulated point patterns as input for <code>envelope()</code> to create simulation envelopes with the null model of a heterogeneous Poisson process.</p>
 <pre class="r"><code>  envelopes_adults_hetero &lt;- envelope(Y = adults, fun = Oest,
                                       r = seq(from = 0, to = 45, 
                                               by = 0.5), 
                                       nsim = 199, rank = 5, 
                                       simulate = simulated_heterogenous_pattern)</code></pre>
-<p><img src="Solution_cluster_files/figure-html/s_3_plot_sim_hetero-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="Solution_advanced_files/figure-html/solution_adv_plot_sim_hetero-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>There is a wrapper around these function in <a href="https://r-spatialecology.github.io/onpoint/"><code>onpoint</code></a> to simulate a heterogenous Poisson process as null model (see <code>?simulate_heterogenous_pattern</code>).</p>
 <p>Alternativly, <code>spatstat</code> can calculated the inhomogenous pair-correlation function and consider the heterogneous plot conditions while estimating the pair-correlation function.</p>
 <pre class="r"><code>  envelopes_adults_inhomo &lt;- envelope(Y = adults, fun = pcfinhom, 
@@ -670,7 +674,48 @@ $(document).ready(function () {
                                       correction = &quot;Ripley&quot;,
                                       r = seq(from = 0, to = 45, by = 0.5),
                                       nsim = 199, rank = 5)</code></pre>
-<p><img src="Solution_cluster_files/figure-html/s_3_plot_envelopes_hetero-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="Solution_advanced_files/figure-html/solution_adv_plot_envelopes_hetero-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="softcore--and-hardcore-process" class="section level1">
+<h1>Softcore- and Hardcore Process</h1>
+<div id="exercise-1-3" class="section level3">
+<h3>Exercise 1</h3>
+<p><strong>Task:</strong> Can the small-scale regularity in the living Douglas fir trees be modeled by a hard-core process? What about a soft-core process?</p>
+<p>First, we need to import the data and convert it to a <code>ppp</code> object.</p>
+<pre class="r"><code>  douglas_fir &lt;- read_delim(file = &quot;Data/DouglasFir_LiveDead_OGN.txt&quot;, 
+                            delim = &quot;;&quot;)
+  
+  douglas_fir &lt;- mutate(douglas_fir,
+                        mark = case_when(mark == 1 ~ &quot;alive&quot;,
+                                         mark == 2 ~ &quot;dead&quot;),
+                        mark = as.factor(mark))
+  
+  plot_area &lt;- ripras(x = douglas_fir$x, y = douglas_fir$y, 
+                      shape = &quot;rectangle&quot;)
+  
+  douglas_fir_ppp &lt;- as.ppp(X = douglas_fir, W = plot_area)</code></pre>
+<p>We can use <code>rStrauss()</code> to simulate hardcore- and softcore processes. Firstly, we subset the data using only living trees. Then, we simulate the hardcore process. We want the same intensity as the observed data (<code>beta</code>). <code>R</code> is the interaction distance between the points and <code>gamma</code> is the probability of two points being separated by distances &lt; <code>R</code>. Therefore, setting this argument to 0 leads to a hardcore process. Lastly, we need to specify the number of (<code>nsim</code>) and the observation window (<code>W</code>, same as observed data) of the simulated patterns.</p>
+<pre class="r"><code>alive &lt;- subset.ppp(douglas_fir_ppp, marks == &quot;alive&quot;, drop = T)
+
+simulated_patterns_hardcore &lt;- rStrauss(beta = intensity(alive),
+                                        R = 1, gamma = 0, 
+                                        nsim = 199, W = alive$window)</code></pre>
+<p>The result is a list of simulated point patterns, that can be used as the <code>simulate</code> argument of the <code>envelope()</code> function. Now, the function calculates the summary function for each pattern in the list and computes the envelopes based on the results.</p>
+<pre class="r"><code>envelope_hardcore &lt;- envelope(Y = alive, fun = Oest, 
+                              r = seq(from = 0, to = 45, by = 0.5),
+                              nsim = 199, nrank = 5,
+                              simulate = simulated_patterns_hardcore)</code></pre>
+<p>The softcore process is very similar, with the only difference that the probability <code>gamma</code> of two points being separated by distance <code>R</code> is increased.</p>
+<pre class="r"><code>simulated_patterns_softcore &lt;- rStrauss(beta = intensity(alive),
+                                        R = 1, gamma = 0.3, 
+                                        nsim = 199, W = alive$window)
+
+envelope_softcore &lt;- envelope(alive, fun = Oest,
+                              r = seq(from = 0, to = 45, by = 0.5),
+                              nsim = 199, nrank = 5,
+                              simulate = simulated_patterns_softcore)</code></pre>
+<p><img src="Solution_advanced_files/figure-html/s_2b_plot_hardcore-1.png" width="672" style="display: block; margin: auto;" /><img src="Solution_advanced_files/figure-html/s_2b_plot_hardcore-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p><strong>References</strong>:</p>
 <p>Baddeley, A., Rubak, E., Turner, R., 2015. Spatial point patterns: Methodology and applications with R. Chapman and Hall/CRC Press, London.</p>
 <p>Getzin, S., Dean, C., He, F., Trofymow, J.A., Wiegand, K., Wiegand, T., 2006. Spatial patterns and competition of tree species in a Douglas fir chronosequence on Vancouver Island. Ecography, 29, 671-682.</p>

@@ -18,13 +18,13 @@ Practicals for Spatial statistics class taught at the University of Goettingen b
 * Maximilian H.K. Hesselbarth
 
 **Aims**:
-Planning and execution of a scientific investigation based on spatial statistics; Knowledge of statistical methods of spatial point pattern analysis; Introduction to mathematical methods of spatial point pattern analysis and to using analysis software (Programita, R);
+Planning and execution of a scientific investigation based on spatial statistics; Knowledge of statistical methods of spatial point pattern analysis; Introduction to mathematical methods of spatial point pattern analysis and to using analysis software (*Programita*, *R*);
 
 **Statistical contents**:
 Intensity of a point pattern, K-, g- and 0-funktions, Mark correlation functions, Null models, Inhomogeneity, Monte-Carlo simulations and point processes; Collection of own field data; Analysis of own and/or sample data sets; Presentation and discussion of current ecological literature on point pattern analysis.
 
 Please see the [**Data**](https://mhesselbarth.github.io/spatial_statistics_practicals/data.html) page for more information.
 
-```{r p3_logo, echo = FALSE, fig.align = "center", out.width = '50%'}
+```{r index_logo, echo = FALSE, fig.align = "center", out.width = '50%'}
 knitr::include_graphics("logo.png", auto_pdf = FALSE)
 ```

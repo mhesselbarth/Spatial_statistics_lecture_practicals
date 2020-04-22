@@ -12,7 +12,7 @@
 <meta name="author" content="Wiegand, Getzin, Hesselbarth" />
 
 
-<title>Homogenous null model</title>
+<title>Cluster processes / Mark correlation function / Heterogenous conditions</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -438,7 +438,7 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Homogenous null model</h1>
+<h1 class="title toc-ignore">Cluster processes / Mark correlation function / Heterogenous conditions</h1>
 <h4 class="author">Wiegand, Getzin, Hesselbarth</h4>
 <h4 class="date">Summer semester 2020</h4>
 
@@ -449,25 +449,64 @@ $(document).ready(function () {
 <p>You can find a link to download the data <a href="https://mhesselbarth.github.io/spatial_statistics_practicals/data.html"><strong>here</strong></a>. The <code>.zip</code>-folder includes two sub-folders, in which you can find the same datasets formatted for both <em>Programita</em> (filename extension <code>.dat</code>/<code>.mcf</code>) and <em>R</em> (filename extension <code>.txt</code>).</p>
 <p>Especially when using <em>Programita</em>, but also using <em>R</em>, make screenshots of your results (or save the results to your disk in any other way) for the plenum discussion later.</p>
 <p>For more information/background, please see <em>Homo_NullModels.pptx</em>.</p>
-<div id="exercise-5" class="section level3">
-<h3>Exercise 5)</h3>
-<p>Using the data set <em>DouglasFir_LiveDead_OGN</em>, calculate the bivariate <span class="math inline">\(g_{12}(r)\)</span> function using the null model random labeling. Was the process that labeled trees as dead or alive a random process?</p>
-<p>For more information, see Slide 81 ff.</p>
+<div id="cluster-process" class="section level1">
+<h1>Cluster process</h1>
+<p>For more information, please see Slides 155 ff.</p>
+<div id="exercise-1" class="section level3">
+<h3>Exercise 1)</h3>
+<p>Perform a point-pattern analysis on the <em>Hemlock_Adults_vs_SmallSaps</em> data set using CSR as null model. We are now especially interested in pattern 2, the small saplings. Using a cell size of 1 meter, calculate the <span class="math inline">\(O_{22}(r)\)</span>. Up to which scale do we find significant clustering of the saplings?</p>
 </div>
-<div id="exercise-6" class="section level3">
-<h3>Exercise 6)</h3>
-<p>Redo the analysis from 5) and try out different settings for the number of simulations and the used lowest/highest values (e.g. n = 39, 199, 499 and lowest/highest = 1, 5, 10). Do the results change?</p>
-<p>For more information, see Slide 81 ff.</p>
+<div id="exercise-2" class="section level3">
+<h3>Exercise 2)</h3>
+<p>Use the pair-correlation function to fit a cluster process to the saplings data and use the fitted model to simulate null model data. Is the null model suitable for the field data?</p>
 </div>
-<div id="exercise-7" class="section level3">
-<h3>Exercise 7)</h3>
-<p>Now use the data set <em>DouglasFir_Adult_vs_Seedling_OGN</em>. Here, pattern 1 gives the locations of adult trees and pattern 2 gives the locations of seedlings. Calculate <span class="math inline">\(O_{12}(r)\)</span> and generate 95% confidence envelopes for the null model antecedent conditions (Pattern 1: fixed, pattern 2: random). What would be a meaningful interpretation of the results?</p>
+<div id="exercise-3" class="section level3">
+<h3>Exercise 3)</h3>
+<p>If the <span class="math inline">\(O_{11}(r)\)</span> function falls into the new envelope, you fitted good parameters for the cluster process. Have a look at the fitted parameters. Here, the typical cluster size and number of parents are of interest.</p>
 </div>
-<div id="exercise-8" class="section level3">
-<h3>Exercise 8)</h3>
-<p>How does the interpretation of the ‘Toroidal shift’ null model differ from the null models in 7)? What is the advantage? Is it always an advantage?</p>
-<p>For more information, see Slides 94 ff.</p>
-<p><img src="Practical_homo_2_files/figure-html/practical_2_plot_example-1.png" width="480" style="display: block; margin: auto;" /></p>
+<div id="exercise-4." class="section level3">
+<h3>Exercise 4.)</h3>
+<p>Looking at the pattern of adult trees and saplings, is the fitted value for the number of parents realistic? If not so, what could be the reason?</p>
+</div>
+</div>
+<div id="mark-correlation-function-stoyans-k_mm" class="section level1">
+<h1>Mark correlation function (Stoyan’s <span class="math inline">\(k_{mm}\)</span>)</h1>
+<div id="exercise-1-1" class="section level3">
+<h3>Exercise 1)</h3>
+<p>The data set <em>Alive_DouglasFir_OGN</em> contains the location and stem diameters (diameter at breast height, DBH) for all live Douglas fir trees in the Old-growth North plot. Calculate the mark-correlation function for the DBH. What do these results suggest?</p>
+</div>
+<div id="exercise-2-1" class="section level3">
+<h3>Exercise 2)</h3>
+<p>Calculate simulation envelopes to test for significance. As a null model use random labelleing. What could be a possible ecological explanation of your results?</p>
+</div>
+</div>
+<div id="inhomogeneous-point-patterns" class="section level1">
+<h1>Inhomogeneous point patterns</h1>
+<div id="exercise-1-2" class="section level3">
+<h3>Exercise 1)</h3>
+<p>In the data set <em>Hemlock_Adults_vs_SmallSaps</em>, you can observe a clear gradient in the density of adult trees. Calculate <span class="math inline">\(O_{11}(r)\)</span> and <span class="math inline">\(L_{11}(r)\)</span> for pattern 1 (adult trees) to see up to which scale clustering of the trees can be observed using CSR as null model.</p>
+</div>
+<div id="exercise-2-2" class="section level3">
+<h3>Exercise 2)</h3>
+<p>Getzin et al. (2008) show that the study area is heterogenous. We are going to account for this heterogeneity by fitting a heterogeneous Poisson processes. Estimate <span class="math inline">\(\lambda(x,y)\)</span> and plot a map of the results. The gradient should be well visible.</p>
+</div>
+<div id="exercise-3-1" class="section level3">
+<h3>Exercise 3)</h3>
+<p>Use the previously estimated intensity <span class="math inline">\(\lambda(x,y)\)</span> to simulate a heterogenous Poisson process. Does <span class="math inline">\(O_{11}(r)\)</span> now fit into the simulation envelope? How do you interpret the result?</p>
+<p><img src="Practical_advanced_files/figure-html/practical_adv_plot_example-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="softcore--and-hardcore-process" class="section level1">
+<h1>Softcore- and Hardcore Process</h1>
+<div id="exercise-1-3" class="section level3">
+<h3>Exercise 1)</h3>
+<p>For this, use the data set <em>DouglasFir_LiveDead_OGN.dat</em> again.</p>
+<p>Can the small-scale regularity in the living Douglas fir trees be modeled by a hard-core process? What about a soft-core process?</p>
+<div id="literature" class="section level4">
+<h4>Literature:</h4>
+<p>Getzin, S., Wiegand, T., Wiegand, K., He, F., 2008. Heterogeneity influences spatial patterns and demographics in forest stands. J. Ecol. 96, 807–820</p>
+</div>
+</div>
 </div>
 
 

@@ -364,7 +364,7 @@ $(document).ready(function () {
           </a>
         </li>
         <li>
-          <a href="Practical_cluster.html">
+          <a href="Practical_advanced.html">
             <span class="fa fa-tasks"></span>
              
             Advanced SPPA
@@ -454,7 +454,7 @@ $(document).ready(function () {
 <pre class="r"><code>  install.packages(c(&quot;spatstat&quot;, &quot;tidyverse&quot;))</code></pre>
 <div id="exercise-1" class="section level3">
 <h3>Exercise 1</h3>
-<p><strong>Task</strong>: Using the data set <em>DouglasFir_LiveDead_OGN.dat</em>, calculate the O-ring statistic and the L-function. Here, pattern 1 gives the locations of living trees and pattern 2 gives the locations of dead trees. Comparing the univariate measures <span class="math inline">\(O_{11}(r)\)</span> and <span class="math inline">\(L_{11}(r)\)</span>, how do they differ?</p>
+<p><strong>Task:</strong> Using the data set <em>DouglasFir_LiveDead_OGN.dat</em>, calculate the O-ring statistic and the L-function. Here, pattern 1 gives the locations of living trees and pattern 2 gives the locations of dead trees. Comparing the univariate measures <span class="math inline">\(O_{11}(r)\)</span> and <span class="math inline">\(L_{11}(r)\)</span>, how do they differ?</p>
 <p>First, we need to import the data using <code>read_delim()</code> (make sure the data is in your working direction. See <code>?getwd()</code>/<code>?setwd()</code> for help). The columns are separated by a semicolon. By using <code>read_delim()</code>, the class of the data is automatically a <code>tibble</code> (an ‘advanced’ version of a <code>data.frame</code>. For more information see <code>?tibble</code>).</p>
 <pre class="r"><code>  douglas_fir &lt;- read_delim(file = &quot;Data/DouglasFir_LiveDead_OGN.txt&quot;,
                             delim = &quot;;&quot;)

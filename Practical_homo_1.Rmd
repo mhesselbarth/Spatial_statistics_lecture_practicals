@@ -11,14 +11,14 @@ editor_options:
 
 <br>
 
-You can find a link to download the data [**here**](https://mhesselbarth.github.io/spatial_statistics_practicals/data.html). The `.zip`-folder includes two sub-folders, in which you can find the same datasets formatted for both _Programita_ (filename extension `.dat`/`.mcf`) and _R_ (filename extension `.txt`).
+You can find a link to download the data [**here**](https://mhesselbarth.github.io/spatial_statistics_practicals/data.html). The `.zip`-folder includes two sub-folders, in which you can find the same datasets formatted for both *Programita* (filename extension `.dat`/`.mcf`) and *R* (filename extension `.txt`).
 
-Especially when using _Programita_, but also using _R_, make screenshots of your results (or save the results to your disk in any other way) for the plenum discussion later.
+Especially when using *Programita*, but also using *R*, make screenshots of your results (or save the results to your disk in any other way) for the plenum discussion later.
 
-For more information/background, please see _Homo_NullModels.pptx_.
+For more information/background, please see *Homo_NullModels.pptx*.
 
 ### Exercise 1) 
-Using the data set _DouglasFir_LiveDead_OGN_, calculate the O-ring statistic and the L-function. Here, pattern 1 gives the locations of living trees and pattern 2 gives the locations of dead trees. Comparing the univariate measures $O_{11}(r)$ and $L_{11}(r)$, how do they differ?
+Using the data set *DouglasFir_LiveDead_OGN*, calculate the O-ring statistic and the L-function. Here, pattern 1 gives the locations of living trees and pattern 2 gives the locations of dead trees. Comparing the univariate measures $O_{11}(r)$ and $L_{11}(r)$, how do they differ?
 
 For more information, see Slides 6 ff., Slides 26 & Slides 51 ff.
 
@@ -37,7 +37,7 @@ Also look at the O-ring statistic $O_{22}(r)$ and the L-function $L_{22}(r)$ for
 
 For more information, see Slides 10 ff. & Slides 51 ff.
 
-```{r p_2a_plot_example, echo = FALSE, message = FALSE, fig.align = "center", fig.width = 5, fig.height = 5}
+```{r practical_1_plot_example, echo = FALSE, message = FALSE, fig.align = "center", fig.width = 5, fig.height = 5}
   library(ggplot2)
   library(spatstat)
 

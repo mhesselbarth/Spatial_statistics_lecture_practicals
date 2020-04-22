@@ -30,7 +30,7 @@ If you don't have the packages already installed, run the following code in orde
 
 ### Exercise 1 
 
-__Task__: Using the data set _DouglasFir_LiveDead_OGN.dat_, calculate the O-ring statistic and the L-function. Here, pattern 1 gives the locations of living trees and pattern 2 gives the locations of dead trees. Comparing the univariate measures $O_{11}(r)$ and $L_{11}(r)$, how do they differ?
+**Task:** Using the data set _DouglasFir_LiveDead_OGN.dat_, calculate the O-ring statistic and the L-function. Here, pattern 1 gives the locations of living trees and pattern 2 gives the locations of dead trees. Comparing the univariate measures $O_{11}(r)$ and $L_{11}(r)$, how do they differ?
 
 First, we need to import the data using `read_delim()` (make sure the data is in your working direction. See `?getwd()`/`?setwd()` for help). The columns are separated by a semicolon. By using `read_delim()`, the class of the data is automatically a `tibble` (an 'advanced' version of a `data.frame`. For more information see `?tibble`). 
 
@@ -145,7 +145,7 @@ Alternatively, these functions are already implemented in the `onpoint` package,
 ```
 
 ### Exercise 3
-__Task:__ Redo the analysis but now with simulation envelopes. How does the simulation envelope change if you change the settings for the envelope from # simulations=39/'lowest/highest'=1 to simulations=199/'lowest/highest'=5.
+**Task:** Redo the analysis but now with simulation envelopes. How does the simulation envelope change if you change the settings for the envelope from # simulations=39/'lowest/highest'=1 to simulations=199/'lowest/highest'=5.
 
 The function `envelope` of the `spatstat` package calculates simulation envelopes. The number of simulations can be specified with the argument `nsim`, the lowest/highest values with the argument `rank`. When not specified otherwise, the functions uses 'CSR' as null model. The `fun` argument can handle any summary function that `spatstat` provides (or the ones we implemented as long as they return a `fv` object).
 
@@ -172,7 +172,7 @@ The function `envelope` of the `spatstat` package calculates simulation envelope
 ```
 
 ### Exercise 4 
-__Task:__ Also look at the functions O22(r) and L22(r). Is there a striking difference between dead and alive Douglas fir trees?
+**Task:** Also look at the functions O22(r) and L22(r). Is there a striking difference between dead and alive Douglas fir trees?
 
 So this time, we want to subset all 'dead' trees.
 
@@ -206,7 +206,7 @@ So this time, we want to subset all 'dead' trees.
                 base_size = 7.5)
 ```
 
-__References__:
+**References**:
 
 Baddeley, A., Rubak, E., Turner, R., 2015. Spatial point patterns: Methodology and applications with R. Chapman and Hall/CRC Press, London.
 
