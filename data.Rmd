@@ -17,6 +17,8 @@ In case you have any questions or trouble, please write me an e-mail or come to 
 
 > To download all data needed for the practicals, [**click here**](Data.zip). Please be aware and credit that the data was published (Getzin et al. 2006, Getzin et al. 2008).
 
+[**Here**](Cheat_sheet.pdf) you can find a cheat sheet for *R* with the most important functions for spatial point pattern analysis. A short introduction can also be found in the ["Getting started with spatstat"](https://cran.r-project.org/web/packages/spatstat/vignettes/getstart.pdf) vignette.
+
 **References**
 
 Getzin, S., Dean, C., He, F., Trofymow, J.A., Wiegand, K., Wiegand, T., 2006. Spatial patterns and competition of tree species in a Douglas fir chronosequence on Vancouver Island. Ecography, 29, 671-682.
