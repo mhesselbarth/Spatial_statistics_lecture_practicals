@@ -439,7 +439,7 @@ $(document).ready(function () {
 
 
 <p><br></p>
-<p><img src="logo.png" width="182" style="display: block; margin: auto;" /></p>
+<p><img src="logo.png" width="182" /></p>
 <p>First, we load all packages, just as before.</p>
 <pre class="r"><code>  library(spatstat)
   library(tidyverse)</code></pre>
@@ -478,6 +478,8 @@ $(document).ready(function () {
                               divisor = &quot;d&quot;, nsim = 199, nrank = 5,
                               simulate = expression(rlabel(douglas_fir_ppp)))</code></pre>
 <p><img src="Solution_homo_2_files/figure-html/solution_2_plot_envelope-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>If we visualise the null model data, we see that during the randomisation the location of all events stay unchanged and only the marks are randomly shuffled acroos the events.</p>
+<p><img src="Solution_homo_2_files/figure-html/visualization_null_model_rl-1.gif" width="65%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="exercise-6" class="section level3">
 <h3>Exercise 6</h3>
@@ -491,9 +493,9 @@ param_envelopes &lt;- expand.grid(nsim = nsim, nrank = nrank)
 param_envelopes &lt;- arrange(param_envelopes, nsim, nrank)
 
 random_labeling_multiple &lt;- purrr::map(1:nrow(param_envelopes), function(i) {
-  
-  as_tibble(envelope(douglas_fir_ppp, 
-                     fun = pcfcross, 
+
+  as_tibble(envelope(douglas_fir_ppp,
+                     fun = pcfcross,
                      i = &quot;alive&quot;,  j = &quot;dead&quot;,
                      r = seq(from = 0, to = 45, by = 0.5),
                      divisor = &quot;d&quot;, nsim = param_envelopes[i, 1], nrank = param_envelopes[i, 2],
@@ -503,9 +505,9 @@ random_labeling_multiple &lt;- purrr::map(1:nrow(param_envelopes), function(i) {
 names(random_labeling_multiple) &lt;- paste0(&quot;nsim_&quot;, param_envelopes$nsim, &quot;_nrank_&quot;, param_envelopes$nrank)
 
 random_labeling_multiple &lt;- bind_rows(random_labeling_multiple, .id = &quot;id&quot;)</code></pre>
-<pre class="r"><code>  ggplot(data = random_labeling_multiple) + 
-    geom_ribbon(aes(x = r, ymin = lo, ymax = hi, fill = &quot;Simulation envelope&quot;), alpha = 0.75) + 
-    geom_line(aes(x = r, y = obs, col = &quot;Observed value&quot;)) + 
+<pre class="r"><code>  ggplot(data = random_labeling_multiple) +
+    geom_ribbon(aes(x = r, ymin = lo, ymax = hi, fill = &quot;Simulation envelope&quot;), alpha = 0.75) +
+    geom_line(aes(x = r, y = obs, col = &quot;Observed value&quot;)) +
     scale_fill_manual(name = &quot;&quot;, values = c(&quot;Simulation envelope&quot; = &quot;grey&quot;)) +
     scale_colour_manual(name = &quot;&quot;, values = c(&quot;Observed value&quot; = &quot;black&quot;)) +
     facet_wrap(~id) +
@@ -565,6 +567,8 @@ for (i in 1:199) {
   
   null_model_pattern[i] &lt;- list(overall_pattern)
 }</code></pre>
+<p>If we visualise the null model patterns, we can see that the location of all adult trees does not change, but the the location of all seedlings is randomised using CSR.</p>
+<p><img src="Solution_homo_2_files/figure-html/visualization_null_model_antecedent-1.gif" width="65%" style="display: block; margin: auto;" /></p>
 <p>Now, we can compute the simulation envelopes as usually.</p>
 <pre class="r"><code>  antecedent_conditions &lt;- envelope(douglas_fir_ppp, 
                                     fun = Oest_cross, 
@@ -588,6 +592,8 @@ for (i in 1:199) {
                                                         which = &quot;seedlings&quot;, 
                                                         edge = &quot;torus&quot;)))</code></pre>
 <p><img src="Solution_homo_2_files/figure-html/solution_2_plot_toroidal-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>If we visualise the null model data, we see that the location of all adult trees is identical between the simulations. However, the location of the seedlings are randomised. Using the toroidal shift, you can see that the overall spatial structure of the seedlings is preserved</p>
+<p><img src="Solution_homo_2_files/figure-html/visualization_null_model_toroidal-1.gif" width="65%" style="display: block; margin: auto;" /></p>
 <p><strong>References</strong>:</p>
 <p>Baddeley, A., Rubak, E., Turner, R., 2015. Spatial point patterns: Methodology and applications with R. Chapman and Hall/CRC Press, London.</p>
 <p>Getzin, S., Dean, C., He, F., Trofymow, J.A., Wiegand, K., Wiegand, T., 2006. Spatial patterns and competition of tree species in a Douglas fir chronosequence on Vancouver Island. Ecography, 29, 671-682.</p>

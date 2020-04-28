@@ -439,7 +439,7 @@ $(document).ready(function () {
 
 
 <p><br></p>
-<p><img src="logo.png" width="182" style="display: block; margin: auto;" /></p>
+<p><img src="logo.png" width="182" /></p>
 <p>First, we need to import the <a href="https://spatstat.org"><code>spatstat</code></a> package for analyzing spatial point patterns. Also, we import the <a href="https://www.tidyverse.org"><code>tidyverse</code></a> package, a collection of <code>R</code> packages designed for data science.</p>
 <pre class="r"><code>  library(spatstat)
   library(tidyverse)</code></pre>
@@ -556,6 +556,9 @@ $(document).ready(function () {
                                       r = seq(from = 0, to = 45, 
                                               by = 0.5),
                                       nsim = 199, nrank = 5)</code></pre>
+<p>The null model ‘CSR’ basically just simulates pattern with the same number of events using a Poisson process, i.e. using random coordinates within the study plot with a homogenous intensity and no interaction between events.</p>
+<p><img src="Solution_homo_1_files/figure-html/visualization_null_model-1.gif" width="65%" style="display: block; margin: auto;" /></p>
+<p>Just use the <code>plot()</code> function to display the results.</p>
 <p><img src="Solution_homo_1_files/figure-html/solution_1_plot_envelopes-1.png" width="672" style="display: block; margin: auto;" /><img src="Solution_homo_1_files/figure-html/solution_1_plot_envelopes-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="exercise-4" class="section level3">

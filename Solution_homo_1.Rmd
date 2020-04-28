@@ -11,13 +11,17 @@ editor_options:
 
 <br>
 
-```{r solution_1_setup, echo = FALSE, fig.align = "center"}
-knitr::include_graphics("logo.png", auto_pdf = FALSE)
+```{r solution_1_setup, echo = FALSE, message = FALSE, warning = FALSE}
+  knitr::include_graphics("logo.png", auto_pdf = FALSE)
+
+  library(spatstat)
+  library(tidyverse)
+  library(gganimate)
 ```
 
 First, we need to import the [`spatstat`](https://spatstat.org) package for analyzing spatial point patterns. Also, we import the [`tidyverse`](https://www.tidyverse.org) package, a collection of `R` packages designed for data science.
 
-```{r solution_1_libraries, message = FALSE}
+```{r solution_1_libraries, eval = FALSE}
   library(spatstat)
   library(tidyverse)
 ```
@@ -160,6 +164,26 @@ The function `envelope` of the `spatstat` package calculates simulation envelope
                                               by = 0.5),
                                       nsim = 199, nrank = 5)
 ```
+
+The null model 'CSR' basically just simulates pattern with the same number of events using a Poisson process, i.e. using random coordinates within the study plot with a homogenous intensity and no interaction between events.
+
+```{r visualization_null_model, echo = FALSE, fig.align = "center", out.width = "65%"}
+  pattern_csr <- runifpoint(n = alive$n, win = alive$window, nsim = 100)
+  
+  pattern_csr <- purrr::map_dfr(pattern_csr, function(x) as_tibble(x), .id = "id")
+
+  ggplot_csr <- ggplot(data = pattern_csr) + 
+    geom_point(aes(x = x, y = y), shape = 1, size = 3) + 
+    geom_polygon(data = as_tibble(alive$window), aes(x = x, y = y), 
+                 fill = NA, col = "black") +
+    theme_void(base_size = 15) + 
+    labs(title = "Complete spatial randomness") +
+    transition_states(id, transition_length = 1, state_length = 5) 
+
+  gganimate::animate(ggplot_csr, nframes = 100, duration = 50)
+```
+
+Just use the `plot()` function to display the results.
 
 ```{r solution_1_plot_envelopes, echo = FALSE,  fig.align = "center"}
   plot(simulation_envelope_39, xlim = c(0,45), 
