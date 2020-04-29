@@ -72,12 +72,6 @@ The function `envelope()` can also be used to simulate more complex null models 
                               simulate = expression(rlabel(douglas_fir_ppp)))
 ```
 
-```{r solution_2_plot_envelope, echo = FALSE,  fig.align = "center"}
-  plot(random_labeling, xlim = c(0, 45), 
-       main = "Bivariate pair correlation function\nrandom labelling",
-       legend = FALSE)
-```
-
 If we visualise the null model data, we see that during the randomisation the location of all events stay unchanged and only the marks are randomly shuffled acroos the events.
 
 ```{r visualization_null_model_rl, echo = FALSE, fig.align = "center", out.width = "65%"}
@@ -98,6 +92,13 @@ If we visualise the null model data, we see that during the randomisation the lo
   gganimate::animate(ggplot_rl, nframes = 100, duration = 50)
 ```
 
+The results can be visualised using the `plot()` function.
+
+```{r solution_2_plot_envelope, echo = FALSE,  fig.align = "center"}
+  plot(random_labeling, xlim = c(0, 45), 
+       main = "Bivariate pair correlation function\nrandom labelling",
+       legend = FALSE)
+```
 
 ### Exercise 6
 **Task:** Redo the analysis from 5) and try out different settings for the number of simulations and the used lowest/highest values (e.g. n = 39, 199, 499 and lowest/highest = 1, 5, 10). Do the results change?
@@ -250,23 +251,6 @@ The [`onpoint`](https://r-spatialecology.github.io/onpoint/) package also includ
   
 There is a possibility to simulate the 'toroidal shift' null model with functions provided by `spatstat`. We just use the function `rshift()` and specify the behavior at the edge of the observation area (`edge`) and which points should be shifted (`which`).
 
-```{r solution_2_calcluate_toroidal, message = FALSE, warning = FALSE, results = "hide"}
-toroidal_shift <- envelope(douglas_fir_ppp, fun = Oest_cross, 
-                           i = "adults", j = "seedlings",
-                           r = seq(from = 0, to = 45, by = 0.5),
-                           nsim = 199, nrank = 5,
-                           simulate = expression(rshift(douglas_fir_ppp,
-                                                        which = "seedlings", 
-                                                        edge = "torus")))
-```
-
-```{r solution_2_plot_toroidal, echo = FALSE, fig.align = "center"}
-plot(toroidal_shift, xlim = c(0, 45), 
-     main = "Bivariate O-ring statistic\ntoroidal shift",  
-     legend = FALSE)
-```
-
-
 If we visualise the null model data, we see that the location of all adult trees is identical between the simulations. However, the location of the seedlings are randomised. Using the toroidal shift, you can see that the overall spatial structure of the seedlings is preserved 
 
 ```{r visualization_null_model_toroidal, echo = FALSE, fig.align = "center", out.width = "65%"}
@@ -288,6 +272,21 @@ If we visualise the null model data, we see that the location of all adult trees
   gganimate::animate(ggplot_toroidal, nframes = 100, duration = 50)
 ```
 
+```{r solution_2_calcluate_toroidal, message = FALSE, warning = FALSE, results = "hide"}
+toroidal_shift <- envelope(douglas_fir_ppp, fun = Oest_cross, 
+                           i = "adults", j = "seedlings",
+                           r = seq(from = 0, to = 45, by = 0.5),
+                           nsim = 199, nrank = 5,
+                           simulate = expression(rshift(douglas_fir_ppp,
+                                                        which = "seedlings", 
+                                                        edge = "torus")))
+```
+
+```{r solution_2_plot_toroidal, echo = FALSE, fig.align = "center"}
+plot(toroidal_shift, xlim = c(0, 45), 
+     main = "Bivariate O-ring statistic\ntoroidal shift",  
+     legend = FALSE)
+```
 
 **References**:
 
