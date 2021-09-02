@@ -57,4 +57,4 @@ navbar:
         hreft: https://mhesselbarth.rbind.io
       - text: "Github" 
         icon: fa-github fa-lg
-        href: https://github.com/r-spatialecology/
+        href: https://github.com/mhesselbarth/spatial_statistics_practicals
