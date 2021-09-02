@@ -74,7 +74,7 @@ The function `envelope()` can also be used to simulate more complex null models 
 
 If we visualise the null model data, we see that during the randomisation the location of all events stay unchanged and only the marks are randomly shuffled acroos the events.
 
-```{r visualization_null_model_rl, echo = FALSE, fig.align = "center", out.width = "65%"}
+```{r visualization_null_model_rl, echo = FALSE, message = FALSE, fig.align = "center", out.width = "65%"}
   
   pattern_rl <- rlabel(X = douglas_fir_ppp, nsim = 100)
   
@@ -138,7 +138,7 @@ random_labeling_multiple <- bind_rows(random_labeling_multiple, .id = "id")
     scale_fill_manual(name = "", values = c("Simulation envelope" = "grey")) +
     scale_colour_manual(name = "", values = c("Observed value" = "black")) +
     facet_wrap(~id) +
-    theme_minimal()
+    theme_classic()
 
 ```
 
@@ -147,7 +147,7 @@ random_labeling_multiple <- bind_rows(random_labeling_multiple, .id = "id")
 
 Firstly, we import the data and convert it to a `ppp` object. Also, we reclassify the mark column to 1 == 'adults' and 2 == 'seedlings' and convert it as a factor. 
 
-```{r solution_2_import_data_b}
+```{r solution_2_import_data_b, message = FALSE}
   douglas_fir <- read_delim(file = "Data/DouglasFir_Adult_vs_Seedling_OGN.txt", 
                             delim = ";")
   
@@ -208,7 +208,7 @@ for (i in 1:199) {
 
 If we visualise the null model patterns, we can see that the location of all adult trees does not change, but the the location of all seedlings is randomised using CSR.
 
-```{r visualization_null_model_antecedent, echo = FALSE, fig.align = "center", out.width = "65%"}
+```{r visualization_null_model_antecedent, echo = FALSE, message = FALSE, fig.align = "center", out.width = "65%"}
   
   pattern_antecedent <- purrr::map_dfr(null_model_pattern[1:100], 
                                        function(x) as_tibble(x), .id = "id")
@@ -253,7 +253,7 @@ There is a possibility to simulate the 'toroidal shift' null model with function
 
 If we visualise the null model data, we see that the location of all adult trees is identical between the simulations. However, the location of the seedlings are randomised. Using the toroidal shift, you can see that the overall spatial structure of the seedlings is preserved 
 
-```{r visualization_null_model_toroidal, echo = FALSE, fig.align = "center", out.width = "65%"}
+```{r visualization_null_model_toroidal, echo = FALSE, message = FALSE, fig.align = "center", out.width = "65%"}
   
   pattern_toroidal <- purrr::map_dfr(1:100, function(x) 
     as_tibble(rshift.ppp(X = douglas_fir_ppp, which = "seedlings", edge = "torus")), 

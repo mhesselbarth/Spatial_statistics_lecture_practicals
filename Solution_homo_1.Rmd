@@ -167,7 +167,7 @@ The function `envelope` of the `spatstat` package calculates simulation envelope
 
 The null model 'CSR' basically just simulates pattern with the same number of events using a Poisson process, i.e. using random coordinates within the study plot with a homogenous intensity and no interaction between events.
 
-```{r visualization_null_model, echo = FALSE, fig.align = "center", out.width = "65%"}
+```{r visualization_null_model, echo = FALSE, message = FALSE, fig.align = "center", out.width = "65%"}
   pattern_csr <- runifpoint(n = alive$n, win = alive$window, nsim = 100)
   
   pattern_csr <- purrr::map_dfr(pattern_csr, function(x) as_tibble(x), .id = "id")
