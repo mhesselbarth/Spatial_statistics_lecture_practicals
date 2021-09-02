@@ -119,7 +119,7 @@ Now, we can compute the envelopes of the null model and compare it to the observ
 ```{r solution_adv_no_parents, echo = FALSE, collapse = TRUE}
   # Check with Programita!
   paste0("Number of parents: ", 
-         round(thomas_process$clustpar[["kappa"]] * spatstat::area(saplings$window), 2))
+         round(thomas_process$clustpar[["kappa"]] * spatstat.geom::area(saplings$window), 2))
 
   paste0("Cluster area: ", 
          round((thomas_process$clustpar[["scale"]] ^ 2) * pi, 2))

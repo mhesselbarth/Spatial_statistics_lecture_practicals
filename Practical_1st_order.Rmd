@@ -27,17 +27,17 @@ flip_coin <- function(pattern, n = 50, radius = 5) {
   vapply(X = 1:n, FUN = function(x) {
   
   # random coord within plot as coin center
-  coin_center <- spatstat::runifpoint(n = 1, win = pattern$window)
+  coin_center <- spatstat.core::runifpoint(n = 1, win = pattern$window)
   
   # calculate coords of circle around center using radius
   coin_x <- sin(seq(0, 2 * pi, length.out = 250)) * radius + coin_center$x
   coin_y <- cos(seq(0, 2 * pi, length.out = 250)) * radius + coin_center$y
   
   # convert circle to window object
-  coin_owin <- spatstat::owin(poly = cbind(rev(coin_x), coin_y))
+  coin_owin <- spatstat.geom::owin(poly = cbind(rev(coin_x), coin_y))
   
   # sum of points within window
-  sum(spatstat::inside.owin(x = pattern, w = coin_owin))
+  sum(spatstat.geom::inside.owin(x = pattern, w = coin_owin))
   }, FUN.VALUE = numeric(1))
 }
 ```
@@ -56,10 +56,10 @@ douglas_fir <- read.table(file = "Data/DouglasFir_Adult_vs_Seedling_OGN.txt",
 douglas_fir <- dplyr::filter(douglas_fir, mark == 1)
 
 # convert to spatstat point pattern object
-douglas_fir_ppp <- spatstat::ppp(x = douglas_fir$x, y = douglas_fir$y, 
-                                 window = spatstat::ripras(x = douglas_fir$x,
-                                                           y = douglas_fir$y, 
-                                                           shape = "rectangle"))
+douglas_fir_ppp <- spatstat.geom::ppp(x = douglas_fir$x, y = douglas_fir$y, 
+                                      window = spatstat.geom::ripras(x = douglas_fir$x,
+                                                                     y = douglas_fir$y, 
+                                                                     shape = "rectangle"))
 
 # create 35 coin flips
 flip_coin(pattern = douglas_fir_ppp, n = 35)

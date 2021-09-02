@@ -60,7 +60,7 @@ Use the previously estimated intensity $\lambda(x,y)$ to simulate a heterogenous
   data <- read.table("Data/Hemlock_Adults_vs_SmallSaps.txt", 
                      sep = ";", dec = ".", header = TRUE)
   
-  window <- spatstat::ripras(data[,1:2], shape = "rectangle")
+  window <- spatstat.geom::ripras(data[,1:2], shape = "rectangle")
 
   ggplot_adults_vs_saps <- ggplot2::ggplot(data = data) +
     ggplot2::geom_polygon(data = as.data.frame(window),
@@ -76,7 +76,7 @@ Use the previously estimated intensity $\lambda(x,y)$ to simulate a heterogenous
     data <- read.table("Data/Alive_DouglasFir_OGN.txt", 
                      sep = ";", dec = ".", header = TRUE)
     
-    window <- spatstat::ripras(data[,1:2], shape = "rectangle")
+    window <- spatstat.geom::ripras(data[,1:2], shape = "rectangle")
     
     ggplot_alive_douglas <- ggplot2::ggplot(data = data) +
       ggplot2::geom_polygon(data = as.data.frame(window),

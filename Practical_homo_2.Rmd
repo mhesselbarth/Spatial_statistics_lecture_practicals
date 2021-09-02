@@ -42,7 +42,7 @@ For more information, see  Slides 94 ff.
   data <- read.table("Data/DouglasFir_LiveDead_OGN.txt", 
                      sep = ";", dec = ".", header = TRUE)
   
-  window <- spatstat::ripras(data[,1:2], shape = "rectangle")
+  window <- spatstat.geom::ripras(data[,1:2], shape = "rectangle")
 
   ggplot2::ggplot(data = data) + 
      ggplot2::geom_polygon(data = as.data.frame(window),
