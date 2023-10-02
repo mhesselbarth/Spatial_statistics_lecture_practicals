@@ -1,7 +1,6 @@
 ---
 title: "Homogenous null model"
 author: "Wiegand, Getzin, Hesselbarth"
-date: "Summer semester 2020"
 output: 
   html_document:
     theme: cosmo
