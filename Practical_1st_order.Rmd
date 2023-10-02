@@ -27,7 +27,7 @@ flip_coin <- function(pattern, n = 50, radius = 5) {
   vapply(X = 1:n, FUN = function(x) {
   
   # random coord within plot as coin center
-  coin_center <- spatstat.core::runifpoint(n = 1, win = pattern$window)
+  coin_center <- spatstat.random::runifpoint(n = 1, win = pattern$window)
   
   # calculate coords of circle around center using radius
   coin_x <- sin(seq(0, 2 * pi, length.out = 250)) * radius + coin_center$x

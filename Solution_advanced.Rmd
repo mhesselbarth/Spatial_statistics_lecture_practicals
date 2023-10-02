@@ -288,9 +288,11 @@ Now, we can use the simulated point patterns as input for `envelope()` to create
        main = "Heterogenous Poisson process")
 ```
 
-There is a wrapper around these function in [`onpoint`](https://r-spatialecology.github.io/onpoint/) to simulate a heterogenous Poisson process as null model (see `?simulate_heterogenous_pattern`).
+There is a wrapper around these function in [`onpoint`](https://r-spatialecology.github.io/onpoint/) to simulate a heterogeneous Poisson process as null model (see `?simulate_heterogenous_pattern`).
 
-Alternativly, `spatstat` can calculated the inhomogenous pair-correlation function and consider the heterogneous plot conditions while estimating the pair-correlation function.
+#### Using the inhomogenous pair-correlation function
+
+Instead of using `lambda` to simulate a heterogeneous Poisson process, `spatstat` can also can calculate the inhomogenous pair-correlation function. This functions uses a kernel methods during the computation of $g_{inhom}(r)$ whick takes the heterogeneity of the point pattern into account. Thus, we can use CSR as null model.
 
 ```{r solution_adv_envelopes_inhomo, results = "hide"}
   envelopes_adults_inhomo <- envelope(Y = adults, fun = pcfinhom, 
@@ -305,7 +307,6 @@ Alternativly, `spatstat` can calculated the inhomogenous pair-correlation functi
        main = "Inhomogenous pair correlation function",
        legend = FALSE)
 ```
-
 
 # Softcore- and Hardcore Process
 ### Exercise 1

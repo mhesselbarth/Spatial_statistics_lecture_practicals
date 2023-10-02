@@ -14,8 +14,8 @@
 
 <title>1st order properties</title>
 
-<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -33,8 +33,8 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -63,6 +63,7 @@ if (window.hljs) {
 
 
 
+
 <style type = "text/css">
 .main-container {
   max-width: 940px;
@@ -83,6 +84,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -140,11 +144,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -173,8 +181,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -182,16 +190,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -235,7 +236,7 @@ $(document).ready(function () {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -261,7 +262,7 @@ $(document).ready(function () {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="fa fa-tasks"></span>
      
     Practicals
@@ -286,7 +287,7 @@ $(document).ready(function () {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="fa fa-check"></span>
      
     Solutions
@@ -311,7 +312,7 @@ $(document).ready(function () {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="fa fa-plus-square"></span>
      
     Additional material
@@ -320,7 +321,7 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
         <span class="fa fa-tasks"></span>
          
         Practicals
@@ -343,7 +344,7 @@ $(document).ready(function () {
       </ul>
     </li>
     <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
         <span class="fa fa-check"></span>
          
         Solutions
@@ -368,7 +369,7 @@ $(document).ready(function () {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="fa fa-ellipsis-h"></span>
      
     More...
@@ -409,9 +410,15 @@ $(document).ready(function () {
 
 
 <p><br></p>
-<p>Please find the introduction slides <a href="Practical_1st_order_intro.pdf">here</a>. If you want to print the point pattern to flip coins on it, you can find a DIN A4 .pdf-file <a href="Practical_1st_order_pattern.pdf">here</a>. Addtionally, there is an <em>Excel</em> template, you can find <a href="Practical_1st_order_coin_table.xlsx">here</a>.</p>
+<p>Please find the introduction slides <a
+href="Practical_1st_order_intro.pdf">here</a>. If you want to print the
+point pattern to flip coins on it, you can find a DIN A4 .pdf-file <a
+href="Practical_1st_order_pattern.pdf">here</a>. Addtionally, there is
+an <em>Excel</em> template, you can find <a
+href="Practical_1st_order_coin_table.xlsx">here</a>.</p>
 <p><img src="coin_flip.jpg" width="50%" style="display: block; margin: auto;" /></p>
-<p>In case you do not want to print the pattern and actually flip a coin, you could use the following code to “simulate” a coin flip.</p>
+<p>In case you do not want to print the pattern and actually flip a
+coin, you could use the following code to “simulate” a coin flip.</p>
 <pre class="r"><code># function to virtually flip coins
 flip_coin &lt;- function(pattern, n = 50, radius = 5) {
   
@@ -419,7 +426,7 @@ flip_coin &lt;- function(pattern, n = 50, radius = 5) {
   vapply(X = 1:n, FUN = function(x) {
   
   # random coord within plot as coin center
-  coin_center &lt;- spatstat.core::runifpoint(n = 1, win = pattern$window)
+  coin_center &lt;- spatstat.random::runifpoint(n = 1, win = pattern$window)
   
   # calculate coords of circle around center using radius
   coin_x &lt;- sin(seq(0, 2 * pi, length.out = 250)) * radius + coin_center$x
@@ -432,11 +439,42 @@ flip_coin &lt;- function(pattern, n = 50, radius = 5) {
   sum(spatstat.geom::inside.owin(x = pattern, w = coin_owin))
   }, FUN.VALUE = numeric(1))
 }</code></pre>
-<p>You can use the resulting count of events within each virtual coin flip to fill the <em>Excel</em> template. Have a look at different <code>radius</code> arguments, to analyse various sizes of the “moving window”.</p>
-<pre class="r"><code>library(dplyr)
-library(spatstat)
-
-# read x and y coords of data
+<p>You can use the resulting count of events within each virtual coin
+flip to fill the <em>Excel</em> template. Have a look at different
+<code>radius</code> arguments, to analyse various sizes of the “moving
+window”.</p>
+<pre class="r"><code>library(dplyr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>library(spatstat)</code></pre>
+<pre><code>## Loading required package: spatstat.data</code></pre>
+<pre><code>## Loading required package: spatstat.geom</code></pre>
+<pre><code>## spatstat.geom 3.2-5</code></pre>
+<pre><code>## Loading required package: spatstat.random</code></pre>
+<pre><code>## spatstat.random 3.1-6</code></pre>
+<pre><code>## Loading required package: spatstat.explore</code></pre>
+<pre><code>## Loading required package: nlme</code></pre>
+<pre><code>## 
+## Attaching package: &#39;nlme&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     collapse</code></pre>
+<pre><code>## spatstat.explore 3.2-3</code></pre>
+<pre><code>## Loading required package: spatstat.model</code></pre>
+<pre><code>## Loading required package: rpart</code></pre>
+<pre><code>## spatstat.model 3.2-6</code></pre>
+<pre><code>## Loading required package: spatstat.linnet</code></pre>
+<pre><code>## spatstat.linnet 3.1-1</code></pre>
+<pre><code>## 
+## spatstat 3.0-6 
+## For an introduction to spatstat, type &#39;beginner&#39;</code></pre>
+<pre class="r"><code># read x and y coords of data
 douglas_fir &lt;- read.table(file = &quot;Data/DouglasFir_Adult_vs_Seedling_OGN.txt&quot;,
                           sep = &#39;;&#39;, header = TRUE)
 
@@ -451,7 +489,7 @@ douglas_fir_ppp &lt;- spatstat.geom::ppp(x = douglas_fir$x, y = douglas_fir$y,
 
 # create 35 coin flips
 flip_coin(pattern = douglas_fir_ppp, n = 35)</code></pre>
-<pre><code>##  [1] 1 0 0 0 0 4 0 1 0 0 2 0 0 1 2 2 2 0 0 0 6 0 0 0 0 5 0 0 1 3 0 1 2 0 4</code></pre>
+<pre><code>##  [1] 2 5 1 3 0 0 0 3 0 1 2 0 1 1 0 2 2 2 0 0 5 0 4 0 0 1 0 0 0 2 0 1 6 0 0</code></pre>
 
 
 
